@@ -1,0 +1,154 @@
+@import "custom-utilities.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.test-imports {
+  @apply dark:bg-test;
+}
+
+.sidebar {
+  @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
+}
+
+.content-container {
+  @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
+}
+.content-container main {
+  @apply w-full mx-auto my-4 sm:p-2;
+}
+.headers {
+  @apply flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between w-full;
+}
+.header-title {
+  @apply text-xl sm:text-2xl lg:text-3xl font-semibold px-4 py-2;
+}
+.section-title {
+  @apply text-lg font-medium text-primary-main;
+}
+
+/* Buttons */
+
+.primary-btn {
+  @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
+  dark:hover:outline-light-background-paper/50 btn;
+}
+.secondary-btn {
+  @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
+  dark:hover:outline-light-background-paper/50 btn;
+}
+.primary-border-btn {
+  @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 btn
+  hover:text-white hover:bg-primary-main;
+}
+.warning-btn {
+  @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
+  dark:hover:outline-light-background-paper/50 btn;
+}
+.text-btn {
+  @apply hover:outline hover:outline-2 text-primary-light hover:text-white hover:bg-primary-main btn;
+}
+/* Sidebar */
+.sidebar-link {
+  @apply p-2 text-sm flex flex-row items-center space-x-3 rounded-md 
+        hover:outline hover:outline-1 hover:bg-primary-main/10;
+}
+.portal-sidebar-ul {
+  @apply px-[3%] sm:px-[6%] text-xs flex flex-col;
+}
+.portal-sidebar-ul a {
+  @apply sidebar-link;
+}
+.portal-sidebar-ul p {
+  @apply text-left text-nowrap;
+}
+.portal-sidebar-ul a.active-link {
+  @apply bg-primary-main/50 text-white hover:text-white;
+}
+
+/* Profile */
+
+.profile {
+  @apply w-full;
+}
+.profile section {
+  @apply w-full card px-10 py-2 my-3;
+}
+.profile section h2 {
+  @apply section-title border-b-2 border-b-light-background-paper dark:border-b-dark-background-paper;
+}
+.profile-info {
+  @apply flex flex-row flex-wrap w-full;
+}
+.profile-info div {
+  @apply flex flex-col w-full sm:w-1/2 p-3;
+}
+.profile-info p {
+  @apply font-medium first-letter:uppercase;
+}
+.profile-info span {
+  @apply opacity-50 font-normal;
+}
+.documents {
+  @apply flex flex-row flex-wrap w-full items-center justify-center gap-2;
+}
+.documents button {
+  @apply p-2 border-2 border-dark-background-paper/30 dark:border-light-background-paper/30 dark:hover:bg-dark-background-paper
+   hover:bg-light-background-paper rounded-lg w-fit;
+}
+
+/* Fundings */
+.funding-details {
+  @apply flex flex-col p-3;
+}
+.funding-details section {
+  @apply flex flex-col w-full gap-2;
+}
+.funding-details button {
+  @apply self-end w-fit;
+}
+
+/* Resources */
+.ul-links {
+  @apply flex flex-row flex-wrap items-center gap-2 mb-4;
+}
+.ul-links * {
+  @apply p-2 rounded-md flex-1 text-base text-center;
+}
+.ul-links .selected {
+  @apply text-primary-light border-b border-primary-main;
+}
+
+.table-toolbar {
+  @apply flex flex-col py-1 px-3 gap-4;
+}
+.table-toolbar button {
+  @apply outline outline-none hover:outline-1 hover:outline-primary-main rounded-sm  px-2;
+}
+
+.text {
+  @apply text-sm sm:text-base;
+}
+
+p {
+  @apply text;
+}
+
+.scrollbar-scheme * {
+  @apply dark:scrollbar-dark scrollbar-light;
+}
+
+.pulsate-fwd {
+  animation: pulsate-fwd 0.5s ease-in-out infinite both;
+}
+@keyframes pulsate-fwd {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

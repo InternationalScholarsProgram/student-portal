@@ -87,7 +87,7 @@ function FindFlights() {
                 />
               </div>
               <div className="col">
-                <label>Travel Date</label>
+                <label>Travel Dates</label>
                 <InputField
                   type="date"
                   required

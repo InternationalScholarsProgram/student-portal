@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
+import flightApi from "../services/flightApi";
 
-const tabs = ["Flights", "History"];
+const tabs = ["Guide","Find Flights", "History"];
 
 const filterFlights = (flights: any) => {
   return flights.filter((flight: any) => {
@@ -31,9 +32,8 @@ const filterFlights = (flights: any) => {
     return europeanStops <= 1 && !hasCanadaStop;
   });
 };
-function getTimeOfDay(dateTime: string) {
+function getTimeOfDay(dateTime: any) {
   // Create a Date object from the date-time string
-  console.log(dateTime);
   const date = new Date(dateTime);
 
   // Ensure that the Date object was created properly
@@ -71,99 +71,88 @@ const convertDuration = (duration: string) =>
     .replace("H", "h ")
     .replace("M", "m");
 
-// async function displayCheapDate(dates: any[], travelDate: any) {
-//   const departureDate = dayjs(travelDate?.value);
-//   const today = dayjs().startOf("day");
+const getDates = (date: any) => {
+  const departureDate = dayjs(date);
+  const today = dayjs().startOf("day");
+  const generatedDates: any[] = [];
 
-//   // Calculate 3 days before and 3 days after the departure date
-//   for (let i = -3; i <= 3; i++) {
-//     const potentialDate = departureDate.add(i, "day");
+  // Calculate 3 days before and 3 days after the departure date
+  for (let i = -3; i <= 3; i++) {
+    const potentialDate = departureDate.add(i, "day");
 
-//     if (potentialDate.isBefore(today)) {
-//       // If the date is before today, shift it to be after the departure date
-//       const adjustedDate = departureDate.add(7 - Math.abs(i), "day");
-//       dates.push({ date: adjustedDate.format("YYYY-MM-DD"), price: null });
-//     } else {
-//       dates.push({ date: potentialDate.format("YYYY-MM-DD"), price: null });
-//     }
-//   }
+    if (potentialDate.isBefore(today)) {
+      // Shift dates before today to after the departure date
+      const adjustedDate = departureDate.add(7 - Math.abs(i), "day");
+      generatedDates.push({
+        date: adjustedDate.format("YYYY-MM-DD"),
+        price: null,
+      });
+    } else {
+      generatedDates.push({
+        date: potentialDate.format("YYYY-MM-DD"),
+        price: null,
+      });
+    }
+  }
 
-//   // Sort the dates in chronological order
-//   dates.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Sort the dates in chronological order
+  return generatedDates.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+};
 
-//   // Create an array of promises to fetch flight data for all dates
-//   const flightPromises = dates.map((dateObj) => searchFlights(dateObj.date));
+const fetchCheapDates = async (formData: any) => {
+  const generatedDates: any = getDates(formData?.travelDate);
 
-//   // Fetch data for all dates concurrently
-//   const flightResults = await Promise.all(flightPromises);
+  // Fetch flight data for all dates
+  const flightPromises = generatedDates.map((day: any) =>
+    flightApi.searchFlights(
+      day.date,
+      formData?.departure,
+      formData?.destination
+    )
+  );
+  const flightResults = await Promise.allSettled(flightPromises);
 
-//   // Process and display the results
-//   flightResults.forEach((flights: any, index: number) => {
-//     if (flights && flights.length > 0) {
-//       const cheapestFlight = flights[0].total_amount;
-//       const day = dayjs(dates[index].date).format("ddd D");
+  console.log(flightResults, "flightResults");
 
-//       // Update the price in the `dates` array
-//       dates[index].price = cheapestFlight;
-//       dates[index].offers = flights;
-//     }
-//   });
-// }
+  // Update dates with flight data
+  flightResults.forEach((result, index) => {
+    if (result.status === "fulfilled" && result.value.length > 0) {
+      const cheapestFlight = result.value[0].total_amount;
+      generatedDates[index].price = cheapestFlight;
+      generatedDates[index].offers = [...result.value];
+    }
+  });
 
-// async function handleCheapDatesDisplay() {
-//   const container = document.getElementById("cheap-dates");
-//   container.innerHTML = ""; // Clear any existing data
-//   const dates = [];
-//   await displayCheapDate(dates);
+  // Find the cheapest flight
+  const cheapest = generatedDates.reduce(
+    (cheapest: any, current: any) => {
+      if (current.price == null) return cheapest;
+      return current.price < (cheapest.price || Infinity) ? current : cheapest;
+    },
+    { date: null, price: null }
+  );
+  const travelDateDay = dayjs(formData?.travelDate).format("YYYY-MM-DD");
+  const travelDateData = generatedDates.find(
+    (date: any) => date.date === travelDateDay
+  );
 
-//   const cheapestFlight =
-//     dates.length > 0
-//       ? dates.reduce((cheapest, current) => {
-//           if (current.price == null) return cheapest; // Skip entries without a price
-//           return current.price < cheapest.price ? current : cheapest;
-//         }, dates[0])
-//       : null;
+  return {
+    dates: generatedDates,
+    cheapestDate: cheapest,
+    travelDate: travelDateData,
+  };
+};
 
-//   dates.forEach((item, index) => {
-//     // Create the HTML structure
-//     const flightDiv = document.createElement("div");
-//     const dateHeading = document.createElement("h5");
-//     const priceParagraph = document.createElement("span");
-
-//     if (travelDate?.value === dates[index].date) {
-//       selectedDiv = flightDiv;
-//       flightDiv.className = "selected-div";
-//       displayResults(dates[index].offers);
-//     }
-//     if (cheapestFlight.date === item.date) {
-//       priceParagraph.style.color = "green";
-//     }
-
-//     dateHeading.textContent = dayjs(item.date).format("ddd D");
-//     priceParagraph.textContent = `$ ${item.price}`;
-
-//     flightDiv.appendChild(dateHeading);
-//     flightDiv.appendChild(priceParagraph);
-//     container.appendChild(flightDiv);
-
-//     flightDiv.onclick = async function (e) {
-//       // Reset previously selected div color to white
-//       if (selectedDiv) {
-//         selectedDiv.className = "";
-//       }
-
-//       // Set the clicked div color to blue
-//       flightDiv.className = "selected-div";
-
-//       // Update the selectedDiv reference
-//       selectedDiv = flightDiv;
-
-//       travelDate.value = dates[index].date;
-//       displayResults(dates[index].offers);
-//     };
-//   });
-// }
-export { tabs, getTimeOfDay, filterFlights, convertDuration };
+export {
+  tabs,
+  getTimeOfDay,
+  filterFlights,
+  convertDuration,
+  getDates,
+  fetchCheapDates,
+};
 const EUROPEAN_NATIONS = [
   "AT", // Austria
   "BE", // Belgium

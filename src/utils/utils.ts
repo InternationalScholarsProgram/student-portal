@@ -84,8 +84,9 @@ function json2formData(json: any) {
   return formData;
 }
 
-const formatDate = (date: string | Date, format?: string) =>
-  dayjs(new Date(date)).format(format || "dddd, MMMM D, YYYY");
+const formatDate = (date: string | Date, format?: string) => {
+  return dayjs(new Date(date)).format(format || "dddd, MMMM D, YYYY");
+};
 
 export {
   formatCurrency,

@@ -1,10 +1,10 @@
 /* From Uiverse.io by adamgiebl */
 .dots-container {
-  @apply flex justify-center items-center h-full w-full;
+  @apply flex justify-center items-center h-full min-h-5 w-full rounded-md;
 }
 
 .dot {
-  @apply aspect-square rounded-full bg-primary-main max-h-4 max-w-4 m-2;
+  @apply aspect-square h-full rounded-full bg-primary-light max-h-8 max-w-6 m-2;
   animation: pulse 1.5s infinite ease-in-out;
 }
 
@@ -26,20 +26,23 @@
 
 @keyframes pulse {
   0% {
+    @apply bg-primary-light;
     transform: scale(0.8);
-    background-color: #b3d4fc;
+    /* background-color: #b3d4fc; */
     box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
   }
 
   50% {
+    @apply bg-primary-main;
     transform: scale(1.2);
     background-color: #6793fb;
     box-shadow: 0 0 0 10px rgba(178, 212, 252, 0);
   }
 
   100% {
+    @apply bg-primary-light;
     transform: scale(0.8);
-    background-color: #b3d4fc;
+    /* background-color: #b3d4fc; */
     box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
   }
 }

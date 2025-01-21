@@ -6,11 +6,12 @@
 .test-imports {
   @apply dark:bg-test;
 }
-
 .sidebar {
   @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
 }
-
+.btn {
+  @apply py-1 px-2 text text-center rounded-md w-fit;
+}
 .content-container {
   @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
 }

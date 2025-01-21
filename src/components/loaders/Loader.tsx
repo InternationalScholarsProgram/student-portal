@@ -2,7 +2,7 @@ import "./loaders.css";
 
 function Loader({ cover }: { cover?: boolean }) {
   return (
-    <section className={`dots-container ${cover ? "" : "min-w-[70vw] min-h-[30vh]"} `}>
+    <section className={`dots-container ${cover ? "" : ""} `}>
       <div className="dot"></div>
       <div className="dot"></div>
       <div className="dot"></div>

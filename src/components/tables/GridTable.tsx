@@ -21,12 +21,12 @@ const CustomToolBar = (props: any) => {
     )
   );
   return (
-    <div className="row justify-between m-4">
+    <div className="row justify-between m-4 overflow-x-auto w-full">
       <TableHeader fileName={props.name} data={props.headerData || data} />
       <GridToolbarQuickFilter
         variant="outlined"
         size="small"
-        sx={inputStyles}
+        sx={{ ...inputStyles }}
       />
     </div>
   );
@@ -47,6 +47,8 @@ function GridTable(props: GridTableProps) {
       disableRowSelectionOnClick
       sx={{
         ...props.sx,
+        minHeight: "30vh",
+        width: "100%",
         height: "min-content",
         overflowX: "auto",
       }}

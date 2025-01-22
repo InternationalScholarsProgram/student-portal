@@ -1,14 +1,13 @@
-import React from "react";
 import { tabs } from "./utils";
 import Accordion from "../../../../components/Accordion";
+import { useState } from "react";
 
 const FlightBookingGuide = ({ openTab }: any) => {
-  const viewExplore = () => {
-    openTab(tabs[1]);
-  };
+  const [expanded, setExpanded] = useState(true);
+  const viewExplore = () => openTab(tabs[1]);
 
   return (
-    <Accordion title="Flight Booking Guide">
+    <Accordion title="Flight Booking Guide" expanded={expanded} onClick={() => setExpanded(!expanded)}>
       <p className="mb-4">
         Please read the instructions below to successfully navigate through this
         module.
@@ -114,12 +113,12 @@ const FlightBookingGuide = ({ openTab }: any) => {
       </div>
 
       {/* Button */}
-      {/* <button
+      <button
         onClick={viewExplore}
         className="primary-btn w-fit self-end px-7 mt-4"
       >
         Find Flight
-      </button> */}
+      </button>
     </Accordion>
   );
 };

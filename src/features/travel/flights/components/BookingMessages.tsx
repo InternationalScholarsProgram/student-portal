@@ -22,7 +22,7 @@ const Booked = ({ row }: { row: any }) => (
       and use your booking reference <strong>{row?.booking_reference}</strong>.
     </p>
 
-    <div className="mt-4 border p-4 rounded shadow">
+    <div className="mt-4 borders-30 w-2/3 p-4 rounded shadow">
       <h5 className="font-semibold opacity-70">Booking Details</h5>
       <div className="p-2">
         <p>
@@ -53,7 +53,7 @@ const Booked = ({ row }: { row: any }) => (
         </p>
       </div>
     </div>
-    <div className="row justify-end gap-3">
+    <div className="row justify-end gap-3 my-1">
       <button onClick={() => row.setOpen(false)} className="text-btn">
         Close
       </button>
@@ -70,7 +70,7 @@ const Rejected = ({ row }: { row: any }) => (
     <p>
       <strong>Reason:</strong> {row?.comments}
     </p>
-    <div className="row justify-end gap-3">
+    <div className="row justify-end gap-3 my-1">
       <button onClick={() => row.setOpen(false)} className="text-btn">
         Close
       </button>
@@ -90,7 +90,7 @@ const Expired = ({ row }: { row: any }) => (
       Unfortunately, your flight order has expired. Please try booking a new
       flight.
     </p>
-    <div className="row justify-end gap-3">
+    <div className="row justify-end gap-3 my-1">
       <button onClick={() => row.setOpen(false)} className="text-btn">
         Close
       </button>
@@ -110,7 +110,7 @@ const Pending = ({ row }: { row: any }) => (
       Thank you for choosing to book with us! Your request has been received and
       is under review. We will contact you shortly with further details.
     </p>
-    <div className="row justify-end gap-3">
+    <div className="row justify-end gap-3 my-1">
       <button onClick={() => row.setOpen(false)} className="text-btn">
         Close
       </button>

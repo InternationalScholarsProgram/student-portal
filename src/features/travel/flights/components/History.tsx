@@ -12,14 +12,11 @@ const History = ({ setShow }: { setShow: any }) => {
   const [open, setOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { orderHistory } = useFlightHook();
-  const viewTableOrders = () => {
-    console.log("Back button clicked");
-  };
+
   const columns: GridColDef[] = [
     {
       field: "departure_time",
       headerName: "Departure Time",
-      flex: 1,
       valueGetter: (params: any) =>
         formatDate(params?.replace("TANYT", ""), "MMM D, YYYY"),
       minWidth: 150,
@@ -27,20 +24,17 @@ const History = ({ setShow }: { setShow: any }) => {
     {
       field: "departure_airport",
       headerName: "Departure",
-      // flex: 1,
       minWidth: 100,
     },
 
     {
       field: "destination_airport",
       headerName: "Destination",
-      flex: 1,
       minWidth: 150,
     },
     {
       field: "status",
       headerName: "Status",
-      flex: 1,
       minWidth: 150,
       cellClassName: "row-center",
       renderCell: (params) => (
@@ -86,23 +80,18 @@ const History = ({ setShow }: { setShow: any }) => {
         <h3 className="text-2xl font-semibold opacity-75">
           Your Order History
         </h3>
-        <div className="w-full borders-30 min-h-[20vh] col-center overfl">
-          {orderHistory ? (
-            <GridTable
-              // sx={{ width: "90%" }}
-              columns={columns}
-              rows={orderHistory || []}
-              getRowId={(row) => JSON.stringify(row)}
-              name="Order History"
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-            />
-          ) : (
-            <Loader />
-          )}
+        <div className="w-full min-h-[20vh] col-center overfl">
+          <GridTable
+            columns={columns}
+            rows={orderHistory}
+            getRowId={(row) => JSON.stringify(row)}
+            name="Order History"
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+          />
         </div>
       </div>
       <OrderHistoryModal

@@ -32,8 +32,8 @@ const Gre = lazy(() => import("../features/entranceExams/gre/Gre"));
 const TrainingResources = lazy(
   () => import("../features/entranceExams/components/TrainingResources")
 );
-const SwitchOptions = lazy(
-  () => import("../features/program/switch/SwitchOptions")
+const SwitchPrograms = lazy(
+  () => import("../features/program/switch/SwitchPrograms")
 );
 const Withdraw = lazy(() => import("../features/program/withdraw/Withdraw"));
 const CreateTicket = lazy(
@@ -44,12 +44,21 @@ const SchoolApplication = lazy(
   () =>
     import("../features/school-admission/school-application/SchoolApplication")
 );
+const OnboardingAgreement = lazy(
+  () => import("../features/user/contracts/OnboardingAgreement")
+);
 
 function Router() {
   return (
     <BrowserRouter>
       <Suspense fallback={<LoaderSideBar />} name="router">
         <Routes>
+          <Route path="contract" element={<Outlet />}>
+            <Route
+              path="onboarding-agreement"
+              element={<OnboardingAgreement />}
+            />
+          </Route>
           <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
@@ -58,7 +67,6 @@ function Router() {
             <Route path="funding" element={<Funding />} />
             <Route path="flights" element={<Flights />} />
             <Route path="school-admission" element={<SchoolAdmission />} />
-
             <Route element={<FinancesLayout />}>
               <Route path="make-payments">
                 <Route index element={<MakePayments />} />
@@ -77,7 +85,10 @@ function Router() {
             </Route>
 
             <Route element={<Outlet />}>
-              <Route path="switch-option" element={<SwitchOptions />} />
+              <Route
+                path="switch-program-package"
+                element={<SwitchPrograms />}
+              />
               <Route path="withdraw" element={<Withdraw />} />
             </Route>
 

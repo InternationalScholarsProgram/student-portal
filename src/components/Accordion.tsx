@@ -1,17 +1,16 @@
 import {
   Accordion as MuiAccordion,
+  AccordionProps as MuiAccordionProps,
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { ReactNode } from "react";
 
-interface AccordionProps {
-  children: ReactNode;
+interface AccordionProps extends MuiAccordionProps {
   title: string;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ children, title }) => {
+const Accordion: React.FC<AccordionProps> = ({ children, title, ...props }) => {
   return (
     <>
       <h3 className="py-4 opacity-70">
@@ -19,7 +18,7 @@ const Accordion: React.FC<AccordionProps> = ({ children, title }) => {
         through this module
       </h3>
       <div className="mx-2">
-        <MuiAccordion>
+        <MuiAccordion {...props}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel2-content"

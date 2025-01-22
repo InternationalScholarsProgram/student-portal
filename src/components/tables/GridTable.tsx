@@ -51,6 +51,9 @@ function GridTable(props: GridTableProps) {
         width: "100%",
         height: "min-content",
         overflowX: "auto",
+        "& .MuiDataGrid-scrollbarFiller": {
+          display: "none", // Hides the scrollbar filler
+        },
       }}
       slots={{
         toolbar: (toolbarProps) => (

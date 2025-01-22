@@ -1,16 +1,10 @@
 import { routes } from "./linkItems";
-const allRoutes = [
-  ...routes,
-  // {
-  //   name: "Dashboard",
-  //   to: "/",
-  // },
-];
 
 const getLabels = (path: string) => {
   if (path === "withdraw") return "Withdraw from Program";
+  if (path === "switch-program-package") return "Switch Program Package";
 
-  const flattenedPaths = allRoutes.flatMap((item: any) => {
+  const flattenedPaths = routes.flatMap((item: any) => {
     if (item?.subItems) return [item, ...item.subItems];
     return item;
   });

@@ -7,12 +7,13 @@ type TableData = (string | number)[][];
 
 function formatCurrency(amount: number | bigint | any) {
   if (typeof amount === "string") amount = parseFloat(amount);
-  if (typeof amount === "object" || !amount) return "";
+  if (typeof amount === "object") return "";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(amount);
+  }).format(amount.toFixed(2));
 }
+
 const contacts = (country: string) =>
   country.toLowerCase() === "kenya"
     ? "+(254) 742 849 555"

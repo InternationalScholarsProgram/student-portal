@@ -58,7 +58,7 @@ const linkItems = [
     subItems: [
       {
         name: "Switch Options",
-        to: "switch-option",
+        to: "switch-program-package",
       },
       {
         name: "Withdraw",

@@ -10,7 +10,7 @@
   @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
 }
 .btn {
-  @apply py-1 px-2 text text-center rounded-md w-fit;
+  @apply p-2 sm:py-2 sm:px-3 text text-center rounded-md w-fit;
 }
 .content-container {
   @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
@@ -152,4 +152,14 @@ p {
   100% {
     transform: scale(1);
   }
+}
+
+.list-bullets ul {
+  @apply mx-3 p-3 pl-5 list-disc;
+}
+/* .contract p{
+  @apply 
+} */
+.contract h5 {
+  @apply font-semibold;
 }

@@ -1,9 +1,9 @@
-import SelectDropDown from "../../../components/autocomplete/SelectDropDown";
+import SelectDropDown from "../../../components/inputs/SelectDropDown";
 import PrimaryBorderBtn from "../../../components/buttons/PrimaryBorderBtn";
 import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
 import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
-import InputField from "../../../components/InputField";
 import Modal from "../../../components/Modal";
+import InputField from "../../../components/inputs/InputField";
 
 interface Props {
   open: boolean;

@@ -1,104 +1,16 @@
 import { useState } from "react";
-import SelectDropDown from "../../../components/autocomplete/SelectDropDown";
 import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
 import Instructions from "../components/Instructions";
-import InputField from "../../../components/InputField";
+import { MenuItem, Select } from "@mui/material";
+import { InputsWithLabel } from "../../../components/inputs/InputField";
 
-function CreateTicket() {
-  const [formData, setFormData] = useState({});
-  const [showInstructions, setShowInstructions] = useState(true);
-  const toggleInstructions = () => setShowInstructions(!showInstructions);
-  const handleChange = (key: string, value: any) =>
-    setFormData({ ...formData, [key]: value });
-
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-    console.log(formData);
-  };
-  return (
-    <main>
-      {showInstructions ? (
-        <Instructions toogleInstructions={toggleInstructions} />
-      ) : (
-        <div className="w-full px-2 col-center">
-          <p className=" my-2 opacity-65">Enter Tickers Details</p>
-          <form className="w-[95%] lg:w-[85%] col gap-4" onSubmit={onSubmit}>
-            <div className="my-2">
-              <label>Select the category of your issue?</label>
-              <SelectDropDown
-                options={issueOptions}
-                display={(option) => (
-                  <p className="px-2 py-1 cursor-pointer">{option.label}</p>
-                )}
-                onChange={(value) => handleChange("t_category", value.value)}
-                placeholder="Select the category of your issue"
-              />
-            </div>
-            <div className="col">
-              <label>
-                What is the urgency of your issue?
-                <span className="text-danger">*</span>
-              </label>
-              <SelectDropDown
-                options={priorityOptions}
-                display={(option) => (
-                  <p className="px-2 cursor-pointer">{option.label}</p>
-                )}
-                onChange={(value) => handleChange("t_urgency", value.value)}
-                placeholder="Select the urgency of your issue"
-              />
-            </div>
-            <div className="col">
-              <label>
-                Describe the issue you are facing{" "}
-                <span className="text-danger">*</span>
-              </label>
-              <InputField
-                className="form-control"
-                onChange={(e) => handleChange("t_issue", e.target.value)}
-                type="textarea"
-                id="exampleFormControlTextarea1"
-                rows="3"
-                placeholder="Describe the issue you are facing....."
-                required
-              />
-            </div>
-            <div className="col">
-              <label>Enter your phone number *</label>
-              <InputField
-                type="text"
-                name="t_phone"
-                onChange={(e) => handleChange("t_phone", e.target.value)}
-                className="form-control"
-                placeholder="(country-code)712345678"
-                helperText="Use this format: (country-code)703123789"
-                required
-              />
-            </div>
-            <div className="col">
-              <label>Attach a screenshot if necessary</label>
-              <InputField
-                type="file"
-                onChange={(e) => handleChange("t_screenshot", e.target.value)}
-                id="myfile"
-                name="file"
-                className="form-control"
-                data-max-file-size="5MB"
-                data-max-files="5"
-              />
-            </div>
-            <div className="w-full my-3 row justify-end gap-3">
-              <button className="text-primary-light" onClick={toggleInstructions}>Cancel</button>
-              <PrimaryBtn btnstyles="self-end">Submit ticket</PrimaryBtn>
-            </div>
-          </form>
-        </div>
-      )}
-    </main>
-  );
+interface FormData {
+  category: string;
+  urgency: string;
+  issue: string;
+  phone: string;
+  screenshot: File | null;
 }
-
-export default CreateTicket;
 
 const issueOptions = [
   { value: "Onboarding", label: "Onboarding" },
@@ -114,8 +26,123 @@ const issueOptions = [
   { value: "travel", label: "Travel and Logistics" },
   { value: "Other", label: "Other" },
 ];
+
 const priorityOptions = [
   { value: "Low", label: "Low" },
   { value: "Medium", label: "Medium" },
   { value: "High", label: "High" },
 ];
+const defaultFormData: FormData = {
+  category: "",
+  urgency: "",
+  issue: "",
+  phone: "",
+  screenshot: null,
+};
+
+function CreateTicket() {
+  const [formData, setFormData] = useState<FormData>(defaultFormData);
+
+  const handleChange = (key: keyof FormData, value: any) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, screenshot: file }));
+  };
+
+  const resetForm = () => setFormData(defaultFormData);
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  return (
+    <main>
+      <Instructions />
+      <section className="card m-2 my-3 col-center">
+        <p className="my-2 opacity-65">Enter Ticket Details</p>
+        <form className="w-full lg:w-3/4 col gap-6" onSubmit={onSubmit}>
+          <FormSelect
+            label="Select the category of your issue? *"
+            value={formData.category}
+            options={issueOptions}
+            onChange={(e) => handleChange("category", e.target.value)}
+          />
+          <FormSelect
+            label="What is the urgency of your issue? *"
+            value={formData.urgency}
+            options={priorityOptions}
+            onChange={(e) => handleChange("urgency", e.target.value)}
+          />
+
+          <InputsWithLabel
+            inputLabel="Describe the issue you are facing *"
+            type="text"
+            value={formData.issue}
+            placeholder="Describe the issue..."
+            onChange={(e) => handleChange("issue", e.target.value)}
+            required
+          />
+          <InputsWithLabel
+            type="text"
+            value={formData.phone}
+            inputLabel="Enter your phone number"
+            placeholder="(country-code) 712345678"
+            onChange={(e) => handleChange("phone", e.target.value)}
+            required
+          />
+          <InputsWithLabel
+            inputLabel="Attach a screenshot if necessary"
+            type="file"
+            onChange={handleFileChange}
+            helperText="Less than 5MB"
+          />
+          <div className="w-full row justify-end gap-3 mb-3">
+            <button
+              type="button"
+              className="text-primary-light"
+              onClick={resetForm}
+            >
+              Cancel
+            </button>
+            <PrimaryBtn btnstyles="w-1/3" type="submit">Create Ticket</PrimaryBtn>
+          </div>
+        </form>
+      </section>
+    </main>
+  );
+}
+
+export default CreateTicket;
+
+const FormSelect = ({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (e: any) => void;
+}) => (
+  <div className="col my-2">
+    <label>{label}</label>
+    <Select
+      value={value}
+      onChange={onChange}
+      aria-label={`Select ${label}`}
+      required
+    >
+      <MenuItem value="">Select Option</MenuItem>
+      {options.map((option, index) => (
+        <MenuItem key={index} value={option.value}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </Select>
+  </div>
+);

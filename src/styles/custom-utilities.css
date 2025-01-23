@@ -34,7 +34,7 @@
     @apply outline-light-background-paper dark:outline-dark-background-paper;
   }
   .content-width {
-    @apply w-full max-w-[100vw] sm:max-w-[600px] md:max-w-[768px] xl:max-w-[900px] mx-auto my-4 sm:px-2;
+    @apply w-full max-w-[100vw] sm:max-w-[600px] md:max-w-[768px] xl:max-w-[900px] mx-auto my-4;
   }
   .card {
     @apply bg-default outline outline-1 outline-color drop-shadow-lg shadow-lg rounded-md space-y-2;
@@ -49,8 +49,30 @@
   .borders-b-30 {
     @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
   }
+  .btn {
+    @apply p-2 sm:py-2 sm:px-3 text text-center rounded-md w-fit;
+  }
 }
 @layer components {
+  .primary-btn {
+    @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .secondary-btn {
+    @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .primary-border-btn {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 btn
+    hover:text-white hover:bg-primary-main;
+  }
+  .warning-btn {
+    @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .text-btn {
+    @apply hover:outline hover:outline-2 text-primary-light hover:text-white hover:bg-primary-main btn;
+  }
   /* Hide scrollbar */
   .scrollbar-hidden {
     scrollbar-width: none;

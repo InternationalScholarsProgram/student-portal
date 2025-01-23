@@ -1,9 +1,11 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import LoaderSideBar from "./LoaderSideBar";
+import PageLayout from "../styles/layouts/PageLayout";
+import Visa from "../features/visa/Visa";
 
 // Layouts
-const PortalLayout = lazy(() => import("../PortalLayout"));
+const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
 const FinancesLayout = lazy(
   () => import("../features/finances/layout/FinancesLayout")
 );
@@ -50,14 +52,20 @@ const OnboardingAgreement = lazy(
 
 function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+      }}
+    >
       <Suspense fallback={<LoaderSideBar />} name="router">
         <Routes>
-          <Route path="contract" element={<Outlet />}>
-            <Route
-              path="onboarding-agreement"
-              element={<OnboardingAgreement />}
-            />
+          <Route element={<PageLayout />}>
+            <Route path="contract" element={<Outlet />}>
+              <Route
+                path="onboarding-agreement"
+                element={<OnboardingAgreement />}
+              />
+            </Route>
           </Route>
           <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
             <Route index element={<Dashboard />} />
@@ -66,6 +74,7 @@ function Router() {
             <Route path="resources" element={<Resources />} />
             <Route path="funding" element={<Funding />} />
             <Route path="flights" element={<Flights />} />
+            <Route path="visa-processing" element={<Visa />} />
             <Route path="school-admission" element={<SchoolAdmission />} />
             <Route element={<FinancesLayout />}>
               <Route path="make-payments">

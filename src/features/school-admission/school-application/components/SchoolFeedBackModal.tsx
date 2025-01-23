@@ -4,7 +4,8 @@ import { useState } from "react";
 import useAdmissions from "../../components/api/useAdmissions";
 import { useMutation } from "@tanstack/react-query";
 import { admissionAPIs } from "../../components/api/functions";
-import InputField from "../../../../components/InputField";
+import InputField from "../../../../components/inputs/InputField";
+
 type Props = {
   open: boolean;
   toggleModal: () => void;
@@ -61,7 +62,6 @@ function SchoolFeedBackModal({ open, toggleModal, school }: Props) {
             <Select
               value={formData?.reason || reasons[0]}
               onChange={(event) => handleChange("reason", event.target.value)}
-              placeholder="Select reason"
               required
             >
               {reasons?.map((item: any) => (

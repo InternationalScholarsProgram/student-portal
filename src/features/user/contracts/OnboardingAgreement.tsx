@@ -1,128 +1,203 @@
 import React, { useState } from "react";
 import axios from "axios";
 import useFetchUser from "../../../services/hooks/useFetchUser";
-import { useParams } from "react-router";
-import { ispLogo } from "../../../assets/imageLinks";
-import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router";
+import { ispLogo, ispStamp } from "../../../assets/imageLinks";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { exportToPDF } from "../../../utils/utils";
-import InputField from "../../../components/InputField";
+import { fetchIp, formatDate, json2formData } from "../../../utils/utils";
 import RegularStudent from "./contract-letters/RegularStudent";
 import PrimeStudent from "./contract-letters/PrimeStudent";
-import Loader from "../../../components/loaders/Loader";
+import { FullLoader } from "../../../components/loaders/Loader";
+import api from "../../../services/api/base";
+import { usePDF } from "react-to-pdf";
+import InputField from "../../../components/inputs/InputField";
 
 type OnboardingAgreementProps = {
   action?: string;
 };
 
-type IpData = {
-  ip: string;
-  city: string;
-  country_name: string;
-};
-
-const fetchIp = async () => {
+const saveContract = async (data: any) => {
   try {
-    const ipResponse = await axios.get<IpData>("https://ipapi.co/json/");
-    const resData: IpData = ipResponse.data;
-    return resData;
+    // Generate PDF and save it to the server
+
+    // const red = {
+    //   pdf: pdf.output("blob"),
+    //   username: "<?php echo $username; ?>",
+    //   token: "<?php echo $token; ?>",
+    // };
+
+    // Create form data to send to server
+    const formData = json2formData(data);
+
+    // Send the PDF to the server
+    const response = await api.post("save_pdf.php?action=contract", formData);
+    if (response.status === 200) {
+      // After saving the PDF in the database, initiate download
+      // html2pdf().set(opt).from(element).save();
+      // pdf.save(`${data.name}.pdf`);
+    }
+
+    // Send PDF data to server to save in the database
   } catch (error) {
-    console.error("Error fetching IP data:", error);
+    toast.error("Error generating PDF. Please try again.");
   }
 };
 
 const version = "V 3.0";
-
 const OnboardingAgreement: React.FC<OnboardingAgreementProps> = () => {
   const { user } = useFetchUser();
-  const params = useParams();
+  const { state } = useLocation();
+  const name = user?.fullnames
+    ?.toLowerCase()
+    ?.replace(/\b[a-z]/g, function (letter: string) {
+      return letter?.toUpperCase();
+    });
+  document.title = `${name} Onboarding Agreement`;
+  const { toPDF, targetRef } = usePDF({ filename: name });
   const [signed, setSigned] = useState(false);
   const { data: ipData } = useQuery({
     queryKey: ["ip"],
     queryFn: fetchIp,
   });
-  const contractRef = React.useRef<HTMLDivElement>(null);
-  const generatePdf = async () => {
-    try {
-      const htmlContent = [contractRef.current?.innerHTML];
-      exportToPDF(htmlContent, "Onboarding Agreement", "onboarding-agreement");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("Error generating PDF. Please try again.");
-    }
+
+  const handleSignContract = async (e: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
+    const payload = {
+      // pdf: pdf.output("blob"),
+      username: user?.fullnames,
+      token: state?.token,
+    };
+    console.log(payload);
+    signContract.mutate();
   };
 
-  const handleSignContract = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSigned(true);
-  };
+  const signContract = useMutation({
+    // mutationFn: saveContract,
+    mutationFn: fetchIp,
+    onSuccess: () => {
+      setSigned(true);
+      toast.success("Contract signed successfully.");
+      const generatePdf = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          try {
+            toPDF({
+              canvas: { qualityRatio: 1.1 },
+              resolution: 3,
+            });
+            resolve(true); // Resolve the promise when successful
+          } catch (error) {
+            reject(error); // Reject the promise if there's an error
+          }
+        }, 1000);
+      });
+      toast.promise(generatePdf, {
+        pending: "Generating PDFs...",
+        success: "Contract Pdf Generated 👌",
+        error: "Something went wrong 🤯",
+      });
+    },
+    onError: (error) => {
+      toast.error("Error signing contract. Please try again.");
+      console.error("Error signing contract:", error);
+    },
+  });
 
-  if (!user?.fullnames) return <Loader />;
+  if (!user?.fullnames) return <FullLoader />;
   return (
-    <main ref={contractRef} className="content-width list-bullets">
-      <section className="col" id="form-print">
-        <header className="text-center">
-          <img
-            src={ispLogo}
-            alt="ISP logo"
-            className="rounded mx-auto"
-            width="140px"
-          />
-          <h4 className="font-bold">
-            The International Scholars Program Onboarding Agreement {version}
-          </h4>
-        </header>
-        <h5 className="font-semibold opacity-70 py-3">
-          Dear {user?.fullnames}
-        </h5>
-        <article className="col mx-1 gap-3 contract">
-          {user?.package?.toLowerCase() !== "prime" ? (
-            <PrimeStudent />
+    <>
+      <main ref={targetRef} className="content-width p-8">
+        <section className="col" id="form-print">
+          <header className="text-center">
+            <img
+              src={ispLogo}
+              alt="ISP logo"
+              className="rounded mx-auto"
+              width="140px"
+            />
+            <h4 className="font-bold">
+              The International Scholars Program Onboarding Agreement {version}
+            </h4>
+          </header>
+          <h5 className="font-semibold opacity-70 py-3">
+            Dear {user?.fullnames}
+          </h5>
+          <article className="contract">
+            {user?.package?.toLowerCase() === "prime" ? (
+              <PrimeStudent />
+            ) : (
+              <RegularStudent />
+            )}
+          </article>
+        </section>
+        <footer className="m-3 relative">
+          {signed === false ? (
+            <form className="col gap-2" onSubmit={handleSignContract}>
+              <div className="col px-2 gap-2">
+                <label>
+                  <strong>Full Name: </strong>
+                </label>
+                <InputField
+                  type="text"
+                  value={user?.fullnames || ""}
+                  required
+                />
+              </div>
+              <button className="primary-btn self-end" type="submit">
+                Sign Contract
+              </button>
+            </form>
           ) : (
-            <RegularStudent />
+            <div>
+              <div className="row pb-2 gap-2 text-xl">
+                <label>Full Name:</label>
+                <strong>{user?.fullnames}</strong>
+              </div>
+              <div className="col-center gap-2">
+                <img
+                  src={ispStamp}
+                  alt="ISP Signed"
+                  className="width: 220px; height: 100px;"
+                />
+                <div className="row-center gap-2 flex-wrap">
+                  <p>
+                    IP Address: <strong>{ipData?.ip}</strong>
+                  </p>
+                  <p>
+                    Date:{" "}
+                    <strong>
+                      {formatDate(new Date(), "dddd, MMMM D, YYYY , h:mm A")}
+                    </strong>
+                  </p>
+                  <p>
+                    Location: <strong>{ipData?.city}</strong>
+                  </p>
+                  <p>
+                    Country: <strong>{ipData?.country_name}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
-        </article>
-      </section>
-      <footer className="m-3">
-        <form className="col gap-2" onSubmit={handleSignContract}>
-          <div className="col px-2 gap-2">
-            <label>
-              <strong>Full Name: </strong>
-            </label>
-            <InputField type="text" value={user?.fullnames || ""} required />
-          </div>
-          <button className="primary-btn self-end" type="submit">
-            Sign Contract
+        </footer>
+      </main>
+      {signed === true && (
+        <div className="flex flex-row-reverse w-full">
+          <button
+            className="primary-btn self-end m-2 mr-6"
+            onClick={() =>
+              toPDF({
+                canvas: { qualityRatio: 1.1 },
+                resolution: 3,
+              })
+            }
+          >
+            Download Contract
           </button>
-        </form>
-
-        {signed && (
-          <>
-            <div className="text-center">
-              <img
-                src="imgs/ISP_STAMP.png"
-                alt="ISP Signed"
-                className="width: 220px; height: 100px;"
-              />
-
-              <p>
-                IP Address: <span id="ip">{ipData?.ip}</span> &nbsp; &nbsp;
-                &nbsp; Date:{" "}
-                <span id="current_timestamp">
-                  {new Date().toLocaleString()}
-                </span>
-                &nbsp; &nbsp; Location:{" "}
-                <span id="location">{ipData?.city} </span> &nbsp; &nbsp;Country:{" "}
-                <span id="Country"> {ipData?.country_name}</span>
-              </p>
-            </div>{" "}
-            <button className="primary-btn my-2" onClick={() => generatePdf()}>
-              Download
-            </button>
-          </>
-        )}
-      </footer>
-    </main>
+        </div>
+      )}
+      {signContract.isPending && <FullLoader />}
+    </>
   );
 };
 

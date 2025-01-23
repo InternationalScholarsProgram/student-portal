@@ -4,12 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 import api, { baseDirectory } from "../../../../services/api/base";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 function useSwitchProgram() {
   const { user, accountStatements }: any = useAccountStatement();
-  const queryClient = useQueryClient();
-  const { userQueryKey } = useFetchUser();
   const [requiredPay, setRequiredPay] = useState(0);
+  
+  const { userQueryKey } = useFetchUser();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const totalPayment = accountStatements?.total_payment;
   const totalExpenditure = accountStatements?.total_expenditure;
@@ -38,11 +41,21 @@ function useSwitchProgram() {
   const handleSwitch = useMutation({
     mutationFn: async () => {
       try {
-        const response = await api.get(`${baseDirectory}switch_package.php`);
+        const response = await api.get(`${baseDirectory}/program_options/switch_package.php`);
         console.log(response.data);
         if (response.status === 200) {
           toast.success("Program successfully switched.");
+          navigate("/contract/onboarding-agreement", {
+            state: response?.data?.data,
+          });
         }
+        // 
+        navigate("/contract/onboarding-agreement", {
+          state: {
+            token : "test Token",
+          },
+        });
+        // 
         return response.data;
       } catch (error: any) {
         throw new Error(error.response);

@@ -9,9 +9,7 @@
 .sidebar {
   @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
 }
-.btn {
-  @apply p-2 sm:py-2 sm:px-3 text text-center rounded-md w-fit;
-}
+
 .content-container {
   @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
 }
@@ -30,25 +28,7 @@
 
 /* Buttons */
 
-.primary-btn {
-  @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.secondary-btn {
-  @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.primary-border-btn {
-  @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 btn
-  hover:text-white hover:bg-primary-main;
-}
-.warning-btn {
-  @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.text-btn {
-  @apply hover:outline hover:outline-2 text-primary-light hover:text-white hover:bg-primary-main btn;
-}
+
 /* Sidebar */
 .sidebar-link {
   @apply p-2 text-sm flex flex-row items-center space-x-3 rounded-md 
@@ -153,13 +133,18 @@ p {
     transform: scale(1);
   }
 }
-
-.list-bullets ul {
-  @apply mx-3 p-3 pl-5 list-disc;
+.contract {
+  @apply col mx-1 gap-3;
 }
-/* .contract p{
-  @apply 
-} */
+.contract div {
+  @apply col gap-2;
+}
+.contract div p h5 li ul {
+  page-break-inside: avoid;
+}
 .contract h5 {
   @apply font-semibold;
+}
+.contract ul {
+  @apply mx-3 p-3 pl-5 list-disc list-inside;
 }

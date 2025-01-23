@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PrimaryBtn from "../../components/buttons/PrimaryBtn.tsx";
-import SelectDropDown from "../../components/autocomplete/SelectDropDown.tsx";
+import SelectDropDown from "../../components/inputs/SelectDropDown.tsx";
 import financeService from "../../services/api/finances.ts";
 import useProgramFees from "../../services/hooks/useProgramFees.tsx";
 import useFetchUser from "../../services/hooks/useFetchUser.tsx";
@@ -10,7 +10,7 @@ import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import InputField from "../../components/InputField.tsx";
+import InputField from "../../components/inputs/InputField.tsx";
 
 const paymentMethods = [
   { label: "M-Pesa", value: "mpesa" },
@@ -81,7 +81,6 @@ function MakePayments() {
             <Select
               value={purpose}
               onChange={handleChange}
-              placeholder="Select reason"
             >
               {programFees.map(({ description }: any) => (
                 <MenuItem key={description} value={description}>

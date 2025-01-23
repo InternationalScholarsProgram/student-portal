@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import useThemeStore from "./styles/theme.store";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -28,7 +28,7 @@ function AppWrapper() {
           <CssBaseline />
           <ToastContainer
             position="top-right"
-            autoClose={3000}
+            // autoClose={3000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick={false}
@@ -36,6 +36,7 @@ function AppWrapper() {
             pauseOnFocusLoss={false}
             draggable={false}
             pauseOnHover={true}
+            transition={Bounce}
           />
           <Router />
         </LocalizationProvider>

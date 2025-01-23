@@ -6,11 +6,14 @@ import { handleStatus, statusClass } from "./TableData";
 import { BASE_URL } from "../../../../services/api/base";
 import useAdmissions from "../../components/api/useAdmissions";
 import { admissionAPIs } from "../../components/api/functions";
-import Loader from "../../../../components/loaders/Loader";
+import {
+  FullLoader,
+  InlineLoader,
+} from "../../../../components/loaders/Loader";
 import Modal from "../../../../components/Modal";
 import PickFileButton from "../../../../components/buttons/PickFileButton";
-import InputField from "../../../../components/InputField";
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
+import InputField from "../../../../components/inputs/InputField";
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
 function DocsModal({ row }: any) {
@@ -61,7 +64,7 @@ function DocsModal({ row }: any) {
     handleUpload.mutate();
   };
 
-  if (!row || !statusData) return <Loader />;
+  if (!row || !statusData) return <FullLoader />;
   return (
     <React.Fragment>
       <button
@@ -196,7 +199,7 @@ function DocsModal({ row }: any) {
                 {uploadedDocs[0]?.status !== 2 && (
                   <PrimaryBtn type="submit">
                     {handleUpload.isPending ? (
-                      <Loader cover={true} />
+                      <InlineLoader />
                     ) : uploadedDocs.length === 0 ? (
                       "Upload"
                     ) : (

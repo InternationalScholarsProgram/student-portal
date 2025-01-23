@@ -1,5 +1,5 @@
 import { TextField, TextFieldProps } from "@mui/material";
-import { inputStyles } from "../styles/styles";
+import { inputStyles } from "../../styles/styles";
 
 function InputField(props: TextFieldProps) {
   return (
@@ -18,5 +18,19 @@ function InputField(props: TextFieldProps) {
     />
   );
 }
+
+type InputsWithLabelProps = TextFieldProps & {
+  inputLabel: string;
+};
+
+export const InputsWithLabel = ({
+  inputLabel,
+  ...props
+}: InputsWithLabelProps) => (
+  <div className="col">
+    <label className="">{inputLabel}</label>
+    <InputField {...props} />
+  </div>
+);
 
 export default InputField;

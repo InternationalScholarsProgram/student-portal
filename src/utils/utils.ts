@@ -2,6 +2,7 @@ import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import dayjs from "dayjs";
+import axios from "axios";
 
 type TableData = (string | number)[][];
 
@@ -89,6 +90,21 @@ const formatDate = (date: string | Date, format?: string) => {
   return dayjs(new Date(date)).format(format || "dddd, MMMM D, YYYY");
 };
 
+type IpData = {
+  ip: string;
+  city: string;
+  country_name: string;
+};
+
+const fetchIp = async () => {
+  try {
+    const ipResponse = await axios.get<IpData>("https://ipapi.co/json/");
+    const resData: IpData = ipResponse.data;
+    return resData;
+  } catch (error) {
+    console.error("Error fetching IP data:", error);
+  }
+};
 export {
   formatCurrency,
   contacts,
@@ -97,4 +113,5 @@ export {
   formatText,
   json2formData,
   formatDate,
+  fetchIp,
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CopyToClipBoard from "../../../../components/CopyToClipBoard";
+import CopyToClipBoard from "../../../../../components/CopyToClipBoard";
 import SchoolFeedBackModal from "./SchoolFeedBackModal";
 import FeedBackStatus from "./FeedBackStatus";
 type Props = {

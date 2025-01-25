@@ -2,9 +2,9 @@ import EventAvailableOutlinedIcon from "@mui/icons-material/EventAvailableOutlin
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { GridExpandMoreIcon } from "@mui/x-data-grid";
 import { columns } from "./TableData";
-import useAdmissions from "../../components/api/useAdmissions";
-import Loader from "../../../../components/loaders/Loader";
-import GridTable from "../../../../components/tables/GridTable";
+import useAdmissions from "../../../services/useAdmissions";
+import Loader from "../../../../../components/loaders/Loader";
+import GridTable from "../../../../../components/tables/GridTable";
 
 function Requirements() {
   const { appDocs, uploadedDocs, proposedSchools } = useAdmissions();

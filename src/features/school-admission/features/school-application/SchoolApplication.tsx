@@ -1,8 +1,8 @@
-import useAdmissions from "../components/api/useAdmissions";
-import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
+import useAdmissions from "../../services/useAdmissions";
+import CareerAdvisory from "../../../../components/career-advisory/CareerAdvisory";
 import MakeApplication from "./components/MakeApplication";
 import SchoolApplicationStatus from "./components/SchoolApplicationStatus";
-import Loader from "../../../components/loaders/Loader";
+import Loader from "../../../../components/loaders/Loader";
 import { Navigate } from "react-router";
 
 function SchoolApplication() {

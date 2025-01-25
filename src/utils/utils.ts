@@ -105,7 +105,13 @@ const fetchIp = async () => {
     console.error("Error fetching IP data:", error);
   }
 };
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const capitalize = (str: string) =>
+  str?.toLowerCase()?.replace(/\b[a-z]/g, function (letter: string) {
+    return letter?.toUpperCase();
+  });
 export {
+  capitalize,
   formatCurrency,
   contacts,
   exportToPDF,
@@ -114,4 +120,11 @@ export {
   json2formData,
   formatDate,
   fetchIp,
+  delay,
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import html2pdf from "html2pdf.js";
+
+export { html2pdf };

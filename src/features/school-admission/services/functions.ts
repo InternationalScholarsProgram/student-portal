@@ -1,13 +1,11 @@
 import { toast } from "react-toastify";
-import api, { baseDirectory } from "../../../../services/api/base";
-import { json2formData } from "../../../../utils/utils";
-const admissionsUrl = "/login/member/dashboard/APIs/school_admission.php";
-// type Apply = {
-//   payload: {
-//     proposed_course_id: string;
-//     intake: string;
-//   };
-// };
+import api, { baseDirectory } from "../../../services/api/base";
+import { json2formData } from "../../../utils/utils";
+
+const admissionsUrl =
+  "/login/member/dashboard/APIs/school_application/school_admission.php";
+const url = `${baseDirectory}/school_application/`;
+
 class AdmissionAPIs {
   eligibilityCheck = async () => {
     try {
@@ -44,16 +42,16 @@ class AdmissionAPIs {
   };
   applicationDocs = async () => {
     const response = await api.get(
-      baseDirectory + "fetch_school_app_docs_requirements.php"
+      `${url}/fetch_school_app_docs_requirements.php`
     );
     return response.data;
   };
   getUploadedDocs = async () => {
-    const response = await api.get(baseDirectory + "uploaded_docs.php");
+    const response = await api.get(`${url}/uploaded_docs.php`);
     return response?.data?.message || [];
   };
   getCurrentIntake = async () => {
-    const response = await api.post(baseDirectory + "school_admission.php", {
+    const response = await api.post(`${url}/school_admission.php`, {
       action: "get_current_intake",
     });
     const data = response?.data;
@@ -63,10 +61,7 @@ class AdmissionAPIs {
   };
   submitSchoolApplication = async (payload: any) => {
     try {
-      const response = await api.post(
-        baseDirectory + "school_application.php",
-        payload
-      );
+      const response = await api.post(`${url}/school_application.php`, payload);
       if (response.status === 201)
         toast.success("Application submitted successfully");
       return response?.data;
@@ -81,7 +76,7 @@ class AdmissionAPIs {
     try {
       const formData = json2formData(data);
       const response = await api.post(
-        baseDirectory + "school_app_docs_upload.php",
+        `${url}/school_app_docs_upload.php`,
         formData
       );
       return response.data;
@@ -94,7 +89,7 @@ class AdmissionAPIs {
     try {
       const formData = json2formData(payload);
       const response = await api.post(
-        baseDirectory + "school_app_feedback.php",
+        `${url}/school_app_feedback.php`,
         formData
       );
       const data = response.data;

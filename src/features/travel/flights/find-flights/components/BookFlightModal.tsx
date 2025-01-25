@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import InputField from "../../../../../components/InputField";
 import Modal from "../../../../../components/Modal";
 import useFlightHook from "../../services/useFlightHook";
 import flightApi from "../../services/flightApi";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import { getTimeOfDay } from "../../components/utils";
 import dayjs from "dayjs";
 import { formatCurrency } from "../../../../../utils/utils";
+import InputField from "../../../../../components/inputs/InputField";
 
 function BookFlightModal({ open, setOpen, offer }: any) {
   const { user, accountStatements } = useFlightHook();

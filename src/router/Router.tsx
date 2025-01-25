@@ -3,6 +3,7 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import LoaderSideBar from "./LoaderSideBar";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
+import Test from "./Test";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -23,7 +24,7 @@ const Resources = lazy(() => import("../features/info-resources/Resources"));
 const Funding = lazy(() => import("../features/funding/Funding"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
 const SchoolAdmission = lazy(
-  () => import("../features/school-admission/requirements/SchoolAdmission")
+  () => import("../features/school-admission/features/requirements/SchoolAdmission")
 );
 const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
@@ -44,7 +45,7 @@ const CreateTicket = lazy(
 const ViewTickets = lazy(() => import("../features/tickets/pages/ViewTickets"));
 const SchoolApplication = lazy(
   () =>
-    import("../features/school-admission/school-application/SchoolApplication")
+    import("../features/school-admission/features/school-application/SchoolApplication")
 );
 const OnboardingAgreement = lazy(
   () => import("../features/user/contracts/OnboardingAgreement")
@@ -74,6 +75,7 @@ function Router() {
             <Route path="resources" element={<Resources />} />
             <Route path="funding" element={<Funding />} />
             <Route path="flights" element={<Flights />} />
+            <Route path="test" element={<Test />} />
             <Route path="visa-processing" element={<Visa />} />
             <Route path="school-admission" element={<SchoolAdmission />} />
             <Route element={<FinancesLayout />}>

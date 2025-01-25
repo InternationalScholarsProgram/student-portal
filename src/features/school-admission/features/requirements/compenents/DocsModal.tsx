@@ -3,17 +3,17 @@ import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SOP from "./SOP";
 import { handleStatus, statusClass } from "./TableData";
-import { BASE_URL } from "../../../../services/api/base";
-import useAdmissions from "../../components/api/useAdmissions";
-import { admissionAPIs } from "../../components/api/functions";
+import { BASE_URL } from "../../../../../services/api/base";
+import useAdmissions from "../../../services/useAdmissions";
+import { admissionAPIs } from "../../../services/functions";
 import {
   FullLoader,
   InlineLoader,
-} from "../../../../components/loaders/Loader";
-import Modal from "../../../../components/Modal";
-import PickFileButton from "../../../../components/buttons/PickFileButton";
-import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
-import InputField from "../../../../components/inputs/InputField";
+} from "../../../../../components/loaders/Loader";
+import Modal from "../../../../../components/Modal";
+import PickFileButton from "../../../../../components/buttons/PickFileButton";
+import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
+import InputField from "../../../../../components/inputs/InputField";
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
 function DocsModal({ row }: any) {

@@ -2,10 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { handleStatus, statusClass } from "./TableData";
-import { BASE_URL } from "../../../../services/api/base";
-import { admissionAPIs } from "../../components/api/functions";
-import PickFileButton from "../../../../components/buttons/PickFileButton";
-import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
+import { BASE_URL } from "../../../../../services/api/base";
+import { admissionAPIs } from "../../../services/functions";
+import PickFileButton from "../../../../../components/buttons/PickFileButton";
+import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
 
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 

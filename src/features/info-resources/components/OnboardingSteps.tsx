@@ -16,17 +16,23 @@ const slides = [
 
 function OnboardingSteps() {
   return (
-    <div className="w-full h-full">
-      <Swiper
+    <div className="grid grid-cols-2 w-full h-full">
+      {slides.map((slide, index) => (
+        <div key={index} className="w-full h-full col">
+          <p className="text-center">{slide.text}</p>
+          <VideoComponent video={slide.video} text={slide.text} />
+        </div>
+      ))}
+      {/* <Swiper
         slidesPerView={1}
         loop={true}
         onChange={(swiper) => {
-          console.log(swiper, "onChange");
+          // console.log(swiper, "onChange");
         }}
         pagination={{
           clickable: true,
           renderBullet: (index: number, className: string) => {
-            console.log(index, className);
+            // console.log(index, className);
             className = className + " bg-primary-main scale-105";
             return '<span class="' + className + '"></span>';
           },
@@ -41,7 +47,7 @@ function OnboardingSteps() {
             <VideoComponent video={slide.video} text={slide.text} />
           </SwiperSlide>
         ))}
-      </Swiper>
+      </Swiper> */}
     </div>
   );
 }

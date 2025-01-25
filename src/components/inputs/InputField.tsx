@@ -5,7 +5,7 @@ function InputField(props: TextFieldProps) {
   return (
     <TextField
       {...props}
-      sx={inputStyles}
+      sx={{ ...inputStyles, ...((props.sx as any) || {}) }}
       slotProps={{
         input: {
           onChange: props.onChange,

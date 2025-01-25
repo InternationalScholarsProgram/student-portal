@@ -71,7 +71,7 @@
     dark:hover:outline-light-background-paper/50 btn;
   }
   .text-btn {
-    @apply hover:outline hover:outline-2 text-primary-light hover:text-white hover:bg-primary-main btn;
+    @apply hover:outline hover:outline-2 text-primary-light  btn;
   }
   /* Hide scrollbar */
   .scrollbar-hidden {

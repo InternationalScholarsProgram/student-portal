@@ -1,10 +1,10 @@
 import { MenuItem, Select } from "@mui/material";
-import Modal from "../../../../components/Modal";
+import Modal from "../../../../../components/Modal";
 import { useState } from "react";
-import useAdmissions from "../../components/api/useAdmissions";
+import useAdmissions from "../../../services/useAdmissions";
 import { useMutation } from "@tanstack/react-query";
-import { admissionAPIs } from "../../components/api/functions";
-import InputField from "../../../../components/inputs/InputField";
+import { admissionAPIs } from "../../../services/functions";
+import InputField from "../../../../../components/inputs/InputField";
 
 type Props = {
   open: boolean;

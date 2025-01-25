@@ -1,27 +1,20 @@
-import { Link } from "react-router-dom";
-import Loader from "../../../components/loaders/Loader";
+import { FullLoader } from "../../../components/loaders/Loader";
 import ProgramConditions from "./components/ProgramConditions";
 import useSwitchProgram from "./hook/useSwitchProgram";
 
 const SwitchPrograms = () => {
-  const { programOption, calculatedBalance, handleSwitch, requiredPay } =
-    useSwitchProgram();
+  const { programOption, balance } = useSwitchProgram();
 
-  if (!programOption || !calculatedBalance) return <Loader />;
-
+  if (!programOption || !balance) return <FullLoader />;
   return (
     <main>
-      <h3>Current Program Option : {programOption}</h3>
+      <h3 className="row">
+        Current Program Option :
+        <span className="first-letter:uppercase px-1">{programOption}</span>
+      </h3>
       <section className="p-6 card col">
-        <ProgramConditions
-          programOption={programOption}
-          balance={calculatedBalance}
-          requiredPay={requiredPay}
-          handleSwitch={handleSwitch}
-        />
+        <ProgramConditions />
       </section>
-      <button onClick={() => handleSwitch.mutate()}>Test</button>
-      <Link to="/contract/onboarding-agreement">{" "}Contract</Link>
     </main>
   );
 };

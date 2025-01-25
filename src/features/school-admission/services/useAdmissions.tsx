@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { admissionAPIs } from "./functions";
-import useFetchUser from "../../../../services/hooks/useFetchUser";
+import useFetchUser from "../../../services/hooks/useFetchUser";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();
@@ -15,14 +15,6 @@ const useAdmissions = () => {
   const { data: eligibility }: any = useQuery({
     queryKey: queryKeys.eligibility,
     queryFn: admissionAPIs.eligibilityCheck,
-    // queryFn: () => ({
-    //   status: "error",
-    //   message: {
-    //     version: "2",
-    //     message: "Upgrade to version 3 by signing the new contract first",
-    //   },
-    //   code: 409,
-    // }),
   });
 
   const eligible = eligibility?.status === "success";
@@ -30,14 +22,6 @@ const useAdmissions = () => {
   const { data: status, isLoading } = useQuery({
     queryKey: queryKeys.statusCheck,
     queryFn: admissionAPIs.statusCheck,
-    // queryFn: () => ({
-    //   status: "error",
-    //   message: {
-    //     version: "2",
-    //     message: {},
-    //   },
-    //   code: 5,
-    // }),
     enabled: eligible,
   });
 

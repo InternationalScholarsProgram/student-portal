@@ -1,11 +1,11 @@
-import Guides from "../components/Guides";
-import Loader from "../../../components/loaders/Loader";
-import BookMeeting from "../components/BookMeeting";
-import Meeting from "../components/Meeting";
-import useAdmissions from "../components/api/useAdmissions";
-import NoOpenIntakes from "../components/NoOpenIntakes";
-import EligibilityStatusCheck from "../components/EligibilityStatusCheck";
-import { formatDate } from "../../../utils/utils";
+import Guides from "../../components/Guides";
+import Loader from "../../../../components/loaders/Loader";
+import BookMeeting from "../../components/BookMeeting";
+import Meeting from "../../components/Meeting";
+import useAdmissions from "../../services/useAdmissions";
+import NoOpenIntakes from "../../components/NoOpenIntakes";
+import EligibilityStatusCheck from "../../components/EligibilityStatusCheck";
+import { formatDate } from "../../../../utils/utils";
 import { Link } from "react-router-dom";
 import { RequirementsAccordion } from "./compenents/Requirements";
 

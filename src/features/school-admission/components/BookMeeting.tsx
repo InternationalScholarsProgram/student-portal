@@ -1,6 +1,6 @@
 import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import useAdmissions from "./api/useAdmissions";
+import useAdmissions from "../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
 import { Chip } from "@mui/material";
 import { Link } from "react-router-dom";

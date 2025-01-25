@@ -3,85 +3,55 @@ import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
 import Instructions from "../components/Instructions";
 import { MenuItem, Select } from "@mui/material";
 import { InputsWithLabel } from "../../../components/inputs/InputField";
+import useTickets from "../hooks/useTickets";
 
 interface FormData {
   category: string;
-  urgency: string;
   issue: string;
   phone: string;
   screenshot: File | null;
 }
 
-const issueOptions = [
-  { value: "Onboarding", label: "Onboarding" },
-  { value: "Account Statement", label: "Account Statement" },
-  { value: "withdraw", label: "Withdrawals" },
-  { value: "payment", label: "Payments" },
-  { value: "Entrance Exams", label: "Entrance Exams" },
-  { value: "Regular-Parallel Change", label: "Program Option Change" },
-  { value: "School Application", label: "School Admissions" },
-  { value: "Student Loan", label: "Funding" },
-  { value: "Webmail", label: "Webmail" },
-  { value: "Visa", label: "Visa processing" },
-  { value: "travel", label: "Travel and Logistics" },
-  { value: "Other", label: "Other" },
-];
-
-const priorityOptions = [
-  { value: "Low", label: "Low" },
-  { value: "Medium", label: "Medium" },
-  { value: "High", label: "High" },
-];
-const defaultFormData: FormData = {
-  category: "",
-  urgency: "",
-  issue: "",
-  phone: "",
-  screenshot: null,
-};
-
 function CreateTicket() {
+  const { createTicket, allTickets } = useTickets();
   const [formData, setFormData] = useState<FormData>(defaultFormData);
+  const [focused, setFocused] = useState(false);
+  const minChar = focused && formData?.issue?.length < 10 ? true : false;
 
   const handleChange = (key: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({ ...prev, screenshot: file }));
-  };
-
-  const resetForm = () => setFormData(defaultFormData);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setFormData((prev) => ({
+      ...prev,
+      screenshot: e.target.files?.[0] || null,
+    }));
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    createTicket.mutate(formData);
   };
 
   return (
     <main>
       <Instructions />
+      <p className="my-5 opacity-65">Enter Ticket Details</p>
       <section className="card m-2 my-3 col-center">
-        <p className="my-2 opacity-65">Enter Ticket Details</p>
-        <form className="w-full lg:w-3/4 col gap-6" onSubmit={onSubmit}>
+        <form className="w-full p-4 lg:w-3/4 col gap-6" onSubmit={onSubmit}>
           <FormSelect
             label="Select the category of your issue? *"
             value={formData.category}
             options={issueOptions}
             onChange={(e) => handleChange("category", e.target.value)}
           />
-          <FormSelect
-            label="What is the urgency of your issue? *"
-            value={formData.urgency}
-            options={priorityOptions}
-            onChange={(e) => handleChange("urgency", e.target.value)}
-          />
-
           <InputsWithLabel
             inputLabel="Describe the issue you are facing *"
             type="text"
+            error={minChar}
+            helperText={minChar && "At least 10 characters"}
             value={formData.issue}
+            onFocus={() => setFocused(true)}
             placeholder="Describe the issue..."
             onChange={(e) => handleChange("issue", e.target.value)}
             required
@@ -103,12 +73,14 @@ function CreateTicket() {
           <div className="w-full row justify-end gap-3 mb-3">
             <button
               type="button"
-              className="text-primary-light"
-              onClick={resetForm}
+              className="text-btn"
+              onClick={() => setFormData(defaultFormData)}
             >
               Cancel
             </button>
-            <PrimaryBtn btnstyles="w-1/3" type="submit">Create Ticket</PrimaryBtn>
+            <PrimaryBtn btnstyles="px-5" type="submit">
+              Create Ticket
+            </PrimaryBtn>
           </div>
         </form>
       </section>
@@ -146,3 +118,25 @@ const FormSelect = ({
     </Select>
   </div>
 );
+
+const issueOptions = [
+  { value: "Onboarding", label: "Onboarding" },
+  { value: "Account Statement", label: "Account Statement" },
+  { value: "withdraw", label: "Withdrawals" },
+  { value: "payment", label: "Payments" },
+  { value: "Entrance Exams", label: "Entrance Exams" },
+  { value: "Regular-Parallel Change", label: "Program Option Change" },
+  { value: "School Application", label: "School Admissions" },
+  { value: "Student Loan", label: "Funding" },
+  { value: "Webmail", label: "Webmail" },
+  { value: "Visa", label: "Visa processing" },
+  { value: "travel", label: "Travel and Logistics" },
+  { value: "Other", label: "Other" },
+];
+
+const defaultFormData: FormData = {
+  category: "",
+  issue: "",
+  phone: "",
+  screenshot: null,
+};

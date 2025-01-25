@@ -47,9 +47,8 @@ function GridTable(props: GridTableProps) {
       disableRowSelectionOnClick
       sx={{
         ...props.sx,
+        flexGrow: 1,
         minHeight: "30vh",
-        width: "100%",
-        height: "min-content",
         overflowX: "auto",
         "& .MuiDataGrid-scrollbarFiller": {
           display: "none", // Hides the scrollbar filler

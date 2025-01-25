@@ -135,6 +135,7 @@ p {
 }
 .contract {
   @apply col mx-1 gap-3;
+  page-break-inside: avoid;
 }
 .contract div {
   @apply col gap-2;
@@ -147,4 +148,7 @@ p {
 }
 .contract ul {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
+}
+.modal {
+  @apply w-[80vw] md:w-[60vw] xl:w-[45vw] col flex-wrap overflow-clip;
 }

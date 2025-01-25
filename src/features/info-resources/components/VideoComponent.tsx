@@ -6,6 +6,7 @@ const VideoComponent = ({ video, text }: { video: string; text: string }) => (
       title={text}
       className="w-[85%] h-[80%]  "
       preload="metadata"
+      autoPlay={false}
     >
       <source src={video} type="video/mp4" />
       Your browser does not support the video tag.

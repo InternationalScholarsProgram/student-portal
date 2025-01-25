@@ -1,10 +1,10 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { formatCurrency } from "../../../../utils/utils";
-import { admissionAPIs } from "../../components/api/functions";
+import { formatCurrency } from "../../../../../utils/utils";
+import { admissionAPIs } from "../../../services/functions";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useAdmissions from "../../components/api/useAdmissions";
+import useAdmissions from "../../../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
 import { useLocation } from "react-router";
 

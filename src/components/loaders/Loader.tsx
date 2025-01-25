@@ -1,11 +1,9 @@
-import { Modal } from "@mui/material";
+import Modal from "../Modal";
 import "./loaders.css";
 
 function Loader({ cover }: { cover?: string }) {
   return (
-    <section
-      className={`dots-container ${cover} `}
-    >
+    <section className={`dots-container ${cover} `}>
       <div className="dot"></div>
       <div className="dot"></div>
       <div className="dot"></div>
@@ -17,12 +15,14 @@ function Loader({ cover }: { cover?: string }) {
 export function FullLoader() {
   return (
     <Modal open={true}>
-      <Loader />
+      <div className="p-2">
+        <Loader />
+      </div>
     </Modal>
   );
 }
 export function InlineLoader() {
-  return <Loader cover="h-full"/>;
+  return <Loader cover="h-full" />;
 }
 
 export default Loader;

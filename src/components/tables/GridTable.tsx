@@ -21,7 +21,7 @@ const CustomToolBar = (props: any) => {
     )
   );
   return (
-    <div className="row justify-between m-4 overflow-x-auto w-full">
+    <div className="row justify-between p-4">
       <TableHeader fileName={props.name} data={props.headerData || data} />
       <GridToolbarQuickFilter
         variant="outlined"
@@ -48,11 +48,12 @@ function GridTable(props: GridTableProps) {
       sx={{
         ...props.sx,
         flexGrow: 1,
+        width: "100%",
         minHeight: "30vh",
         overflowX: "auto",
-        "& .MuiDataGrid-scrollbarFiller": {
-          display: "none", // Hides the scrollbar filler
-        },
+        // "& .MuiDataGrid-scrollbarFiller": {
+        //   display: "none", // Hides the scrollbar filler
+        // },
       }}
       slots={{
         toolbar: (toolbarProps) => (

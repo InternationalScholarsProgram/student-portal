@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import { Modal as MuiModal } from "@mui/material";
 
 interface CustomModalProps {

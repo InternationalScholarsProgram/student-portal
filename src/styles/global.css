@@ -150,5 +150,5 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[45vw] col flex-wrap overflow-clip;
+  @apply w-[80vw] md:w-[60vw] xl:w-[45vw] col flex-wrap overflow-clip p-3;
 }

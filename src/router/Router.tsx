@@ -24,7 +24,7 @@ const Resources = lazy(() => import("../features/info-resources/Resources"));
 const Funding = lazy(() => import("../features/funding/Funding"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
 const SchoolAdmission = lazy(
-  () => import("../features/school-admission/features/requirements/SchoolAdmission")
+  () => import("../features/school-admission/pages/requirements/SchoolAdmission")
 );
 const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
@@ -45,7 +45,7 @@ const CreateTicket = lazy(
 const ViewTickets = lazy(() => import("../features/tickets/pages/ViewTickets"));
 const SchoolApplication = lazy(
   () =>
-    import("../features/school-admission/features/school-application/SchoolApplication")
+    import("../features/school-admission/pages/school-application/SchoolApplication")
 );
 const OnboardingAgreement = lazy(
   () => import("../features/user/contracts/OnboardingAgreement")

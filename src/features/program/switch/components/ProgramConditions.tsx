@@ -96,10 +96,11 @@ const ProgramConditions = () => {
   } else if (programOption === "prime") {
     return (
       <>
-        <h4>Shifting to Regular!</h4>
+        <h4>Switching to Regular</h4>
         <p className="mt-4">
-          Having enrolled as a <b>Prime</b> option student, you are hereby
-          required to create a ticket for the Prime to Regular switch.{" "}
+          As a <b>Prime</b> option student, you are required to submit a ticket
+          to request a switch from Prime to Regular. Please ensure you provide
+          all necessary details to facilitate the process.
         </p>
         <Link
           to="/create-ticket"

@@ -4,7 +4,7 @@ import { creatingMBA } from "../assets/videos";
 function CreatingMBA() {
   return (
     <div className="col-center h-full">
-      <p>Steps to Create MBA Account</p>
+      <p className="py-1">Steps to Create MBA Account</p>
       <VideoComponent text="" video={creatingMBA} />
 
       <div className="w-full row items-center gap-2 text-lg p-4">

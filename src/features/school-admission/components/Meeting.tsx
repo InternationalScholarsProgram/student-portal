@@ -5,7 +5,7 @@ import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
 import PrimaryBorderBtn from "../../../components/buttons/PrimaryBorderBtn";
 import dayjs from "dayjs";
 import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
-import { RequirementsAccordion } from "../features/requirements/compenents/Requirements";
+import { RequirementsAccordion } from "../pages/requirements/compenents/Requirements";
 import { Link } from "react-router-dom";
 
 const Meeting = ({ status }: { status: any }) => {

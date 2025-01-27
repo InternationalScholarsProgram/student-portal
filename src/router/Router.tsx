@@ -42,7 +42,7 @@ const Withdraw = lazy(() => import("../features/program/withdraw/Withdraw"));
 const CreateTicket = lazy(
   () => import("../features/tickets/pages/CreateTicket")
 );
-const ViewTickets = lazy(() => import("../features/tickets/pages/ViewTickets"));
+const ViewTickets = lazy(() => import("../features/tickets/pages/view-tickets/ViewTickets"));
 const SchoolApplication = lazy(
   () =>
     import("../features/school-admission/pages/school-application/SchoolApplication")

@@ -1,38 +1,40 @@
-import { useState } from "react";
-import GridTable from "../../../components/tables/GridTable";
-import { columns } from "../components/shared";
-import useTickets from "../hooks/useTickets";
-import ViewTicketModal from "../components/ViewTicketModal";
-import PrimaryBorderBtn from "../../../components/buttons/PrimaryBorderBtn";
+import { useEffect, useState } from "react";
+import GridTable from "../../../../components/tables/GridTable";
+import { columns } from "../../components/utils";
+import useTickets from "../../hooks/useTickets";
+import ViewTicketModal from "./components/ViewTicketModal";
+import PrimaryBorderBtn from "../../../../components/buttons/PrimaryBorderBtn";
 import { GridColDef } from "@mui/x-data-grid";
-import { FullLoader } from "../../../components/loaders/Loader";
+import { FullLoader } from "../../../../components/loaders/Loader";
+import { Badge } from "@mui/material";
 
 function ViewTickets() {
-  const { openTickets, openIsLoading, closedTickets } = useTickets();
+  const { openTickets, isLoading, closedTickets } = useTickets();
   const [showOpen, setShowOpen] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
   const toggleModal = () => setOpenModal(!openModal);
-  
+
   const actionColumn: GridColDef = {
     field: "action",
     headerName: "Action",
     minWidth: 150,
     renderCell: (params) => (
-      <div className="col-center w-full h-full py-1 leading-none">
-        <PrimaryBorderBtn
+      <Badge color="primary" badgeContent={params.row.unread_count}>
+        <button
+          className="primary-border-btn"
           onClick={() => {
-            toggleModal();
             setSelectedTicket(params.row);
+            toggleModal();
           }}
         >
           View
-        </PrimaryBorderBtn>
-      </div>
+        </button>
+      </Badge>
     ),
   };
-  
-  if (openIsLoading) return <FullLoader />;
+
+  if (isLoading) return <FullLoader />;
   return (
     <main>
       <ul className="ul-links w-full">
@@ -54,6 +56,7 @@ function ViewTickets() {
           name={showOpen ? "Open Tickets" : "Closed Tickets"}
           rows={showOpen ? openTickets || [] : closedTickets || []}
           columns={[...columns, ...[actionColumn]]}
+          // getRowHeight={() => "auto"}
         />
       </section>
       <ViewTicketModal

@@ -3,39 +3,30 @@ import api from "../../../services/api/base";
 import { json2formData } from "../../../utils/utils";
 import useFetchUser from "../../../services/hooks/useFetchUser";
 import { toast } from "react-toastify";
+import { getTicketsUrl } from "../components/utils";
 
 function useTickets() {
   const { user } = useFetchUser();
   const queryKey = ["yourTickets", user?.email];
-
   const queryClient = useQueryClient();
-  const { data: closedTickets, isLoading: closedLoading } = useQuery({
-    queryKey: queryKey,
-    queryFn: async () => {
-      const response = await api.get(
-        "/login/member/dashboard/APIs/tickets/get_tickets.php?action=closed_tickets"
-      );
-      return response.data.data;
-    },
-  });
-  const { data: openTickets, isLoading: openIsLoading } = useQuery({
-    queryKey: queryKey,
-    queryFn: async () => {
-      const response = await api.get(
-        "/login/member/dashboard/APIs/tickets/get_tickets.php?action=open_tickets"
-      );
-      return response.data.data;
-    },
-  });
+
   const { data: allTickets, isLoading: isLoading } = useQuery({
     queryKey: queryKey,
     queryFn: async () => {
-      const response = await api.get(
-        "/login/member/dashboard/APIs/tickets/get_tickets.php?action=all_tickets"
-      );
+      const response = await api.get(`${getTicketsUrl}action=my_tickets`);
+      const resData = response.data;
+      if (resData.code === 200) return resData.data;
       return response.data.data;
     },
   });
+
+  const closedTickets = allTickets?.filter(
+    (ticket: any) => ticket.status === "closed"
+  );
+  const openTickets = allTickets?.filter(
+    (ticket: any) => ticket.status !== "closed"
+  );
+
   const createTicket = useMutation({
     mutationFn: async (data: any) => {
       const payload = json2formData(data);
@@ -53,14 +44,13 @@ function useTickets() {
       console.log(data, "data");
     },
   });
+
   return {
+    allTickets,
     closedTickets,
-    closedLoading,
     openTickets,
-    openIsLoading,
     isLoading,
     createTicket,
-    allTickets,
   };
 }
 

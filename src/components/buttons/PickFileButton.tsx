@@ -3,7 +3,7 @@ import TopicIcon from "@mui/icons-material/Topic";
 import { useState } from "react";
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   setFiles?: (file: any) => void;
-  text?: string;
+  text?: string | React.ReactNode;
   file?: any;
 }
 

@@ -1,0 +1,19 @@
+.chat-container {
+  @apply col p-1 overflow-y-auto;
+}
+.message-item {
+  @apply min-h-10 w-fit max-w-[80%] rounded-xl p-1 m-1 gap-1;
+}
+.message-item p {
+  @apply text-base h-fit px-2;
+}
+.message-item span {
+  @apply text-sm h-fit self-end text-ellipsis text-nowrap;
+}
+.chat-container .support {
+  @apply row bg-primary-light message-item;
+}
+.chat-container .student {
+  @apply row bg-cyan-400/40 place-self-end message-item;
+}
+

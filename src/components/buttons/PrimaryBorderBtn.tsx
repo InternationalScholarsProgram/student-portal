@@ -1,4 +1,4 @@
-import { CustomButtonProps } from "../../../../types";
+import { CustomButtonProps } from "../../types";
 
 function PrimaryBorderBtn(props: CustomButtonProps) {
   return (

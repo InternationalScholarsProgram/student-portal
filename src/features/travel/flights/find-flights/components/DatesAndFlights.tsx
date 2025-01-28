@@ -35,7 +35,7 @@ const DatesAndFlights = ({ flightsData }: DatesAndFlightsProps) => {
               key={item?.date}
               className={`${
                 item.date === selectedDate?.date && "text-primary-light"
-              } p-2 borders-30 rounded-md text-center text-nowrap`}
+              } p-2 border-30 rounded-md text-center text-nowrap`}
               onClick={() => setSelectedDate(item)}
             >
               <h5 className="font-bold">{dayjs(item.date).format("ddd D")}</h5>

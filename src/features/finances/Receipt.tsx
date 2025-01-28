@@ -1,37 +1,24 @@
-import {  useRef } from "react";
+import { useRef } from "react";
 import { Navigate } from "react-router";
 import { useFinancesStore } from "./layout/FinancesLayout";
 import { ispLogo } from "../../assets/imageLinks";
-import { contacts } from "../../utils/utils";
+import { contacts, printPDF } from "../../utils/utils";
 
 const Receipt = () => {
   const { selectedTransaction } = useFinancesStore((state) => state);
-
   const sectionRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handlePrint = () => {
-    if (!buttonRef.current) return;
+  const handlePrint = async () => {
     if (!sectionRef.current) {
       console.error("Section ref is not assigned.");
       return;
     }
-    document.title = "Receipt";
-    buttonRef.current.innerHTML = "";
-    const printContent = sectionRef.current;
-    const originalContent = document.body.innerHTML;
-
-    // Replace body content with the section to print
-    document.body.innerHTML = printContent.innerHTML;
-    window.print();
-
-    // Restore original body content
-    document.body.innerHTML = originalContent;
-    window.location.reload();
+    printPDF(payment_intent_id, sectionRef.current);
+    console.log(payment_intent_id);
+    return;
   };
 
-  if (!selectedTransaction)
-    return <Navigate to="/portal/finances/account-statements" />;
+  if (!selectedTransaction) return <Navigate to="/account-statements" />;
 
   const { purpose, payment_intent_id, date_completed, amount, country } =
     selectedTransaction;
@@ -105,13 +92,16 @@ const Receipt = () => {
         {/* Disclaimer */}
         <div className="mt-4 text-center text-sm">
           <p>
-            Disclaimer: Contact us at{" "}{contacts(country)}{" "}or email accounts@internationalscholarsprogram.com.
+            Disclaimer: Contact us at {contacts(country)} or email
+            accounts@internationalscholarsprogram.com.
           </p>
           <p>***** COMPUTER GENERATED STATEMENT *****</p>
         </div>
-        <div className="w-full row justify-end items-end">
+        <div
+          data-html2canvas-ignore
+          className="w-full row justify-end items-end"
+        >
           <button
-            ref={buttonRef}
             className="bg-primary-main text-white px-4 py-2 rounded shadow hover:bg-blue-800"
             onClick={handlePrint}
           >

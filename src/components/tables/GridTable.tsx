@@ -45,6 +45,7 @@ function GridTable(props: GridTableProps) {
       }}
       pageSizeOptions={[10, 20, 50]}
       disableRowSelectionOnClick
+      getCellClassName={() => "first-letter:uppercase"}
       sx={{
         ...props.sx,
         flexGrow: 1,

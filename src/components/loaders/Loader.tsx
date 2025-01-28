@@ -1,28 +1,31 @@
-import Modal from "../Modal";
-import "./loaders.css";
+import { Modal } from "@mui/material";
+const dots = [1, 2, 3, 4, 5];
 
-function Loader({ cover }: { cover?: string }) {
+function Loader() {
   return (
-    <section className={`dots-container ${cover} `}>
-      <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"></div>
-    </section>
+    <div className="h-full w-full flex-1 col-center">
+      <section className="dots-container">
+        {dots.map((dot) => (
+          <div key={dot} className="dot" />
+        ))}
+      </section>
+    </div>
   );
 }
 export function FullLoader() {
   return (
-    <Modal open={true}>
-      <div className="p-2">
+    <Modal
+      sx={{ outlineColor: "transparent", borderColor: "transparent" }}
+      open={true}
+    >
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <Loader />
       </div>
     </Modal>
   );
 }
 export function InlineLoader() {
-  return <Loader cover="h-full" />;
+  return <Loader />;
 }
 
 export default Loader;

@@ -50,7 +50,7 @@ function MakeApplication({
 
   return (
     <>
-      <h3 className="p-2 opacity-70 font-semibold text-lg row w-full gap-3 borders-b-30">
+      <h3 className="p-2 opacity-70 font-semibold text-lg row w-full gap-3 border-b-30">
         <SchoolIcon /> School Application
       </h3>
       {notAppliedSchools?.length > 0 ? (

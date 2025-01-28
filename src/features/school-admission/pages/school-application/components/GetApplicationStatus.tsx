@@ -41,7 +41,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
         </p>
         <p>{comment}</p>
         <p>Access the school portal using the following details:</p>
-        <div className="px-4 m-2 borders-30 rounded-md">
+        <div className="px-4 m-2 border-30 rounded-md">
           <a
             className="text-primary-light underline"
             href={school?.application_details?.school_link}

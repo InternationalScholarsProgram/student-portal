@@ -1,5 +1,6 @@
 @import "custom-utilities.css";
 @import "../features/tickets/tickets.css";
+@import "../components/loaders/loaders.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

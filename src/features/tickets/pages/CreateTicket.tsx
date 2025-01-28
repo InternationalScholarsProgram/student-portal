@@ -13,7 +13,7 @@ interface FormData {
 }
 
 function CreateTicket() {
-  const { createTicket, allTickets } = useTickets();
+  const { createTicket } = useTickets();
   const [formData, setFormData] = useState<FormData>(defaultFormData);
   const [focused, setFocused] = useState(false);
   const minChar = focused && formData?.issue?.length < 10 ? true : false;
@@ -32,13 +32,21 @@ function CreateTicket() {
     e.preventDefault();
     createTicket.mutate(formData);
   };
+  const resetForm = () => {
+    setFocused(false);
+    setFormData(defaultFormData);
+  };
 
   return (
     <main>
       <Instructions />
-      <p className="my-5 opacity-65">Enter Ticket Details</p>
-      <section className="card m-2 my-3 col-center">
-        <form className="w-full p-4 lg:w-3/4 col gap-6" onSubmit={onSubmit}>
+      <p className="my-5 opacity-65">Please fill out the form below </p>
+      <section className=" m-2 my-3 col-center">
+        <form
+          className="card w-full p-4 lg:w-3/4 col gap-6"
+          onSubmit={onSubmit}
+        >
+          <p className="text-center">Ticket Details</p>
           <FormSelect
             label="Select the category of your issue? *"
             value={formData.category}
@@ -71,11 +79,7 @@ function CreateTicket() {
             helperText="Less than 5MB"
           />
           <div className="w-full row justify-end gap-3 mb-3">
-            <button
-              type="button"
-              className="text-btn"
-              onClick={() => setFormData(defaultFormData)}
-            >
+            <button type="button" className="text-btn" onClick={resetForm}>
               Cancel
             </button>
             <PrimaryBtn btnstyles="px-5" type="submit">

@@ -40,13 +40,16 @@
     @apply bg-default outline outline-1 outline-color drop-shadow-lg shadow-lg rounded-md space-y-2;
   }
 
-  .borders-30 {
+  .border-30 {
     @apply border dark:border-light-background-paper/30 border-dark-background-paper/30;
   }
   .border-b-30 {
     @apply border-b dark:border-light-background-paper/30 border-dark-background-paper/30;
   }
-  .borders-b-30 {
+  .border-t-30 {
+    @apply border-t dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-b-30 {
     @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
   }
   .btn {

@@ -22,7 +22,7 @@ const Booked = ({ row }: { row: any }) => (
       and use your booking reference <strong>{row?.booking_reference}</strong>.
     </p>
 
-    <div className="mt-4 borders-30 w-2/3 p-4 rounded shadow">
+    <div className="mt-4 border-30 w-2/3 p-4 rounded shadow">
       <h5 className="font-semibold opacity-70">Booking Details</h5>
       <div className="p-2">
         <p>

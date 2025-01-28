@@ -17,9 +17,7 @@ import PrimeStudent from "./contract-letters/PrimeStudent";
 import { FullLoader } from "../../../components/loaders/Loader";
 import api from "../../../services/api/base";
 import { usePDF } from "react-to-pdf";
-import InputField from "../../../components/inputs/InputField";
 import { generateBlob, generatePdf } from "./utils/utils";
-import { Input } from "@mui/material";
 
 type OnboardingAgreementProps = {
   action?: string;

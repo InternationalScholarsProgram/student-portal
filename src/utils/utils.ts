@@ -12,7 +12,7 @@ function formatCurrency(amount: number | bigint | any) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(amount.toFixed(2));
+  }).format(amount?.toFixed(2));
 }
 
 const contacts = (country: string) =>
@@ -89,6 +89,10 @@ function json2formData(json: any) {
 const formatDate = (date: string | Date, format?: string) => {
   return dayjs(new Date(date)).format(format || "dddd, MMMM D, YYYY");
 };
+function capitalizeFirstCharacter(str: string) {
+  if (!str) return ""; // Handle empty or undefined strings
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 type IpData = {
   ip: string;
@@ -110,6 +114,32 @@ const capitalize = (str: string) =>
   str?.toLowerCase()?.replace(/\b[a-z]/g, function (letter: string) {
     return letter?.toUpperCase();
   });
+
+const pdfOptions = {
+  image: {
+    type: "jpeg",
+    quality: 1,
+  },
+  html2canvas: {
+    scale: 2,
+  },
+  jsPDF: {
+    unit: "in",
+    format: "letter",
+    orientation: "portrait",
+  },
+  pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+};
+
+export async function printPDF(filename: string, element: any) {
+  const opt = {
+    ...pdfOptions,
+    margin: 1,
+    filename: filename,
+  };
+  html2pdf().set(opt).from(element).save();
+}
+
 export {
   capitalize,
   formatCurrency,
@@ -121,6 +151,7 @@ export {
   formatDate,
   fetchIp,
   delay,
+  capitalizeFirstCharacter,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

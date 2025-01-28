@@ -29,7 +29,7 @@ function Modal({ children, title, open, setOpen }: CustomModalProps) {
                 ✕
               </button>
             </div>
-            <div className="borders-b-30 mx-2" />
+            <div className="border-b-30 mx-2" />
           </>
         )}
         {children}

@@ -21,7 +21,7 @@ function FlightItem({ offer, openModal }: Props) {
   const handleSelect = () => openModal(offer);
 
   return (
-    <div className="card col my-4 p-1 dark:borders-30">
+    <div className="card col my-4 p-1 dark:border-30">
       <div className="row border-b-30 shadow-sm p-2 gap-2">
         <img
           alt={offer?.owner?.name}

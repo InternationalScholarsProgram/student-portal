@@ -72,16 +72,15 @@ function MakePayments() {
 
   return (
     <main className="">
-        <p>Proceed to make payment</p>
-      <section className="card min-w-fit p-3 sm:px-[5%] my-[2vh] self-center col justify-center">
-
-        <form onSubmit={onSubmit} className="col w-full px-3 sm:px-[5%]">
+      <p>Proceed to make payment</p>
+      <section className="min-w-fit p-3 sm:px-[5%] my-[2vh] self-center col-center">
+        <form
+          onSubmit={onSubmit}
+          className="card col w-full p-3 px-8 md:w-3/4 lg:1/2"
+        >
           <div className="col my-3 w-full">
             <label>Select reason for payment</label>
-            <Select
-              value={purpose}
-              onChange={handleChange}
-            >
+            <Select value={purpose} onChange={handleChange}>
               {programFees.map(({ description }: any) => (
                 <MenuItem key={description} value={description}>
                   {description}
@@ -139,12 +138,10 @@ function MakePayments() {
             </div>
           )}
 
-          <PrimaryBtn
-            type="submit"
-            btnstyles="min-w-[10vw]  min-h-[4vh] my-4 px-[2vw] self-end"
-          >
+          <div className="h-[2vh]" />
+          <button type="submit" className="primary-btn self-end">
             {handlePayments.isPending ? "Processing..." : "Make Payment"}
-          </PrimaryBtn>
+          </button>
         </form>
       </section>
     </main>

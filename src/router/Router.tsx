@@ -4,6 +4,7 @@ import LoaderSideBar from "./LoaderSideBar";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
+import Receipt from "../features/finances/Receipt";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -24,7 +25,8 @@ const Resources = lazy(() => import("../features/info-resources/Resources"));
 const Funding = lazy(() => import("../features/funding/Funding"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
 const SchoolAdmission = lazy(
-  () => import("../features/school-admission/pages/requirements/SchoolAdmission")
+  () =>
+    import("../features/school-admission/pages/requirements/SchoolAdmission")
 );
 const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
@@ -42,10 +44,14 @@ const Withdraw = lazy(() => import("../features/program/withdraw/Withdraw"));
 const CreateTicket = lazy(
   () => import("../features/tickets/pages/CreateTicket")
 );
-const ViewTickets = lazy(() => import("../features/tickets/pages/view-tickets/ViewTickets"));
+const ViewTickets = lazy(
+  () => import("../features/tickets/pages/view-tickets/ViewTickets")
+);
 const SchoolApplication = lazy(
   () =>
-    import("../features/school-admission/pages/school-application/SchoolApplication")
+    import(
+      "../features/school-admission/pages/school-application/SchoolApplication"
+    )
 );
 const OnboardingAgreement = lazy(
   () => import("../features/user/contracts/OnboardingAgreement")
@@ -87,6 +93,7 @@ function Router() {
                 path="account-statements"
                 element={<AccountStatements />}
               />
+              <Route path="/finances/receipt" element={<Receipt />} />
             </Route>
 
             <Route element={<Outlet />}>

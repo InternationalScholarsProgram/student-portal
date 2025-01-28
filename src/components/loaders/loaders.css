@@ -1,6 +1,5 @@
-/* From Uiverse.io by adamgiebl */
 .dots-container {
-  @apply flex justify-center items-center min-h-5 w-full rounded-md;
+  @apply row-center min-h-5 flex-1;
 }
 
 .dot {

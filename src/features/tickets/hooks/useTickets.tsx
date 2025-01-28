@@ -3,12 +3,14 @@ import api from "../../../services/api/base";
 import { json2formData } from "../../../utils/utils";
 import useFetchUser from "../../../services/hooks/useFetchUser";
 import { toast } from "react-toastify";
-import { getTicketsUrl } from "../components/utils";
+import { getTicketsUrl, ticketsUrl } from "../components/utils";
 
 function useTickets() {
   const { user } = useFetchUser();
   const queryKey = ["yourTickets", user?.email];
   const queryClient = useQueryClient();
+  const inValidate = () =>
+    queryClient.invalidateQueries({ queryKey: queryKey });
 
   const { data: allTickets, isLoading: isLoading } = useQuery({
     queryKey: queryKey,
@@ -38,10 +40,38 @@ function useTickets() {
     },
     onSuccess: (data) => {
       if (data.success === true) {
-        queryClient.invalidateQueries({ queryKey: queryKey });
+        inValidate();
         toast.success("Ticket created successfully!");
       }
       console.log(data, "data");
+    },
+  });
+  const readNotification = useMutation({
+    mutationFn: async (ticket_id: string) => {
+      const response = await api.get(
+        `${getTicketsUrl}action=read_notif&ticket_id=${ticket_id}`
+      );
+      return response.status;
+    },
+    onSuccess: (status) => {
+      if (status === 200) inValidate();
+    },
+  });
+
+  const sendMessage = useMutation({
+    mutationFn: async (data: any) => {
+      const payload = json2formData(data);
+      const response = await api.post(
+        `${ticketsUrl}/send_message.php`,
+        payload
+      );
+      return { ...response?.data, queryKey: data?.queryKey };
+    },
+    onSuccess: (data) => {
+      if (data.code === 200) {
+        toast.success("Message sent")
+        queryClient.invalidateQueries({ queryKey: data?.queryKey });
+      }
     },
   });
 
@@ -51,6 +81,9 @@ function useTickets() {
     openTickets,
     isLoading,
     createTicket,
+    readNotification,
+    sendMessage,
+    queryClient,
   };
 }
 

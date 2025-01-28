@@ -21,7 +21,7 @@ const Navbar = ({ toogleSideBar }: NavbarProps) => {
         <MenuIcon className="text-primary" fontSize="large" />
       </button>
       <div className="row items-center justify-end space-x-3 flex-1">
-        <div className=" min-w-[35vw] px-3">
+        {/* <div className=" min-w-[35vw] px-3">
           <InputField
             placeholder="Search..."
             // variant="outlined"
@@ -37,7 +37,7 @@ const Navbar = ({ toogleSideBar }: NavbarProps) => {
               },
             }}
           />
-        </div>
+        </div> */}
         <button onClick={toggleTheme}>
           {themeMode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
         </button>

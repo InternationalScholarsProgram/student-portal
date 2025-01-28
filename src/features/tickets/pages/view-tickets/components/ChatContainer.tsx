@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@mui/material";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
-import PhotoSizeSelectActualOutlinedIcon from "@mui/icons-material/PhotoSizeSelectActualOutlined";
+import SourceOutlinedIcon from '@mui/icons-material/SourceOutlined';
 
 import { formatDate } from "../../../../../utils/utils";
 import SendMessageInput from "./SendMessageInput";
@@ -115,7 +115,7 @@ const Attachment = ({ link }: { link: any }) => {
   return (
     link && (
       <div className="row items-center justify-end w-full">
-        <PhotoSizeSelectActualOutlinedIcon fontSize="small" />
+        <SourceOutlinedIcon fontSize="small" />
         <a
           href={attachmentLink}
           target="_blank"

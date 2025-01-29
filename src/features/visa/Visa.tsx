@@ -1,12 +1,11 @@
-import { InlineLoader } from "../../components/loaders/Loader";
+import CheckI20 from "./components/CheckI20";
+import VisaGuide from "./components/VisaGuide";
 
 function Visa() {
   return (
-    <main className="">
-      <p>Loader</p>
-      <button className="primary-border-btn">
-        <InlineLoader />
-      </button>
+    <main>
+      <VisaGuide />
+      <CheckI20 />
     </main>
   );
 }

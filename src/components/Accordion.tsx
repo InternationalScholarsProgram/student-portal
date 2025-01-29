@@ -13,7 +13,7 @@ interface AccordionProps extends MuiAccordionProps {
 const Accordion: React.FC<AccordionProps> = ({ children, title, ...props }) => {
   return (
     <>
-      <h3 className="py-4 opacity-70">
+      <h3 className="py-4 opacity-70 sm:text-sm text-base">
         Please read the instructions below for you to successfully navigate
         through this module
       </h3>

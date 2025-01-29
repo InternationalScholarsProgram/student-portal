@@ -10,5 +10,9 @@ interface CustomButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   btnstyles?: string;
 }
+interface ModalProps {
+  open: boolean;
+  toggleModal?: () => void;
+}
 
-export type { CustomButtonProps };
+export type { CustomButtonProps, ModalProps };

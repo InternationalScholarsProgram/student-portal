@@ -26,6 +26,17 @@ const useAdmissions = () => {
   });
 
   const proposedSchools = status?.message?.proposed_courses || [];
+  
+  const appliedSchools = proposedSchools?.filter(
+    (item: any) => item?.application_status === "applied"
+  );
+  const notAppliedSchools = proposedSchools?.filter(
+    (item: any) =>
+      item?.SOP_status === "2" && item?.application_status !== "applied"
+  );
+  const hasAppliedToAllSchools = proposedSchools?.every(
+    (item: any) => item?.application_status === "applied"
+  );
 
   const { data: appDocs } = useQuery({
     queryKey: queryKeys.appDocs,
@@ -50,6 +61,9 @@ const useAdmissions = () => {
     status,
     user,
     proposedSchools,
+    appliedSchools,
+    notAppliedSchools,
+    hasAppliedToAllSchools,
     isLoading,
     uploadedDocs,
     queryKeys,

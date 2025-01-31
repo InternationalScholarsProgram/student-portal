@@ -1,4 +1,5 @@
 import api from "../../../services/api/base";
+import { fetchIp, formData2json, json2formData } from "../../../utils/utils";
 
 const url = "/login/member/dashboard/APIs/visa-processing/";
 class VisaEndpoints {
@@ -8,8 +9,23 @@ class VisaEndpoints {
     );
     return response?.data?.data;
   };
+  ds160RequestReview = async (data: any) => {
+    const payload = formData2json(data);
+    const response = await api.post(`${url}/ds160_request_review.php`, payload);
+    return response?.data;
+  };
   schools = async () => {
-    return [];
+    const response = await api.get(`${url}schools.php`);
+    return response?.data?.data;
+  };
+  requestVisaTrainingResources = async (data: any) => {
+    const payload = json2formData(data);
+    const response = await api.post(`${url}schools.php`, payload);
+    return response?.data?.data;
+  };
+  test = async () => {
+    const response = await fetchIp();
+    return response;
   };
 }
 const visaEndpoints = new VisaEndpoints();

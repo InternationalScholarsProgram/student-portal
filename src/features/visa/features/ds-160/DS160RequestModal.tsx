@@ -1,37 +1,51 @@
-import { FormEvent, useEffect, useState } from "react";
-import { InputsWithLabel } from "../../../components/inputs/InputField";
-import Modal from "../../../components/Modal";
-import { ModalProps } from "../../../types";
-import useVisa from "../services/hooks/useVisa";
-import Select from "../../../components/inputs/Select";
+import { FormEvent } from "react";
+import { InputsWithLabel } from "../../../../components/inputs/InputField";
+import Modal from "../../../../components/Modal";
+import { ModalProps } from "../../../../types";
+import useVisa from "../../services/hooks/useVisa";
+import Select from "../../../../components/inputs/Select";
 import { MenuItem } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import visaEndpoints from "../../services/visaEndpoints";
+import { toast } from "react-toastify";
 
 function DS160RequestModal({ open, toggleModal }: ModalProps) {
-  const { schools } = useVisa();
-  const [inputs, setInputs] = useState(formInputs);
+  const { schools, user,setStage } = useVisa();
 
-  //   useEffect(() => {
-  //     if (!schools) return;
-  //     const _formInputs = formInputs(schools);
-  //     setInputs(_formInputs);
-  //   }, []);
-
-  const requestReview = (e: FormEvent) => {
+  const requestReview = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+    const schoolName = formData.get("school-name");
+    const course = schools?.find(
+      (item: any) => item?.school_name === schoolName
+    )?.program_name;
 
-    // Convert formData into an object and log it
-    const formDataObj: Record<string, any> = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-      console.log(key, value);
-    });
+    formData.set("course", course);
+    formData.append("fullnames", user?.fullnames);
 
-    console.log(formDataObj);
+    await ds160RequestReview.mutateAsync(formData);
   };
+
+  const ds160RequestReview = useMutation({
+    mutationFn: async (data: any) => {
+      return visaEndpoints.ds160RequestReview(data);
+    },
+    onSuccess: (data) => {
+      if (data?.code === 200) {
+        toast.success(data.message, {
+          autoClose: 5000,
+        });
+        toggleModal();
+        setStage(3)
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.response);
+    },
+  });
   return (
     <Modal open={open} setOpen={toggleModal} title="DS-160 Request for Review">
-      <div className="p-2">
+      <div className="p-6">
         <p>
           The following information is required to request your DS-160
           application review
@@ -42,18 +56,30 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
             {formInputs?.map((input) => {
-              if (input?.type === "select")
+              if (input?.type === "select") {
                 return (
                   <Select
                     key={input?.name}
                     placeholder={input?.inputLabel}
                     {...input}
                   >
-                    {input?.options?.map((option) => (
-                      <MenuItem value={option?.value}>{option?.label}</MenuItem>
-                    ))}
+                    {input?.name === "school-name"
+                      ? schools?.map((school: any) => (
+                          <MenuItem
+                            key={school?.school_name}
+                            value={school?.school_name}
+                          >
+                            {school?.school_name + " - " + school?.program_name}
+                          </MenuItem>
+                        ))
+                      : input?.options?.map((option) => (
+                          <MenuItem key={option?.value} value={option?.value}>
+                            {option?.label}
+                          </MenuItem>
+                        ))}
                   </Select>
                 );
+              }
               return <InputsWithLabel key={input?.name} {...input} />;
             })}
           </div>
@@ -62,7 +88,7 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
               Close
             </button>
             <button className="primary-btn" type="submit">
-              Submit
+              {ds160RequestReview.isPending ? "Submiting..." : "Submit"}
             </button>
           </div>
         </form>
@@ -111,11 +137,7 @@ const formInputs = [
     inputLabel: "School Name",
     placeholder: "Select or Enter School Name",
     required: true,
-    // options: schoolsList,
-    options: [
-      { value: "yes", label: "Yes" },
-      { value: "no", label: "No" },
-    ],
+    options: [],
   },
   {
     type: "date",
@@ -123,13 +145,13 @@ const formInputs = [
     inputLabel: "Earliest School Reporting Date (As per I-20)",
     required: true,
   },
-  {
-    type: "text",
-    name: "course",
-    inputLabel: "Select a Course",
-    placeholder: "Enter Course Name",
-    required: true,
-  },
+  // {
+  //   type: "text",
+  //   name: "course",
+  //   inputLabel: "Select a Course",
+  //   placeholder: "Enter Course Name",
+  //   required: true,
+  // },
   {
     type: "select",
     name: "denied-before",
@@ -185,7 +207,7 @@ const formInputs = [
   },
   {
     type: "select",
-    name: "Financial",
+    name: "financial",
     inputLabel: "Proof of Finances",
     required: true,
     options: [

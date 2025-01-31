@@ -6,30 +6,49 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { useState } from "react";
-import PickFileButton from "../../../components/buttons/PickFileButton";
-import useVisa from "../services/hooks/useVisa";
+import PickFileButton from "../../../../components/buttons/PickFileButton";
+import useVisa from "../../services/hooks/useVisa";
 import { Link } from "react-router-dom";
 import DS160RequestModal from "./DS160RequestModal";
+import visaEndpoints from "../../services/visaEndpoints";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const CheckI20 = () => {
-  const { applicationVideo } = useVisa();
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
   const [hasI20, setHasI20] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [stage] = useState(1);
+  const { applicationVideo, stage, setStage } = useVisa();
+
+  const toggleModal = () => setOpen(!open);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setHasI20(event.target.value);
 
-  const requestAccess = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(file);
+    requestAccess.mutate({
+      file,
+    });
   };
+  const requestAccess = useMutation({
+    mutationFn: async (data: any) => {
+      return await visaEndpoints.test();
+    },
+    onSuccess: (data) => {
+      setStage(1);
+      toast.success("Request sent successfully", {
+        autoClose: 5000,
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error.response.message);
+    },
+  });
 
   return (
     <div>
       {stage === 0 && (
-        <section className="p-6">
+        <section className="py-9">
           <p className="">
             Before we begin, do you have your{" "}
             <span className="font-bold">I-20</span>? It’s required to proceed
@@ -68,7 +87,7 @@ const CheckI20 = () => {
                 <strong className="px-2">DS-160 instructions resource</strong>
                 to proceed with your visa application.
               </p>
-              <form onSubmit={requestAccess} className="col py-3 px-7 gap-2">
+              <form onSubmit={onSubmit} className="col py-3 px-7 gap-2">
                 <label className="opacity-75">
                   Please upload a copy of your I-20:
                 </label>
@@ -88,6 +107,30 @@ const CheckI20 = () => {
         </section>
       )}
       {stage === 1 && (
+        <section className="col card my-5 gap-4 p-3">
+          <p>
+            Your request to access the DS-160 instruction resource is pending
+            approval. Please allow some time for the review process to be
+            completed.
+          </p>
+          <p>
+            If you need urgent assistance or have any questions, feel free to
+            reach out to our support team.
+          </p>
+          <p>Thank you for your patience and understanding.</p>
+          <div className="row justify-end">
+            <Link
+              onClick={() => setStage(2)}
+              // to="/create-ticket"
+              to="/visa-processing"
+              className="primary-btn"
+            >
+              Create Ticket
+            </Link>
+          </div>
+        </section>
+      )}
+      {stage === 2 && (
         <section className="col my-5 gap-4">
           <p>
             Your request to access DS-160 instruction resource has been approved

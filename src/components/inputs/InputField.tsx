@@ -1,7 +1,42 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { inputStyles } from "../../styles/styles";
+import {
+  DatePicker,
+  DateTimePicker,
+  TimePicker,
+} from "@mui/x-date-pickers";
 
 function InputField(props: TextFieldProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { onChange, type, ...rest } = props;
+
+  if (props.type === "date")
+    return (
+      <DatePicker
+        onChange={(e: any) => onChange?.(e)}
+        slotProps={{
+          textField: { ...rest, size: "medium" },
+        }}
+      />
+    );
+  if (props.type === "datetime-local")
+    return (
+      <DateTimePicker
+        onChange={(e: any) => onChange?.(e)}
+        slotProps={{
+          textField: { ...rest, size: "small" },
+        }}
+      />
+    );
+  if (props.type === "time")
+    return (
+      <TimePicker
+        onChange={(e: any) => onChange?.(e)}
+        slotProps={{
+          textField: { ...rest, size: "small" },
+        }}
+      />
+    );
   return (
     <TextField
       {...props}

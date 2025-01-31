@@ -6,28 +6,24 @@ import Loader from "../../../../components/loaders/Loader";
 import { Navigate } from "react-router";
 
 function SchoolApplication() {
-  const { status, proposedSchools, isLoading } = useAdmissions();
+  const {
+    status,
+    proposedSchools,
+    appliedSchools,
+    notAppliedSchools,
+    hasAppliedToAllSchools,
+    isLoading,
+  } = useAdmissions();
 
   if (isLoading) return <Loader />;
   if (status?.code !== 5 || !proposedSchools)
     return <Navigate to="/school-admission-requirements" />;
 
-  const notAppliedSchools = proposedSchools?.filter(
-    (item: any) =>
-      item?.SOP_status === "2" && item?.application_status !== "applied"
-  );
-  const appliedSchools = proposedSchools?.filter(
-    (item: any) => item?.application_status === "applied"
-  );
-  const hasAppliedAllSchools = proposedSchools?.every(
-    (item: any) => item?.application_status === "applied"
-  );
-
   return (
     <main>
       <MakeApplication
         notAppliedSchools={notAppliedSchools}
-        hasAppliedAllSchools={hasAppliedAllSchools}
+        hasAppliedAllSchools={hasAppliedToAllSchools}
         intake_id={status?.message?.intake_id}
       />
       {appliedSchools.length > 0 && (

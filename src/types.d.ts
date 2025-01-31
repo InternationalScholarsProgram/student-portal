@@ -12,7 +12,7 @@ interface CustomButtonProps
 }
 interface ModalProps {
   open: boolean;
-  toggleModal?: () => void;
+  toggleModal: () => void;
 }
 
 export type { CustomButtonProps, ModalProps };

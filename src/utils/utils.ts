@@ -55,6 +55,12 @@ const formatText = (text: string): string => {
   }
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+function formData2json(formData: FormData) {
+  const jsonObject: Record<string, any> = {};
+  formData.forEach((value, key) => (jsonObject[key] = value));
+  return jsonObject;
+}
+
 function json2formData(json: any) {
   const formData = new FormData();
 
@@ -152,6 +158,7 @@ export {
   fetchIp,
   delay,
   capitalizeFirstCharacter,
+  formData2json,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

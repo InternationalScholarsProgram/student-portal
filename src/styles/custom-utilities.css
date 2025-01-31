@@ -53,7 +53,7 @@
     @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
   }
   .btn {
-    @apply p-2 sm:py-1 sm:px-3 text text-center rounded-md w-fit;
+    @apply p-2 sm:py-2 sm:px-3 text-center rounded-md w-fit min-w-[10vw];
   }
 }
 @layer components {

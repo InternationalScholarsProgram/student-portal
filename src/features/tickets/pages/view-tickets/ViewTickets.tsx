@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GridTable from "../../../../components/tables/GridTable";
 import { feedbackCol, columns } from "../../components/utils";
 import useTickets from "../../hooks/useTickets";
@@ -16,24 +16,24 @@ function ViewTickets() {
 
   const toggleModal = () => setOpenModal(!openModal);
   const toggleTickets = () => setShowOpenTickets(!showOpenTickets);
+  const actionView = (row: any) => {
+    setSelectedTicket(row);
+    toggleModal();
+    if (row.unread_count > 0) readNotification.mutate(row.id);
+  };
 
   const actionColumn: GridColDef = {
     field: "action",
     headerName: "Action",
+    cellClassName: "row-center",
     renderCell: (params) => (
-      <Badge color="primary" badgeContent={params.row.unread_count}>
-        <button
-          className="primary-border-btn"
-          onClick={() => {
-            setSelectedTicket(params.row);
-            toggleModal();
-            if (params.row.unread_count > 0)
-              readNotification.mutate(params.row.id);
-          }}
-        >
-          View
-        </button>
-      </Badge>
+      <div className="col-center flex-1">
+        <Badge color="primary" badgeContent={params.row.unread_count}>
+          <p className="table-btn" onClick={() => actionView(params.row)}>
+            View
+          </p>
+        </Badge>
+      </div>
     ),
   };
 

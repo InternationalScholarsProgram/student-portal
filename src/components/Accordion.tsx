@@ -8,15 +8,23 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface AccordionProps extends MuiAccordionProps {
   title: string;
+  label?: boolean;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ children, title, ...props }) => {
+const Accordion: React.FC<AccordionProps> = ({
+  children,
+  label,
+  title,
+  ...props
+}) => {
   return (
     <>
-      <h3 className="py-4 opacity-70 sm:text-sm text-base">
-        Please read the instructions below for you to successfully navigate
-        through this module
-      </h3>
+      {!label && (
+        <h3 className="py-4 opacity-70 sm:text-sm text-base">
+          Please read the instructions below for you to successfully navigate
+          through this module
+        </h3>
+      )}
       <div className="mx-2">
         <MuiAccordion {...props}>
           <AccordionSummary

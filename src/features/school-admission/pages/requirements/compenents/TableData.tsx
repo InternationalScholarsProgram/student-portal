@@ -56,14 +56,7 @@ const columns: GridColDef[] = [
     headerName: "Items",
     flex: 1,
     minWidth: 200,
-    // cellClassName: "text-primary-light cursor-pointer",
   },
-  // {
-  //   field: "description",
-  //   headerName: "Description",
-  //   minWidth: 150,
-  //   flex: 1,
-  // },
   {
     field: "uploaded_documents",
     headerName: "Status",
@@ -72,17 +65,6 @@ const columns: GridColDef[] = [
     valueGetter: handleStatus,
     cellClassName: "row-center flex-wrap",
     renderCell: (params) => {
-      // if (params.row.id === "3" && params.row.uploaded_documents?.length > 0) {
-      //   return params.row.uploaded_documents?.map((doc: any, index: number) => (
-      //     <p key={index} className="text-sm my-1 w-full">
-      //       {doc?.course?.school_name} :
-      //       <span className={statusClass(handleStatus(doc?.status))}>
-      //         {" "}
-      //         {handleStatus(doc?.status)}
-      //       </span>
-      //     </p>
-      //   ));
-      // }
       if (params.row.id === "3") {
         return params.row.schools?.map((school: any) => {
           const getSchoolDocStatus = params.row.uploaded_documents?.find(
@@ -109,12 +91,7 @@ const columns: GridColDef[] = [
     minWidth: 100,
     headerName: "Action",
     headerAlign: "center",
-    cellClassName: "cursor-pointer leading-none",
-    renderCell: (params) => (
-      <div className="row items-center justify-center gap-2 h-full w-full ">
-        <DocsModal row={params.row} />
-      </div>
-    ),
+    renderCell: (params) => <DocsModal row={params.row} />,
   },
 ];
 

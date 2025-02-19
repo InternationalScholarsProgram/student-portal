@@ -10,7 +10,7 @@ import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
 
 function DS160RequestModal({ open, toggleModal }: ModalProps) {
-  const { schools, user,setStage } = useVisa();
+  const { schools, user, inValidateStatus } = useVisa();
 
   const requestReview = async (e: FormEvent) => {
     e.preventDefault();
@@ -32,11 +32,9 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
     },
     onSuccess: (data) => {
       if (data?.code === 200) {
-        toast.success(data.message, {
-          autoClose: 5000,
-        });
+        toast.success(data.message);
+        inValidateStatus();
         toggleModal();
-        setStage(3)
       }
     },
     onError: (error: any) => {

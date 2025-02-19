@@ -41,12 +41,12 @@ const useAdmissions = () => {
   const { data: appDocs } = useQuery({
     queryKey: queryKeys.appDocs,
     queryFn: admissionAPIs.applicationDocs,
-    enabled: eligible,
+    enabled: status?.code >= 2,
   });
   const { data: uploadedDocs } = useQuery({
     queryKey: queryKeys.uploadedDocs,
     queryFn: admissionAPIs.getUploadedDocs,
-    enabled: eligible,
+    enabled: !!appDocs,
   });
   const { data: currentIntake } = useQuery({
     queryKey: queryKeys.intakes,

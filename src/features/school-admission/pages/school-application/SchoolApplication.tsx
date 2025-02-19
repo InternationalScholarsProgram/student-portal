@@ -34,13 +34,11 @@ function SchoolApplication() {
         <p className="text-sm">
           Do you wish to seek clarification or guidance on the schools you
           applied to ? Kindly submit another career advisory request.
-        </p>
-        <div className="self-end my-2">
           <CareerAdvisory
-            classes="primary-border-btn text-sm p-1"
+            classes="px-2 text-sm text-primary-light underline"
             text="Request Career Advisory"
           />
-        </div>
+        </p>
       </section>
     </main>
   );

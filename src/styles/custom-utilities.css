@@ -53,7 +53,10 @@
     @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
   }
   .btn {
-    @apply p-2 sm:py-2 sm:px-3 text-center rounded-md w-fit min-w-[10vw];
+    @apply p-2 sm:py-2 sm:px-3 text-center rounded-md w-fit;
+  }
+  .btn-sm {
+    @apply p-0 text-center rounded-md w-1/2;
   }
 }
 @layer components {
@@ -66,8 +69,8 @@
     dark:hover:outline-light-background-paper/50 btn;
   }
   .primary-border-btn {
-    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 btn
-    hover:text-white hover:bg-primary-main;
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main btn;
   }
   .warning-btn {
     @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
@@ -75,6 +78,13 @@
   }
   .text-btn {
     @apply hover:outline hover:outline-2 text-primary-light  btn;
+  }
+  .btn-outline {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main;
+  }
+  .table-btn {
+    @apply btn-outline rounded cursor-pointer p-1 px-2;
   }
   /* Hide scrollbar */
   .scrollbar-hidden {

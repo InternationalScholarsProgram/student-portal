@@ -15,12 +15,13 @@ function Loader() {
 export function FullLoader() {
   return (
     <Modal
-      sx={{ outlineColor: "transparent", borderColor: "transparent" }}
+      sx={{
+        outline: "0px dotted transparent",
+        border: "0px dotted transparent",
+      }}
       open={true}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <Loader />
-      </div>
+      <div className="w-full h-full flex-1 col-center" children={<Loader />} />
     </Modal>
   );
 }

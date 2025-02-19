@@ -4,14 +4,14 @@ import Cookies from "js-cookie";
 const studentId = Cookies.get("studentId");
 
 const testStudents = [
-  "wesochogo7@gmail.com",
+  "test@gmail.com",
   "test_one@gmail.com",
   "test_two@gmail.com",
   "test_three@gmail.com",
   "test_four@gmail.com",
 ];
 
-const activeStudentId = testStudents[1] || studentId;
+const activeStudentId = testStudents[4] || studentId;
 
 export const baseDirectory = "/login/member/dashboard/APIs/";
 const BASE_URL = "https://finkapinternational.qhtestingserver.com";

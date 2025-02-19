@@ -7,7 +7,7 @@ import NoOpenIntakes from "../../components/NoOpenIntakes";
 import EligibilityStatusCheck from "../../components/EligibilityStatusCheck";
 import { formatDate } from "../../../../utils/utils";
 import { Link } from "react-router-dom";
-import { RequirementsAccordion } from "./compenents/Requirements";
+import { RequirementsAccordion } from "./compenents/RequirementsTable";
 
 function SchoolAdmission() {
   const { eligibility, status, isLoading, currentIntake } = useAdmissions();
@@ -20,7 +20,7 @@ function SchoolAdmission() {
   if (status?.code === 1) return <NoOpenIntakes />;
 
   if (status?.code === 2) return <BookMeeting status={0} />;
-  if (status?.code === 3) return <main children={<Meeting status={status} />} />;
+  if (status?.code === 3) return <Meeting />;
   if (status?.code === 4 || status?.code === 5)
     return (
       <main className="">

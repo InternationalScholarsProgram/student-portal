@@ -2,14 +2,11 @@ import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import useAdmissions from "../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
-import { Chip } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function BookMeeting({ status }: { status: number }) {
-  const {
-    status: { code },
-    proposedSchools,
-  } = useAdmissions();
+  const { status: statusCheck, proposedSchools } = useAdmissions();
+  const code = statusCheck?.code;
   return (
     <main>
       <section className="card col p-3 gap-3">
@@ -72,7 +69,10 @@ function BookMeeting({ status }: { status: number }) {
                 text="Request Career Advisory"
               />
               {code === 5 && (
-                <Link to="/school-admission-application" className="primary-border-btn">
+                <Link
+                  to="/school-admission-application"
+                  className="primary-border-btn"
+                >
                   Request Application
                 </Link>
               )}

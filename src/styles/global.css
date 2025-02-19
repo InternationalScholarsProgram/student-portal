@@ -154,3 +154,9 @@ p {
 .modal {
   @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col flex-wrap overflow-clip p-3;
 }
+.title {
+  @apply text-xl sm:text-2xl font-semibold;
+}
+.title-sm {
+  @apply opacity-70 sm:text-lg font-semibold;
+}

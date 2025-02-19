@@ -36,25 +36,15 @@ function GridTable(props: GridTableProps) {
   return (
     <DataGrid
       {...props}
-      pagination={true}
-      initialState={{
-        ...props.initialState,
-        pagination: {
-          paginationModel: { page: 0, pageSize: 10 },
-        },
-      }}
-      pageSizeOptions={[10, 20, 50]}
       disableRowSelectionOnClick
-      getCellClassName={() => "first-letter:uppercase"}
+      getCellClassName={
+        props.getCellClassName
+          ? props.getCellClassName
+          : () => "first-letter:uppercase"
+      }
       sx={{
         ...props.sx,
-        flexGrow: 1,
-        width: "100%",
         minHeight: "30vh",
-        overflowX: "auto",
-        // "& .MuiDataGrid-scrollbarFiller": {
-        //   display: "none", // Hides the scrollbar filler
-        // },
       }}
       slots={{
         toolbar: (toolbarProps) => (

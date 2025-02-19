@@ -14,6 +14,7 @@ import Modal from "../../../../../components/Modal";
 import PickFileButton from "../../../../../components/buttons/PickFileButton";
 import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
 import InputField from "../../../../../components/inputs/InputField";
+import PrimaryBorderBtn from "../../../../../components/buttons/PrimaryBorderBtn";
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
 function DocsModal({ row }: any) {
@@ -63,21 +64,21 @@ function DocsModal({ row }: any) {
     e.preventDefault();
     handleUpload.mutate();
   };
+  const viewOnClick = () => {
+    console.log(row, "row");
+    console.log(statusData, "statusData");
+
+    setOpen(true);
+  };
 
   if (!row || !statusData) return <FullLoader />;
   return (
     <React.Fragment>
-      <button
-        onClick={() => {
-          console.log(row, "row");
-          console.log(statusData, "statusData");
-
-          setOpen(true);
-        }}
-        className="primary-border-btn py-1 px-2 cursor-pointer"
-      >
-        View
-      </button>
+      <div className="col-center w-full h-full py-1 leading-none">
+        <button onClick={viewOnClick} className="table-btn">
+          View
+        </button>
+      </div>
       <Modal title={row?.item_name} open={open} setOpen={setOpen}>
         <div className="col p-3 w-[80vw] sm:w-[65vw] lg:w-[50vw] xl:w-[38vw]">
           <p className="font-semibold underline opacity-75">Guide</p>

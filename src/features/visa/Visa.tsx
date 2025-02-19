@@ -1,32 +1,21 @@
 import CheckI20 from "./features/ds-160/CheckI20";
 import VisaGuide from "./components/VisaGuide";
-import Expedite from "./features/expedite/Expedite";
-import TrainingResources from "./features/training-resources/TrainingResources";
+import TrainingResources from "./features/visa-training-resources/StatusHandler";
 import useVisa from "./services/hooks/useVisa";
+import DS160req from "./features/ds-160/DS160req";
+import DS160Review from "./features/ds-160/DS160Review";
+import { FullLoader } from "../../components/loaders/Loader";
 
 function Visa() {
-  const { stage } = useVisa();
+  const { stage, isLoading } = useVisa();
+  if (isLoading) return <FullLoader />;
   return (
     <main>
       <VisaGuide />
       {stage === 0 && <CheckI20 />}
-      {stage === 1 && <CheckI20 />}
-      {stage === 2 && <CheckI20 />}
-      {stage === 3 && (
-        <section>
-          <div>
-            <p className="my-2 p-3">
-              Your visa fee payment has been approved and disbursed to you. You
-              may now submit it to the embassy and schedule a visa interview
-              date. You have also been granted access to visa expedite letter
-              (if you need it). To access the visa training resources, please
-              submit the request using the button below.
-            </p>
-          </div>
-          <TrainingResources />
-          <Expedite />
-        </section>
-      )}
+      {stage === 1 && <DS160req />}
+      {stage === 2 && <DS160Review />}
+      {stage === 3 && <TrainingResources />}
     </main>
   );
 }

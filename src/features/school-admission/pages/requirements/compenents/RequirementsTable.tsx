@@ -6,7 +6,7 @@ import useAdmissions from "../../../services/useAdmissions";
 import Loader from "../../../../../components/loaders/Loader";
 import GridTable from "../../../../../components/tables/GridTable";
 
-function Requirements() {
+function RequirementsTable() {
   const { appDocs, uploadedDocs, proposedSchools } = useAdmissions();
   if (!appDocs?.data || !uploadedDocs) return <Loader />;
 
@@ -34,11 +34,6 @@ function Requirements() {
         rows={rowData}
         getRowId={(row) => row.id}
         name="School Admission"
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 10 },
-          },
-        }}
         getRowHeight={(params) => {
           if (params.id === "3" && params.model.schools.length > 0)
             return "auto";
@@ -66,10 +61,10 @@ const RequirementsAccordion = () => (
         </h3>
       </AccordionSummary>
       <AccordionDetails>
-        <Requirements />
+        <RequirementsTable />
       </AccordionDetails>
     </Accordion>
   </div>
 );
 export { RequirementsAccordion };
-export default Requirements;
+export default RequirementsTable;

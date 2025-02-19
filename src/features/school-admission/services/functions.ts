@@ -101,6 +101,32 @@ class AdmissionAPIs {
       return error.response.data;
     }
   };
+  consents = async (school_details: any) => {
+    const url =
+      "/login/member/dashboard/APIs/others/sign_consent.php?action=fetch_consent";
+    const _schoolResponse = await api.get(url, {
+      params: {
+        consent_type: "2",
+        extra_column: "school_id",
+        extra_value: school_details.school,
+      },
+    });
+    const schoolResponse = _schoolResponse?.data?.message;
+
+    const _programResponse = await api.get(url, {
+      params: {
+        consent_type: "5",
+        extra_column: "program_id",
+        extra_value: school_details.course,
+      },
+    });
+    const programResponse = _programResponse?.data?.message;
+    const resData =
+      schoolResponse && schoolResponse?.length > 0
+        ? schoolResponse
+        : programResponse;
+    return resData;
+  };
 }
 const admissionAPIs = new AdmissionAPIs();
 export { admissionAPIs };

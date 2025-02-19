@@ -56,6 +56,9 @@ const SchoolApplication = lazy(
 const OnboardingAgreement = lazy(
   () => import("../features/user/contracts/OnboardingAgreement")
 );
+const ExpediteLetter = lazy(
+  () => import("../features/visa/features/expedite/ExpediteLetter")
+);
 
 function Router() {
   return (
@@ -73,6 +76,7 @@ function Router() {
                 element={<OnboardingAgreement />}
               />
             </Route>
+            <Route path="/visa-processing/expedite-letter" element={<ExpediteLetter />} />
           </Route>
           <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
             <Route index element={<Dashboard />} />

@@ -7,7 +7,9 @@ import Loader from "../../../../../components/loaders/Loader";
 import GridTable from "../../../../../components/tables/GridTable";
 
 function RequirementsTable() {
-  const { appDocs, uploadedDocs, proposedSchools } = useAdmissions();
+  const { appDocs, uploadedDocs, proposedSchools, consentsWithSchool } =
+    useAdmissions();
+
   if (!appDocs?.data || !uploadedDocs) return <Loader />;
 
   const filterUploadedDocs = (docType: any) => {
@@ -25,6 +27,7 @@ function RequirementsTable() {
       ...item,
       uploaded_documents: filterUploadedDocs(item.id) || [],
       schools: proposedSchools,
+      consents: consentsWithSchool,
     }));
 
   return (
@@ -37,6 +40,7 @@ function RequirementsTable() {
         getRowHeight={(params) => {
           if (params.id === "3" && params.model.schools.length > 0)
             return "auto";
+          if (params.id === "14") return "auto";
           return null;
         }}
       />

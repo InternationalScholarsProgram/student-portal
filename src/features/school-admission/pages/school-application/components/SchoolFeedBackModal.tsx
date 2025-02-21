@@ -3,7 +3,7 @@ import Modal from "../../../../../components/Modal";
 import { useState } from "react";
 import useAdmissions from "../../../services/useAdmissions";
 import { useMutation } from "@tanstack/react-query";
-import { admissionAPIs } from "../../../services/functions";
+import { admissionAPIs } from "../../../services/admissionAPIs";
 import InputField from "../../../../../components/inputs/InputField";
 
 type Props = {

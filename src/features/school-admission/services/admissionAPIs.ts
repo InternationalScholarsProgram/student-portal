@@ -75,8 +75,25 @@ class AdmissionAPIs {
   uploadFile = async (data: any) => {
     try {
       const formData = json2formData(data);
+      console.log(data, "data");
+      
       const response = await api.post(
         `${url}/school_app_docs_upload.php`,
+        formData
+      );
+      return response.data;
+    } catch (error: any) {
+      console.log(error.response.data);
+      return error.response.data;
+    }
+  };
+  uploadConsent = async (data: any) => {
+    try {
+      const formData = json2formData(data);
+      console.log(data, "data");
+      
+      const response = await api.post(
+        `${baseDirectory}/others/sign_consent.php?action=sign_consent`,
         formData
       );
       return response.data;
@@ -101,31 +118,34 @@ class AdmissionAPIs {
       return error.response.data;
     }
   };
-  consents = async (school_details: any) => {
+  consents = async (school: { id: string; course: string }) => {
     const url =
       "/login/member/dashboard/APIs/others/sign_consent.php?action=fetch_consent";
     const _schoolResponse = await api.get(url, {
       params: {
         consent_type: "2",
         extra_column: "school_id",
-        extra_value: school_details.school,
+        extra_value: school.id,
       },
     });
-    const schoolResponse = _schoolResponse?.data?.message;
 
     const _programResponse = await api.get(url, {
       params: {
         consent_type: "5",
         extra_column: "program_id",
-        extra_value: school_details.course,
+        extra_value: school.course,
       },
     });
+
+    const schoolResponse = _schoolResponse?.data?.message;
     const programResponse = _programResponse?.data?.message;
+
     const resData =
       schoolResponse && schoolResponse?.length > 0
         ? schoolResponse
         : programResponse;
-    return resData;
+    if (resData.length > 0) return resData;
+    return null;
   };
 }
 const admissionAPIs = new AdmissionAPIs();

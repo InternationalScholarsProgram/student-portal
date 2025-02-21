@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { formatCurrency } from "../../../../../utils/utils";
-import { admissionAPIs } from "../../../services/functions";
+import { admissionAPIs } from "../../../services/admissionAPIs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

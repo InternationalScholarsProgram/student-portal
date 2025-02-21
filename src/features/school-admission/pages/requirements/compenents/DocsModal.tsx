@@ -5,7 +5,7 @@ import SOP from "./SOP";
 import { handleStatus, statusClass } from "./TableData";
 import { BASE_URL } from "../../../../../services/api/base";
 import useAdmissions from "../../../services/useAdmissions";
-import { admissionAPIs } from "../../../services/functions";
+import { admissionAPIs } from "../../../services/admissionAPIs";
 import {
   FullLoader,
   InlineLoader,
@@ -15,15 +15,11 @@ import PickFileButton from "../../../../../components/buttons/PickFileButton";
 import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
 import InputField from "../../../../../components/inputs/InputField";
 import PrimaryBorderBtn from "../../../../../components/buttons/PrimaryBorderBtn";
+import Consents from "./Consents";
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
 function DocsModal({ row }: any) {
-  const { status, queryKeys, currentIntake } = useAdmissions();
-  const queryClient = useQueryClient();
-
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: queryKeys.uploadedDocs });
-  };
+  const { status, currentIntake, invalidateDocs: invalidate } = useAdmissions();
   const statusData = status?.message;
   const [open, setOpen] = useState(false);
   const [file, setFiles] = useState<File | null>(null);
@@ -37,16 +33,6 @@ function DocsModal({ row }: any) {
     comment: " ",
   };
 
-  const handleOnSuccess = (res: any) => {
-    if (res.status === "success") {
-      invalidate();
-      toast.success(res.message);
-      setOpen(false);
-      return;
-    }
-    toast.error(res.message);
-  };
-
   const handleUpload = useMutation({
     mutationFn: async () => {
       const _data =
@@ -58,7 +44,15 @@ function DocsModal({ row }: any) {
             };
       return admissionAPIs.uploadFile({ ...data, ..._data, file: file });
     },
-    onSuccess: handleOnSuccess,
+    onSuccess: (res: any) => {
+      if (res.status === "success") {
+        invalidate();
+        toast.success(res.message);
+        setOpen(false);
+        return;
+      }
+      toast.error(res.message);
+    },
   });
   const handleOnSubmit = (e: any) => {
     e.preventDefault();
@@ -102,11 +96,15 @@ function DocsModal({ row }: any) {
           <p className="font-semibold underline opacity-75">Document</p>
           {row.id === "3" ? (
             <SOP
-              schools={statusData?.proposed_courses}
               setOpen={setOpen}
               data={data}
               row={row}
-              inValidate={invalidate}
+            />
+          ) : row.id === "14" ? (
+            <Consents
+              setOpen={setOpen}
+              data={data}
+              row={row}
             />
           ) : (
             <form onSubmit={handleOnSubmit} className="py-2">

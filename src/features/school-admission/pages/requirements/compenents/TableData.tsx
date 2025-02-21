@@ -79,6 +79,17 @@ const columns: GridColDef[] = [
           );
         });
       }
+      if (params.row.id === "14") {
+        return params.row.consents?.map((item: any) => {
+          const status = handleStatus(item?.document?.status);
+          return (
+            <p key={item?.school?.school_id} className="text-sm my-1 w-full">
+              {item?.school.school_name} :
+              <span className={statusClass(status)}>{" " + status}</span>
+            </p>
+          );
+        });
+      }
       return (
         <p className={statusClass(params.value[0], "text-sm")}>
           {params.value}

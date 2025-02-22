@@ -1,5 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DocsModal from "./DocsModal";
+import { SchoolConsentDocument } from "../../../types/types";
 
 export const handleStatus = (params: any) => {
   if (!params) return "Not Uploaded";
@@ -19,38 +20,7 @@ export const handleStatus = (params: any) => {
   return "Invalid Input";
 };
 
-export const getStatus = (status: any) => {
-  status = parseInt(status);
-  if (status === 1) return "Pending";
-  if (status === 2) return "Approved";
-  if (status === 3) return "Rejected";
-  console.log("Not found", status);
-  return "Not Uploaded";
-};
-export const statusClass = (status: any, otherClasses?: string): string => {
-  const _status = typeof status === "number" ? getStatus(status) : status;
-
-  let value = "";
-
-  switch (_status) {
-    case "Pending":
-      value = "text-warning-main";
-      break;
-    case "Approved":
-      value = "text-secondary-main";
-      break;
-    case "Rejected":
-      value = "text-error-main/75";
-      break;
-    default:
-      value = "";
-  }
-
-  // Ensure proper concatenation and trimming for empty strings
-  return [value, otherClasses].filter(Boolean).join(" ");
-};
-
-const columns: GridColDef[] = [
+export const columns: GridColDef[] = [
   {
     field: "item_name",
     headerName: "Items",
@@ -80,7 +50,8 @@ const columns: GridColDef[] = [
         });
       }
       if (params.row.id === "14") {
-        return params.row.consents?.map((item: any) => {
+        if (!params.row.consents) return <p></p>;
+        return params.row.consents?.map((item: SchoolConsentDocument) => {
           const status = handleStatus(item?.document?.status);
           return (
             <p key={item?.school?.school_id} className="text-sm my-1 w-full">
@@ -102,8 +73,39 @@ const columns: GridColDef[] = [
     minWidth: 100,
     headerName: "Action",
     headerAlign: "center",
-    renderCell: (params) => <DocsModal row={params.row} />,
+    renderCell: (params) => {
+      if (params.row.id === "14" && !params.row.consents) return <p></p>;
+      return <DocsModal row={params.row} />;
+    },
   },
 ];
 
-export { columns };
+export const getStatus = (status: any) => {
+  status = parseInt(status);
+  if (status === 1) return "Pending";
+  if (status === 2) return "Approved";
+  if (status === 3) return "Rejected";
+  console.log("Not found", status);
+  return "Not Uploaded";
+};
+export const statusClass = (status: any, otherClasses?: string): string => {
+  const _status = typeof status === "number" ? getStatus(status) : status;
+  let value = "";
+
+  switch (_status) {
+    case "Pending":
+      value = "text-warning-main";
+      break;
+    case "Approved":
+      value = "text-secondary-main";
+      break;
+    case "Rejected":
+      value = "text-error-main/75";
+      break;
+    default:
+      value = "";
+  }
+
+  // Ensure proper concatenation and trimming for empty strings
+  return [value, otherClasses].filter(Boolean).join(" ");
+};

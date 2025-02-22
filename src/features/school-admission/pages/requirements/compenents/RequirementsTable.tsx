@@ -10,20 +10,18 @@ function RequirementsTable() {
   const { appDocs, uploadedDocs, proposedSchools, consentsWithSchool } =
     useAdmissions();
 
-  if (!appDocs?.data || !uploadedDocs) return <Loader />;
+  if (!appDocs || !uploadedDocs) return <Loader />;
 
-  const filterUploadedDocs = (docType: any) => {
+  const filterUploadedDocs = (docType: string) => {
     if (uploadedDocs.length === 0) return [];
-    const uploadedDocById = uploadedDocs
-      ?.filter((uploadedDoc: any) => uploadedDoc.doc_id?.toString() === docType)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ?.map(({ id, item_name, ...other }: any) => other);
-    return uploadedDocById;
+    return uploadedDocs
+      .filter((doc) => doc.doc_id?.toString() === docType)
+      .map(({ id: _id, ...other }) => other);
   };
 
-  const rowData = appDocs.data
-    .filter((item: any) => !(item.id === "3" && proposedSchools?.length === 0))
-    .map((item: any) => ({
+  const rowData = appDocs
+    ?.filter((item) => !(item.id === "3" && proposedSchools?.length === 0))
+    ?.map((item) => ({
       ...item,
       uploaded_documents: filterUploadedDocs(item.id) || [],
       schools: proposedSchools,
@@ -31,20 +29,17 @@ function RequirementsTable() {
     }));
 
   return (
-    <div className="w-full h-fit">
-      <GridTable
-        columns={columns}
-        rows={rowData}
-        getRowId={(row) => row.id}
-        name="School Admission"
-        getRowHeight={(params) => {
-          if (params.id === "3" && params.model.schools.length > 0)
-            return "auto";
-          if (params.id === "14") return "auto";
-          return null;
-        }}
-      />
-    </div>
+    <GridTable
+      columns={columns}
+      rows={rowData}
+      getRowId={(row) => row.id}
+      name="School Admission"
+      getRowHeight={(params) => {
+        if (params.id === "3" && params.model.schools.length > 0) return "auto";
+        if (params.id === "14" && params.model.consents) return "auto";
+        return null;
+      }}
+    />
   );
 }
 

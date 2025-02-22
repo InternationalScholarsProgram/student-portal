@@ -3,22 +3,27 @@ import { formatCurrency } from "../../../../../utils/utils";
 import { admissionAPIs } from "../../../services/admissionAPIs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import useAdmissions from "../../../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
 import { useLocation } from "react-router";
+import ConsentStatus from "../../../components/ConsentStatus";
 
-function MakeApplication({
-  notAppliedSchools,
-  hasAppliedAllSchools,
-  intake_id,
-}: any) {
+function MakeApplication() {
   const { state } = useLocation();
-  const { queryKeys } = useAdmissions();
-  const queryClient = useQueryClient();
-  const [school, setSchool] = useState<any>("");
+  const {
+    queryKeys,
+    queryClient,
+    consentsWithSchool,
+    notAppliedSchools,
+    hasAppliedToAllSchools,
+    currentIntake,
+  } = useAdmissions();
+
+  const [school, setSchool] = useState("");
 
   useEffect(() => {
+    // when the navigate with a predetermined school
     if (state) {
       const find = notAppliedSchools.find(
         (item: any) => item.school_name === state.school_name
@@ -28,13 +33,9 @@ function MakeApplication({
     }
   }, [state]);
 
-  const handleChange = (e: any) => setSchool(e.target.value);
-
-  const findSchool = notAppliedSchools.find(
-    (item: any) => item.school_name === school
-  );
   const handleSubmit = async () => {
-    if (!school || !intake_id) return toast.error("Please select a school");
+    if (!school || !currentIntake?.id)
+      return toast.error("Please select a school");
     submitApplication.mutate();
   };
 
@@ -42,12 +43,18 @@ function MakeApplication({
     mutationFn: async () =>
       await admissionAPIs.submitSchoolApplication({
         proposed_course_id: findSchool?.id,
-        intake: intake_id,
+        intake: currentIntake?.id,
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.statusCheck }),
   });
-
+  const findSchool = notAppliedSchools.find(
+    (item) => item.school_name === school
+  );
+  const hasConsent = consentsWithSchool?.find(
+    (item) => item.school.school_name === school
+  );
+  const canApply = school && (!hasConsent || hasConsent?.document?.status === 2);
   return (
     <>
       <h3 className="p-2 opacity-70 font-semibold text-lg row w-full gap-3 border-b-30">
@@ -56,7 +63,7 @@ function MakeApplication({
       {notAppliedSchools?.length > 0 ? (
         <section className="col p-4">
           <p>
-            All your documents have been approved. You are now ready to submit
+            Most of your documents have been approved. You are now ready to submit
             your school application request. Please note, you can only submit an
             application request for each school at a time. Please use the button
             below to submit your school application request.
@@ -68,7 +75,7 @@ function MakeApplication({
                 labelId="school"
                 id="demo-simple-select-standard"
                 value={school}
-                onChange={handleChange}
+                onChange={(e) => setSchool(e.target.value)}
                 label="Age"
               >
                 <MenuItem value="">
@@ -80,17 +87,21 @@ function MakeApplication({
                   </MenuItem>
                 ))}
               </Select>
-              {findSchool && (
-                <p className="mt-4">
-                  School Application fee is{" "}
-                  {findSchool?.application_cost === "Waived"
-                    ? "waived for this school"
-                    : formatCurrency(findSchool?.application_cost)}
-                </p>
+              {hasConsent ? (
+                <ConsentStatus consent={hasConsent} />
+              ) : (
+                findSchool && (
+                  <p className="mt-4">
+                    School Application fee is{" "}
+                    {findSchool?.application_cost === "Waived"
+                      ? "waived for this school"
+                      : formatCurrency(findSchool?.application_cost)}
+                  </p>
+                )
               )}
             </FormControl>
           </div>
-          {school && (
+          {canApply && (
             <button onClick={handleSubmit} className="primary-btn self-end">
               {submitApplication.isPending
                 ? "Submitting..."
@@ -98,7 +109,7 @@ function MakeApplication({
             </button>
           )}
         </section>
-      ) : hasAppliedAllSchools ? (
+      ) : hasAppliedToAllSchools ? (
         <p className="p-4">
           You have successfully requested application to all proposed schools
         </p>

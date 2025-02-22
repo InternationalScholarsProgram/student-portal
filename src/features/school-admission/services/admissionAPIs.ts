@@ -44,7 +44,7 @@ class AdmissionAPIs {
     const response = await api.get(
       `${url}/fetch_school_app_docs_requirements.php`
     );
-    return response.data;
+    return response?.data?.data;
   };
   getUploadedDocs = async () => {
     const response = await api.get(`${url}/uploaded_docs.php`);

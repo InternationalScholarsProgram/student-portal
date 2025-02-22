@@ -1,14 +1,12 @@
 import { useState } from "react";
 import GridTable from "../../../../components/tables/GridTable";
-import { feedbackCol, columns } from "../../components/utils";
+import { columns } from "../../components/utils";
 import useTickets from "../../hooks/useTickets";
 import ViewTicketModal from "./components/ViewTicketModal";
-import { GridColDef } from "@mui/x-data-grid";
 import { FullLoader } from "../../../../components/loaders/Loader";
-import { Badge } from "@mui/material";
 
 function ViewTickets() {
-  const { openTickets, isLoading, closedTickets, readNotification } =
+  const { openTickets, closedTickets, isLoading, readNotification } =
     useTickets();
   const [showOpenTickets, setShowOpenTickets] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -22,27 +20,13 @@ function ViewTickets() {
     if (row.unread_count > 0) readNotification.mutate(row.id);
   };
 
-  const actionColumn: GridColDef = {
-    field: "action",
-    headerName: "Action",
-    cellClassName: "row-center",
-    renderCell: (params) => (
-      <div className="col-center flex-1">
-        <Badge color="primary" badgeContent={params.row.unread_count}>
-          <p className="table-btn" onClick={() => actionView(params.row)}>
-            View
-          </p>
-        </Badge>
-      </div>
-    ),
+  const getColumns = () => {
+    const _columns = columns(actionView);
+    const fieldToExclude = showOpenTickets ? "feedback" : "status";
+    return _columns.filter((col) => col.field !== fieldToExclude);
   };
 
   if (isLoading) return <FullLoader />;
-  const getColumns = () => {
-    if (showOpenTickets) return [...columns, actionColumn];
-    return [...columns, feedbackCol, actionColumn];
-  };
-
   return (
     <main>
       <ul className="ul-links w-full">

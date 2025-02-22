@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import SOP from "./SOP";
 import { handleStatus, statusClass } from "./TableData";
 import { BASE_URL } from "../../../../../services/api/base";
@@ -14,8 +14,8 @@ import Modal from "../../../../../components/Modal";
 import PickFileButton from "../../../../../components/buttons/PickFileButton";
 import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
 import InputField from "../../../../../components/inputs/InputField";
-import PrimaryBorderBtn from "../../../../../components/buttons/PrimaryBorderBtn";
-import Consents from "./Consents";
+import ConsentsForm from "../../../components/ConsentsForm";
+
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
 function DocsModal({ row }: any) {
@@ -95,17 +95,9 @@ function DocsModal({ row }: any) {
           </div>
           <p className="font-semibold underline opacity-75">Document</p>
           {row.id === "3" ? (
-            <SOP
-              setOpen={setOpen}
-              data={data}
-              row={row}
-            />
+            <SOP setOpen={setOpen} data={data} row={row} />
           ) : row.id === "14" ? (
-            <Consents
-              setOpen={setOpen}
-              data={data}
-              row={row}
-            />
+            <ConsentsForm setOpen={setOpen} />
           ) : (
             <form onSubmit={handleOnSubmit} className="py-2">
               <div className="col p-2 card mx-2">

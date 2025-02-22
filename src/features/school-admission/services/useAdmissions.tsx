@@ -1,6 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { admissionAPIs } from "./admissionAPIs";
 import useFetchUser from "../../../services/hooks/useFetchUser";
+import {
+  Consent,
+  DocRequirements,
+  School,
+  SchoolConsentDocumentArray,
+  UploadedDocument,
+} from "../types/types";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();
@@ -29,36 +36,42 @@ const useAdmissions = () => {
     queryFn: admissionAPIs.statusCheck,
     enabled: eligible,
   });
+  const schoolAppId = status?.message?.school_app_id;
 
-  const proposedSchools = status?.message?.proposed_courses || [];
-
+  const proposedSchools: School[] = status?.message?.proposed_courses;
   const appliedSchools = proposedSchools?.filter(
-    (item: any) => item?.application_status === "applied"
+    (item) => item?.application_status === "applied"
   );
   const notAppliedSchools = proposedSchools?.filter(
-    (item: any) =>
-      item?.SOP_status === "2" && item?.application_status !== "applied"
+    (item) => item?.SOP_status === "2" && item?.application_status !== "applied"
   );
   const hasAppliedToAllSchools = proposedSchools?.every(
-    (item: any) => item?.application_status === "applied"
+    (item) => item?.application_status === "applied"
   );
 
-  const { data: appDocs } = useQuery({
+  const { data: appDocs } = useQuery<DocRequirements[]>({
     queryKey: queryKeys.appDocs,
     queryFn: admissionAPIs.applicationDocs,
     enabled: status?.code >= 2,
   });
-  const { data: uploadedDocs } = useQuery({
+  appDocs?.sort((a, b) => {
+    if (a.id === "3") return 1; // a should come after b
+    if (b.id === "3") return -1; // b should come after a
+    return 0; // otherwise, keep original order
+  });
+
+  const { data: uploadedDocs } = useQuery<UploadedDocument[]>({
     queryKey: queryKeys.uploadedDocs,
     queryFn: admissionAPIs.getUploadedDocs,
     enabled: !!appDocs,
   });
+
   const { data: currentIntake } = useQuery({
     queryKey: queryKeys.intakes,
     queryFn: admissionAPIs.getCurrentIntake,
     enabled: eligible,
   });
-  const { data: consents } = useQuery({
+  const { data: consents } = useQuery<Consent[] | null>({
     queryKey: queryKeys.consents,
     queryFn: async () => {
       try {
@@ -93,26 +106,26 @@ const useAdmissions = () => {
     enabled: proposedSchools?.length > 0,
   });
 
-  const consentsWithSchool = consents?.map((consent: any) => {
-    const school = proposedSchools?.find(
-      (school: any) => school.school_id === consent?.school_id?.toString()
-    );
+  const consentsWithSchool = consents
+    ?.map((consent) => {
+      const school = proposedSchools?.find(
+        (school) => school.school_id === consent?.school_id?.toString()
+      );
+      const uploadedDocById = uploadedDocs
+        ?.filter((uploadedDoc) => uploadedDoc.doc_id?.toString() === "14")
+        ?.map(({ id: _id, ...rest }) => rest); // Remove the 'id' property
 
-    const uploadedDocById = uploadedDocs
-      ?.filter((uploadedDoc: any) => uploadedDoc.doc_id?.toString() === "14")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ?.map(({ id, item_name, ...other }: any) => other);
+      const filterUploadedDocs = uploadedDocById?.find(
+        (doc) => doc.comment === school?.course
+      );
 
-    const filterUploadedDocs = uploadedDocById?.find(
-      (doc: any) => doc?.comment === consent?.school_id?.toString()
-    );
-
-    return {
-      school: school,
-      consent: consent,
-      document: filterUploadedDocs,
-    };
-  });
+      return {
+        school: school,
+        consent: consent,
+        document: filterUploadedDocs,
+      };
+    })
+    .filter(Boolean) as SchoolConsentDocumentArray;
 
   return {
     eligibility,
@@ -129,6 +142,7 @@ const useAdmissions = () => {
     queryKeys,
     consentsWithSchool,
     queryClient,
+    schoolAppId,
     invalidateDocs,
   };
 };

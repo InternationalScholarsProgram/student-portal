@@ -1,19 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { handleStatus, statusClass } from "./TableData";
-import { BASE_URL } from "../../../../../services/api/base";
-import { admissionAPIs } from "../../../services/admissionAPIs";
-import PickFileButton from "../../../../../components/buttons/PickFileButton";
-import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
-import useAdmissions from "../../../services/useAdmissions";
-import { SchoolConsentDocumentArray } from "../../../types/types";
+import {
+  handleStatus,
+  statusClass,
+} from "../pages/requirements/compenents/TableData";
+import { BASE_URL } from "../../../services/api/base";
+import { admissionAPIs } from "../services/admissionAPIs";
+import PickFileButton from "../../../components/buttons/PickFileButton";
+import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
+import useAdmissions from "../services/useAdmissions";
+import { SchoolConsentDocumentArray } from "../types/types";
 
 const docUrl = BASE_URL + "/login/member/dashboard/school_app_docs/";
 
-const ConsentsForm = ({ setOpen, data, row }: Props) => {
-  const { invalidateDocs } = useAdmissions();
-  const consents: SchoolConsentDocumentArray = row?.consents;
+const ConsentsForm = ({ setOpen }: Props) => {
+  const { invalidateDocs, currentIntake, schoolAppId, consentsWithSchool } =
+    useAdmissions();
+  const consents: SchoolConsentDocumentArray = consentsWithSchool;
   const [filesState, setFilesState] = useState<ConsentFile[]>([]);
 
   const handleFiles = (school_id: string, file: File) => {
@@ -58,17 +62,16 @@ const ConsentsForm = ({ setOpen, data, row }: Props) => {
         : { action: "upload" };
 
       const reqData = {
-        ...data,
         ...action,
+        doc_type_id: "14",
         comment: consentItem.school.school_id,
         consent_id: consentItem.consent.id,
         consent: item.file,
         type: consentItem.consent.consent_type,
-        app_id: data.school_app_id,
-        intake: data.intake_id,
-        school_id: consentItem.school.school_id,
+        app_id: schoolAppId,
+        intake: currentIntake?.id,
+        course_id: consentItem.school.course,
       };
-      console.log(data, "props");
 
       const response = await admissionAPIs.uploadConsent(reqData);
       // Give feedback for each request
@@ -117,12 +120,35 @@ const ConsentsForm = ({ setOpen, data, row }: Props) => {
   };
 
   return (
-    <form onSubmit={handleOnSubmit} className="col p-2 w-full">
-      {consents?.map((item: any) => {
+    <form onSubmit={handleOnSubmit} className="col p-2 w-full overflow-hidden">
+      {consents?.map((item) => {
         const statusName = handleStatus(item.document?.status);
         return (
           <div key={item.school.id} className="my-2 p-1 card ">
             <p className="font-bold">{item.school.school_name}</p>
+            {item.consent.sign_type === "hand" ? (
+              <p>
+                Download and sign Consent/Agreement form attached.
+                <a
+                  href={item.consent.URL}
+                  className="text-primary-light hover:underline pl-1"
+                  target="_blank"
+                >
+                  Download
+                </a>
+              </p>
+            ) : (
+              <p>
+                Consent/Agreement :{" "}
+                <a
+                  href={item.consent.URL}
+                  className="text-primary-light "
+                  target="_blank"
+                >
+                  View
+                </a>
+              </p>
+            )}
             {item.document ? (
               <div className="col my-2 gap-1 p-2">
                 <p className="row gap-2">
@@ -172,9 +198,8 @@ const ConsentsForm = ({ setOpen, data, row }: Props) => {
               </div>
             ) : (
               <div className="col gap-3 p-2 w-full">
-                {/* <p className="font-semibold opacity-60">Upload SOP</p> */}
                 <PickFileButton
-                  text="Upload Consent"
+                  text="Upload Signed Consent"
                   onChange={(e) => handlePickFiles(e, item.school.school_id)}
                 />
               </div>
@@ -186,7 +211,7 @@ const ConsentsForm = ({ setOpen, data, row }: Props) => {
         <button className="text-btn" onClick={() => setOpen(false)}>
           Close
         </button>
-        {row.uploaded_documents.filter((item: any) => item?.status !== "2")
+        {consents?.filter((item) => item?.document?.status?.toString() !== "2")
           .length !== 0 && (
           <PrimaryBtn type="submit">
             {handleUpdates.isPending ? "Uploading..." : "Update"}
@@ -205,7 +230,5 @@ type ConsentFile = {
 };
 
 type Props = {
-  setOpen: any;
-  data: any;
-  row: any;
+  setOpen?: any;
 };

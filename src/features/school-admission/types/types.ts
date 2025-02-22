@@ -14,7 +14,7 @@ type School = {
 type Consent = {
   id: number;
   consent_type: number;
-  school_id: string |number;
+  school_id: string | number;
   program_id: number;
   loan_id: number | null;
   sign_type: string;
@@ -23,6 +23,7 @@ type Consent = {
 };
 
 type UploadedDocument = {
+  id?: number;
   doc_id: number;
   app_id: string;
   document_name: string;
@@ -32,15 +33,25 @@ type UploadedDocument = {
   remarks: string | null;
   status: number;
   reject_docname: string;
+  item_name: string;
 };
 
 type SchoolConsentDocument = {
   school: School;
   consent: Consent;
-  document: UploadedDocument;
+  document: UploadedDocument | undefined;
 };
 
-type SchoolConsentDocumentArray = SchoolConsentDocument[];
+type SchoolConsentDocumentArray = SchoolConsentDocument[] | undefined;
+
+interface DocRequirements {
+  acronym: string;
+  description: string;
+  id: string;
+  item_name: string;
+  sample_link: string;
+  type: string;
+}
 
 export type {
   SchoolConsentDocument,
@@ -48,4 +59,5 @@ export type {
   Consent,
   UploadedDocument,
   School,
+  DocRequirements,
 };

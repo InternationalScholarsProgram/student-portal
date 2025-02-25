@@ -41,7 +41,7 @@ const version = "V 3.0";
 const OnboardingAgreement: React.FC<OnboardingAgreementProps> = () => {
   const { user } = useFetchUser();
   const { state } = useLocation();
-  console.log(state, "state");
+  
   const name = capitalize(user?.fullnames);
   document.title = `${name} Onboarding Agreement`;
   const { toPDF, targetRef } = usePDF({ filename: name });

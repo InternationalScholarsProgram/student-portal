@@ -30,7 +30,7 @@ function DocsModal({ row }: any) {
     school_app_id: statusData?.school_app_id,
     intake_id: currentIntake?.id,
     doc_type_id: row?.id,
-    comment: " ",
+    comment: row?.acronym,
   };
 
   const handleUpload = useMutation({
@@ -93,7 +93,7 @@ function DocsModal({ row }: any) {
               </span>
             </p>
           </div>
-          <p className="font-semibold underline opacity-75">Document</p>
+          <p className="font-semibold opacity-75">Document(s)</p>
           {row.id === "3" ? (
             <SOP setOpen={setOpen} data={data} row={row} />
           ) : row.id === "14" ? (

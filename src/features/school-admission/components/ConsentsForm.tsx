@@ -58,6 +58,7 @@ const ConsentsForm = ({ setOpen }: Props) => {
         ? {
             current_doc_name: consentItem?.document.document_name,
             action: "update",
+            update_id: consentItem.document.id,
           }
         : { action: "upload" };
 
@@ -127,8 +128,8 @@ const ConsentsForm = ({ setOpen }: Props) => {
           <div key={item.school.id} className="my-2 p-1 card ">
             <p className="font-bold">{item.school.school_name}</p>
             {item.consent.sign_type === "hand" ? (
-              <p>
-                Download and sign Consent/Agreement form attached.
+              <p className="w-full">
+                Download and sign Consent/Agreement form attached.{" "}
                 <a
                   href={item.consent.URL}
                   className="text-primary-light hover:underline pl-1"
@@ -158,11 +159,13 @@ const ConsentsForm = ({ setOpen }: Props) => {
 
                 {item.document?.status === 3 && (
                   <div className="col">
-                    <p className="font-semibold">Reason for Rejection :</p>
+                    <p className="font-semibold">
+                      Reason for Rejection :
+                      <span className=" font-medium first-letter:uppercase">
+                        {" " +item.document?.remarks}
+                      </span>
+                    </p>
                     <div className="px-3">
-                      <p className="first-letter:uppercase">
-                        {item.document?.remarks}
-                      </p>
                       {item.document?.reject_docname && (
                         <p>
                           <a

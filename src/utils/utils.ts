@@ -99,7 +99,10 @@ function capitalizeFirstCharacter(str: string) {
   if (!str) return ""; // Handle empty or undefined strings
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
+const capitalize = (str: string) =>
+  str?.toLowerCase()?.replace(/\b[a-z]/g, function (letter: string) {
+    return letter?.toUpperCase();
+  });
 type IpData = {
   ip: string;
   city: string;
@@ -116,10 +119,6 @@ const fetchIp = async () => {
   }
 };
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const capitalize = (str: string) =>
-  str?.toLowerCase()?.replace(/\b[a-z]/g, function (letter: string) {
-    return letter?.toUpperCase();
-  });
 
 const pdfOptions = {
   image: {
@@ -164,5 +163,4 @@ export {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import html2pdf from "html2pdf.js";
-
 export { html2pdf };

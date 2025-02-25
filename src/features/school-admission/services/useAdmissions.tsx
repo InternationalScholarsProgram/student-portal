@@ -6,6 +6,7 @@ import {
   DocRequirements,
   School,
   SchoolConsentDocumentArray,
+  TranscriptsProps,
   UploadedDocument,
 } from "../types/types";
 
@@ -20,6 +21,7 @@ const useAdmissions = () => {
     uploadedDocs: [...admissionKey, "getUploadedDocs"],
     intakes: [...admissionKey, "intakes"],
     consents: [...admissionKey, "consents"],
+    transcripts: [...admissionKey, "transcripts"],
   };
   const invalidateDocs = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.uploadedDocs });
@@ -111,10 +113,9 @@ const useAdmissions = () => {
       const school = proposedSchools?.find(
         (school) => school.school_id === consent?.school_id?.toString()
       );
-      const uploadedDocById = uploadedDocs
-        ?.filter((uploadedDoc) => uploadedDoc.doc_id?.toString() === "14")
-        ?.map(({ id: _id, ...rest }) => rest); // Remove the 'id' property
-
+      const uploadedDocById = uploadedDocs?.filter(
+        (uploadedDoc) => uploadedDoc.doc_id?.toString() === "14"
+      );
       const filterUploadedDocs = uploadedDocById?.find(
         (doc) => doc.comment === school?.course
       );
@@ -127,6 +128,19 @@ const useAdmissions = () => {
     })
     .filter(Boolean) as SchoolConsentDocumentArray;
 
+  const { data: _transcripts, isLoading: transcriptsLoading } = useQuery({
+    queryKey: queryKeys.transcripts,
+    queryFn: async () => admissionAPIs.transcripts(schoolAppId),
+    enabled: !!schoolAppId,
+  });
+  const transcripts = _transcripts?.data?.message as TranscriptsProps;
+
+  const hasAnyVerified =
+    transcripts?.requests?.some((item) => item.status === "2") ||
+    transcripts?.requirements?.some((item) => item.ver_status === "2");
+
+  const canMakeSchoolApplication = status?.code === 5 && hasAnyVerified;
+
   return {
     eligibility,
     currentIntake,
@@ -137,12 +151,17 @@ const useAdmissions = () => {
     appliedSchools,
     notAppliedSchools,
     hasAppliedToAllSchools,
-    isLoading,
+    isLoading: isLoading || transcriptsLoading,
     uploadedDocs,
     queryKeys,
     consentsWithSchool,
     queryClient,
     schoolAppId,
+    transcripts: {
+      ...transcripts,
+      hasAnyVerified,
+    },
+    canMakeSchoolApplication,
     invalidateDocs,
   };
 };

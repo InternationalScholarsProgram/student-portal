@@ -138,12 +138,21 @@ p {
 .contract {
   @apply col mx-1 gap-3;
   page-break-inside: avoid;
+  break-inside: avoid;
 }
 .contract div {
   @apply col gap-2;
+  page-break-before: auto;
 }
-.contract div p h5 li ul {
-  page-break-inside: avoid;
+.contract p,
+.contract span,
+.contract b,
+.contract h5,
+.contract li,
+.contract ul,
+.contract ol {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
 }
 .contract h5 {
   @apply font-semibold;
@@ -152,7 +161,7 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col flex-wrap overflow-clip p-3;
+  @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col p-3;
 }
 .title {
   @apply text-xl sm:text-2xl font-semibold;

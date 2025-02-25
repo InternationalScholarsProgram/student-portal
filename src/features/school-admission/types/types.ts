@@ -17,7 +17,7 @@ type Consent = {
   school_id: string | number;
   program_id: number;
   loan_id: number | null;
-  sign_type: string;
+  sign_type: "digital" | "hand";
   URL: string;
   signed: string | null; // Adjust based on actual data type (e.g., `string | null` if applicable)
 };
@@ -45,13 +45,39 @@ type SchoolConsentDocument = {
 type SchoolConsentDocumentArray = SchoolConsentDocument[] | undefined;
 
 interface DocRequirements {
-  acronym: string;
-  description: string;
+  acronym?: string;
+  description?: string;
   id: string;
   item_name: string;
-  sample_link: string;
-  type: string;
+  sample_link?: string;
+  type?: string;
 }
+interface TranscriptsProps {
+  school_count: number;
+  requirements: TranscriptsRequirementProps[];
+  requests: TranscriptsRequestProps[];
+}
+type TranscriptsRequirementProps = {
+  app_id: string;
+  proposed_course: string;
+  id: string;
+  school_name: string;
+  verification: string;
+  ver_id: string | null;
+  transcript: string;
+  ver_status: string;
+  verification_email: string;
+};
+type TranscriptsRequestProps = {
+  app_id: string | null;
+  city: string | null;
+  code: string | null;
+  email: string;
+  id: string;
+  request_letter: string;
+  status: string;
+  transcript: string | null;
+};
 
 export type {
   SchoolConsentDocument,
@@ -60,4 +86,5 @@ export type {
   UploadedDocument,
   School,
   DocRequirements,
+  TranscriptsProps,
 };

@@ -2,9 +2,8 @@ import { toast } from "react-toastify";
 import api, { baseDirectory } from "../../../services/api/base";
 import { json2formData } from "../../../utils/utils";
 
-const admissionsUrl =
-  "/login/member/dashboard/APIs/school_application/school_admission.php";
 const url = `${baseDirectory}/school_application/`;
+const admissionsUrl = `${url}/school_admission.php`;
 
 class AdmissionAPIs {
   eligibilityCheck = async () => {
@@ -51,13 +50,45 @@ class AdmissionAPIs {
     return response?.data?.message || [];
   };
   getCurrentIntake = async () => {
-    const response = await api.post(`${url}/school_admission.php`, {
+    const response = await api.post(admissionsUrl, {
       action: "get_current_intake",
     });
     const data = response?.data;
     if (data.code === 200) return data?.message;
     if (data.code === 204) return null;
     return null;
+  };
+  transcripts = async (app_id: string) => {
+    const response = await api.post(`${admissionsUrl}?app_id=${app_id}`, {
+      action: "check_transcript_verification",
+    });
+    return response;
+  };
+  updateTranscripts = async (payload: {
+    name: string;
+    docs: any;
+    proposed_course_id: string[] | number[];
+  }) => {
+    const file = new File([payload.docs.blob], payload.name, {
+      type: "application/pdf",
+    });
+
+    const data = json2formData({
+      ...payload,
+      letter: file,
+      action: "save_transcript_request",
+    });    
+    const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
+    const response = await api.post(endpoint, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response?.status === 200) {
+      payload.docs.download();
+    }
+    return response;
   };
   submitSchoolApplication = async (payload: any) => {
     try {
@@ -76,7 +107,7 @@ class AdmissionAPIs {
     try {
       const formData = json2formData(data);
       console.log(data, "data");
-      
+
       const response = await api.post(
         `${url}/school_app_docs_upload.php`,
         formData
@@ -91,7 +122,7 @@ class AdmissionAPIs {
     try {
       const formData = json2formData(data);
       console.log(data, "data");
-      
+
       const response = await api.post(
         `${baseDirectory}/others/sign_consent.php?action=sign_consent`,
         formData

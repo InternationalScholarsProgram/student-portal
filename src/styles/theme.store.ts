@@ -3,58 +3,42 @@ import { create } from "zustand";
 interface ThemeStoreTypes {
   themeMode: string;
   setTheme: (theme: string) => void;
-  getTheme: () => string;
   toggleTheme: () => void;
   setDarkTheme: () => void;
   setLightTheme: () => void;
 }
 
-const themeKey = "ispTheme";
-const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const systemTheme = isDarkMode === true ? "dark" : "light";
-const localStorageTheme = window.localStorage.getItem(themeKey);
-const classDark = "dark";
-const bodyClass = window.document.body.classList;
+const THEME_KEY = "ispTheme";
+const DARK_CLASS = "dark";
+const bodyClass = document.body.classList;
 
-export const theme = localStorageTheme || systemTheme;
+// Get theme from localStorage or system preference
+const systemPrefersDark = window.matchMedia(
+  "(prefers-color-scheme: dark)"
+).matches;
+const storedTheme = localStorage.getItem(THEME_KEY);
+const initialTheme = storedTheme || (systemPrefersDark ? "dark" : "light");
 
 const useThemeStore = create<ThemeStoreTypes>((set, get) => ({
-  themeMode: theme,
-  getTheme: () => get().themeMode,
-  setTheme: (theme) => set({ themeMode: theme }),
-  toggleTheme: () => {
-    const colorMode = get().themeMode;
+  themeMode: initialTheme,
 
-    if (colorMode === "light") {
-      bodyClass.add(classDark);
-      // bodyClass.remove("scrollbar-dark");
-      // bodyClass.add("scrollbar-light");
-      window.localStorage.setItem(themeKey, "dark");
-      set({ themeMode: "dark" });
+  setTheme: (theme) => {
+    localStorage.setItem(THEME_KEY, theme);
+    if (theme === "dark") {
+      bodyClass.add(DARK_CLASS);
     } else {
-      bodyClass.remove(classDark);
-      // bodyClass.remove("scrollbar-light");
-      // bodyClass.add("scrollbar-dark");
-      window.localStorage.setItem(themeKey, "light");
-      set({ themeMode: "light" });
+      bodyClass.remove(DARK_CLASS);
     }
-  },
-  setDarkTheme: () => {
-    bodyClass.add(classDark);
-    // bodyClass.remove("scrollbar-light");
-    // bodyClass.add("scrollbar-dark");
 
-    window.localStorage.setItem(themeKey, "dark");
-    set({ themeMode: "dark" });
+    set({ themeMode: theme });
   },
-  setLightTheme: () => {
-    bodyClass.remove(classDark);
-    // bodyClass.remove("scrollbar-dark");
-    // bodyClass.add("scrollbar-light");
 
-    window.localStorage.setItem(themeKey, "light");
-    set({ themeMode: "light" });
+  toggleTheme: () => {
+    const newTheme = get().themeMode === "light" ? "dark" : "light";
+    get().setTheme(newTheme);
   },
+  setDarkTheme: () => get().setTheme("dark"),
+  setLightTheme: () => get().setTheme("light"),
 }));
 
 export default useThemeStore;

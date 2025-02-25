@@ -54,7 +54,8 @@ function MakeApplication() {
   const hasConsent = consentsWithSchool?.find(
     (item) => item.school.school_name === school
   );
-  const canApply = school && (!hasConsent || hasConsent?.document?.status === 2);
+  const canApply =
+    school && (!hasConsent || hasConsent?.document?.status === 2);
   return (
     <>
       <h3 className="p-2 opacity-70 font-semibold text-lg row w-full gap-3 border-b-30">
@@ -63,20 +64,18 @@ function MakeApplication() {
       {notAppliedSchools?.length > 0 ? (
         <section className="col p-4">
           <p>
-            Most of your documents have been approved. You are now ready to submit
-            your school application request. Please note, you can only submit an
-            application request for each school at a time. Please use the button
-            below to submit your school application request.
+            Most of your documents have been approved. You are now ready to
+            submit your school application request. Please note, you can only
+            submit an application request for each school at a time. Please use
+            the button below to submit your school application request.
           </p>
           <div className="col m-3">
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
               <InputLabel id="school">Select School And Program</InputLabel>
               <Select
                 labelId="school"
-                id="demo-simple-select-standard"
                 value={school}
                 onChange={(e) => setSchool(e.target.value)}
-                label="Age"
               >
                 <MenuItem value="">
                   <em>Select School</em>
@@ -87,17 +86,17 @@ function MakeApplication() {
                   </MenuItem>
                 ))}
               </Select>
-              {hasConsent ? (
+              {hasConsent && hasConsent?.document?.status !== 2 && (
                 <ConsentStatus consent={hasConsent} />
-              ) : (
-                findSchool && (
-                  <p className="mt-4">
-                    School Application fee is{" "}
-                    {findSchool?.application_cost === "Waived"
-                      ? "waived for this school"
-                      : formatCurrency(findSchool?.application_cost)}
-                  </p>
-                )
+              )}
+              {canApply && findSchool && (
+                <p className="mt-4">
+                  School application fee is{" "}
+                  {findSchool?.application_cost === "Waived"
+                    ? "waived for this school"
+                    : formatCurrency(findSchool?.application_cost)}
+                  .
+                </p>
               )}
             </FormControl>
           </div>

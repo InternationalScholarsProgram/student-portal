@@ -10,23 +10,23 @@ function RequirementsTable() {
   const { appDocs, uploadedDocs, proposedSchools, consentsWithSchool } =
     useAdmissions();
 
-  if (!appDocs || !uploadedDocs) return <Loader />;
-
-  const filterUploadedDocs = (docType: string) => {
-    if (uploadedDocs.length === 0) return [];
-    return uploadedDocs
-      .filter((doc) => doc.doc_id?.toString() === docType)
-      .map(({ id: _id, ...other }) => other);
-  };
+  const filterUploadedDocs = (docType: string) =>
+    uploadedDocs?.filter((doc) => doc.doc_id?.toString() === docType);
 
   const rowData = appDocs
-    ?.filter((item) => !(item.id === "3" && proposedSchools?.length === 0))
+    ?.filter((item) => {
+      if (item.id === "3" && proposedSchools?.length === 0) return false;
+      if (item.id === "14" && !consentsWithSchool) return false;
+      return true;
+    })
     ?.map((item) => ({
       ...item,
       uploaded_documents: filterUploadedDocs(item.id) || [],
       schools: proposedSchools,
       consents: consentsWithSchool,
     }));
+
+  if (!appDocs || !uploadedDocs) return <Loader />;
 
   return (
     <GridTable
@@ -44,7 +44,7 @@ function RequirementsTable() {
 }
 
 const RequirementsAccordion = () => (
-  <div className="col mx-2 my-5 gap-3">
+  <div className="col sm:mx-2 my-5 gap-3">
     <Accordion>
       <AccordionSummary
         sx={{
@@ -55,8 +55,7 @@ const RequirementsAccordion = () => (
         expandIcon={<GridExpandMoreIcon />}
       >
         <h3 className="opacity-70 font-semibold flex items-center gap-2">
-          <EventAvailableOutlinedIcon /> Schools Application Requirements
-          Checklist
+          <EventAvailableOutlinedIcon /> Requirements Checklist
         </h3>
       </AccordionSummary>
       <AccordionDetails>
@@ -67,3 +66,9 @@ const RequirementsAccordion = () => (
 );
 export { RequirementsAccordion };
 export default RequirementsTable;
+
+const transcriptObj = {
+  id: "transcripts",
+  item_name: "Transcripts",
+  uploaded_documents: [],
+};

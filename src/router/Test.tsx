@@ -1,45 +1,144 @@
-import { usePDF } from "react-to-pdf";
-import useThemeStore from "../styles/theme.store";
-import { useEffect, useState } from "react";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import { DataGrid, DataGridProps, GridColDef } from "@mui/x-data-grid";
 
+const items = [
+  { id: 1, item: "Paperclip", quantity: 100, price: 1.99 },
+  { id: 2, item: "Paper", quantity: 10, price: 30 },
+  { id: 3, item: "Pencil", quantity: 100, price: 1.25 },
+];
 
-const Test = () => {
-  const { themeMode, setDarkTheme, setLightTheme } = useThemeStore();
-  const [initialTheme, setInitialTheme] = useState(themeMode);
+type Item = (typeof items)[number];
 
-  const switchToBack = () => {
-    if (initialTheme === "dark") setLightTheme();
-  };
+interface SubtotalHeader {
+  id: "SUBTOTAL";
+  label: string;
+  subtotal: number;
+}
 
-  useEffect(() => {
-    setInitialTheme(themeMode);
-  }, []);
+interface TaxHeader {
+  id: "TAX";
+  label: string;
+  taxRate: number;
+  taxTotal: number;
+}
 
-  const { toPDF, targetRef } = usePDF({
-    method: "open",
-  });
-  const handleDownload = async () => {
-    // Generate the PDF
-    setDarkTheme();
-    const blob = await toPDF({
-      method: "save",
-    });
+interface TotalHeader {
+  id: "TOTAL";
+  label: string;
+  total: number;
+}
 
-    console.log(typeof blob);
+type Row = Item | SubtotalHeader | TaxHeader | TotalHeader;
 
-    switchToBack();
-  };
+const rows: Row[] = [
+  ...items,
+  { id: "SUBTOTAL", label: "Subtotal", subtotal: 624 },
+  { id: "TAX", label: "Tax", taxRate: 10, taxTotal: 62.4 },
+  { id: "TOTAL", label: "Total", total: 686.4 },
+];
 
-  return (
-    <div>
-      <div ref={targetRef}>
-        {/* The content to be converted to PDF */}
-        <h1>Hello, PDF!</h1>
-        <p>This content will be converted to a PDF.</p>
-      </div>
-      <button onClick={handleDownload}>Generate and Save PDF</button>
-    </div>
-  );
+const baseColumnOptions = {
+  sortable: false,
+  pinnable: false,
+  hideable: false,
 };
 
-export default Test;
+const columns: GridColDef<Row>[] = [
+  {
+    field: "item",
+    headerName: "Item/Description",
+    ...baseColumnOptions,
+    flex: 3,
+    colSpan: (value, row) => {
+      if (row.id === "SUBTOTAL" || row.id === "TOTAL") {
+        return 3;
+      }
+      if (row.id === "TAX") {
+        return 2;
+      }
+      return undefined;
+    },
+    valueGetter: (value, row) => {
+      if (row.id === "SUBTOTAL" || row.id === "TAX" || row.id === "TOTAL") {
+        return row.label;
+      }
+      return value;
+    },
+  },
+  {
+    field: "quantity",
+    headerName: "Quantity",
+    ...baseColumnOptions,
+    flex: 1,
+    sortable: false,
+  },
+  {
+    field: "price",
+    headerName: "Price",
+    flex: 1,
+    ...baseColumnOptions,
+    valueGetter: (value, row) => {
+      if (row.id === "TAX") {
+        return `${row.taxRate}%`;
+      }
+      return value;
+    },
+  },
+  {
+    field: "total",
+    headerName: "Total",
+    flex: 1,
+    ...baseColumnOptions,
+    valueGetter: (value, row) => {
+      if (row.id === "SUBTOTAL") {
+        return row.subtotal;
+      }
+      if (row.id === "TAX") {
+        return row.taxTotal;
+      }
+      if (row.id === "TOTAL") {
+        return row.total;
+      }
+      return row.price * row.quantity;
+    },
+  },
+];
+
+const getCellClassName: DataGridProps["getCellClassName"] = ({
+  row,
+  field,
+}) => {
+  if (row.id === "SUBTOTAL" || row.id === "TOTAL" || row.id === "TAX") {
+    if (field === "item") {
+      return "bold";
+    }
+  }
+  return "";
+};
+
+export default function ColumnSpanningFunction() {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        "& .bold": {
+          fontWeight: 600,
+        },
+      }}
+    >
+      <DataGrid
+        disableColumnFilter
+        disableRowSelectionOnClick
+        hideFooter
+        showCellVerticalBorder
+        showColumnVerticalBorder
+        getCellClassName={getCellClassName}
+        columns={columns}
+        rows={rows}
+      />
+    </Box>
+  );
+}

@@ -19,11 +19,11 @@ function Transcripts() {
   const hasApprovedTranscript = transcripts.requests?.some(
     (item) => item.status === "2"
   );
-  const allVerified = transcripts.requirements?.length
+  const allVerified = transcripts?.requirements?.length
     ? transcripts.requirements.every((item) => item.ver_status === "2")
     : false;
 
-  const noSchoolRecords = transcripts.school_count === 0;
+  const noSchoolRecords = transcripts?.school_count === 0;
 
   console.log(
     "noSchoolRecords :",
@@ -36,9 +36,10 @@ function Transcripts() {
   // Exit early if all conditions are met
   if ((noSchoolRecords && hasApprovedTranscript) || allVerified) return null;
 
-  const waitForApproval = transcripts.requirements?.some(
+  const canRequestLetter = transcripts?.requirements?.some(
     (item) => !item.ver_id || item.ver_status === "3"
   );
+  const hasRequested = transcripts?.requirements?.some((item) => item.ver_id);
 
   return (
     <div>
@@ -57,23 +58,25 @@ function Transcripts() {
           <ToProgram toggleModal={toggleModal} />
         ) : (
           <>
-            {waitForApproval && <b>Requested Letters Status</b>}
+            <b>Requested Letters Status</b>
             <ol className="list-decimal px-5">
-              {transcripts.requirements?.map((item) => (
-                <li key={item.ver_id}>
-                  {item.school_name}
-                  {item.ver_status === "1"
-                    ? ` - Verification in progress.`
-                    : item.ver_status === "2"
-                    ? ` - Successfully verified.`
-                    : item.ver_status === "3"
-                    ? ` - Verification rejected.`
-                    : ""}
-                </li>
-              ))}
+              {transcripts.requirements?.map((item, index) => {
+                return (
+                  <li key={index}>
+                    {item.school_name}
+                    {item.ver_status === "1"
+                      ? ` - Verification in progress.`
+                      : item.ver_status === "2"
+                      ? ` - Successfully verified.`
+                      : item.ver_status === "3"
+                      ? ` - Verification rejected.`
+                      : " - Verification letter not requested"}
+                  </li>
+                );
+              })}
             </ol>
 
-            {waitForApproval && (
+            {canRequestLetter && (
               <div className="col m-3">
                 <Button
                   onClick={toggleModal}

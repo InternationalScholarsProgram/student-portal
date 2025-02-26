@@ -9,6 +9,7 @@ import {
   TranscriptsProps,
   UploadedDocument,
 } from "../types/types";
+import { useMemo } from "react";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();
@@ -31,14 +32,14 @@ const useAdmissions = () => {
     queryFn: admissionAPIs.eligibilityCheck,
   });
 
-  const eligible = eligibility?.status === "success";
+  const isEligible = eligibility?.status === "success";
 
   const { data: status, isLoading } = useQuery({
     queryKey: queryKeys.statusCheck,
     queryFn: admissionAPIs.statusCheck,
-    enabled: eligible,
+    enabled: isEligible,
   });
-  const schoolAppId = status?.message?.school_app_id;
+  const schoolAppId = status?.message?.school_app_id ?? null;
 
   const proposedSchools: School[] = status?.message?.proposed_courses;
   const appliedSchools = proposedSchools?.filter(
@@ -56,11 +57,14 @@ const useAdmissions = () => {
     queryFn: admissionAPIs.applicationDocs,
     enabled: status?.code >= 2,
   });
-  appDocs?.sort((a, b) => {
-    if (a.id === "3") return 1; // a should come after b
-    if (b.id === "3") return -1; // b should come after a
-    return 0; // otherwise, keep original order
-  });
+  const sortedAppDocs = useMemo(() => {
+    if (!appDocs) return [];
+    return [...appDocs].sort((a, b) => {
+      if (a.id === "3") return 1; // a should come after b
+      if (b.id === "3") return -1; // b should come after a
+      return 0; // otherwise, keep original order
+    });
+  }, [appDocs]);
 
   const { data: uploadedDocs } = useQuery<UploadedDocument[]>({
     queryKey: queryKeys.uploadedDocs,
@@ -71,7 +75,7 @@ const useAdmissions = () => {
   const { data: currentIntake } = useQuery({
     queryKey: queryKeys.intakes,
     queryFn: admissionAPIs.getCurrentIntake,
-    enabled: eligible,
+    enabled: isEligible,
   });
   const { data: consents } = useQuery<Consent[] | null>({
     queryKey: queryKeys.consents,
@@ -131,7 +135,7 @@ const useAdmissions = () => {
   const { data: _transcripts, isLoading: transcriptsLoading } = useQuery({
     queryKey: queryKeys.transcripts,
     queryFn: async () => admissionAPIs.transcripts(schoolAppId),
-    enabled: !!schoolAppId,
+    enabled: Boolean(schoolAppId),
   });
   const transcripts = _transcripts?.data?.message as TranscriptsProps;
 
@@ -144,7 +148,7 @@ const useAdmissions = () => {
   return {
     eligibility,
     currentIntake,
-    appDocs,
+    appDocs: sortedAppDocs,
     status,
     user,
     proposedSchools,

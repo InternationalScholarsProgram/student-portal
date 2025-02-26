@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { useRef } from "react";
 import { FullLoader } from "../../../../../../components/loaders/Loader";
 
-const TranscriptsModal = ({ open, toggleModal }: ModalProps) => { 
+const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
   const { transcripts, user, queryKeys, queryClient } = useAdmissions();
   const name = capitalizeFirstCharacter(user?.fullnames);
   const targetRef = useRef<HTMLDivElement>(null);
@@ -100,12 +100,12 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
               </p>
             )}
             <ol className="mx-3 px-3 list-decimal">
-              {transcripts?.requirements.map((school) => {
+              {transcripts?.requirements.map((school, index) => {
                 if (school.ver_status === "2" || school.ver_status === "1")
-                  return null;
+                  return;
 
                 return (
-                  <li key={school.proposed_course}>
+                  <li key={index}>
                     <p className="mt-2">{school.school_name}</p>
                     <p>
                       Email Address:{" "}

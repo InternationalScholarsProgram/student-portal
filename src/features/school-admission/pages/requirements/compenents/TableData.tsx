@@ -68,7 +68,7 @@ export const columns: GridColDef[] = [
                   key={item?.school?.school_id}
                   className="text-sm my-1 w-full"
                 >
-                  {item?.school.school_name} :
+                  {item?.school?.school_name} :
                   <span className={statusClass(status)}>{" " + status}</span>
                 </p>
               );

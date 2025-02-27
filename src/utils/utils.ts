@@ -145,6 +145,70 @@ export async function printPDF(filename: string, element: any) {
   html2pdf().set(opt).from(element).save();
 }
 
+// function convertImageToBase64(url: string) {
+//   return new Promise((resolve, reject) => {
+//     const img = new Image();
+//     img.crossOrigin = "Anonymous"; // Prevents CORS issues if the image is hosted elsewhere
+//     img.src = url;
+
+//     img.onload = function () {
+//       const canvas = document.createElement("canvas");
+//       canvas.width = img.width;
+//       canvas.height = img.height;
+//       const ctx = canvas.getContext("2d");
+
+//       ctx?.drawImage(img, 0, 0);
+//       const dataURL = canvas.toDataURL("image/png"); // Converts image to Base64
+
+//       resolve(dataURL); // Return Base64 image
+//     };
+
+//     img.onerror = reject; // Handle errors
+//   });
+// }
+function convertImageToBase64(url: string, quality: number = 0.7) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous"; 
+    img.src = url;
+
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+
+      // Reduce resolution to avoid unnecessary large images
+      const maxWidth = 800; // Adjust based on your needs
+      const maxHeight = 500;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth || height > maxHeight) {
+        const aspectRatio = width / height;
+        if (width > height) {
+          width = maxWidth;
+          height = maxWidth / aspectRatio;
+        } else {
+          height = maxHeight;
+          width = maxHeight * aspectRatio;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(img, 0, 0, width, height);
+      const outputFormat = "png"
+
+      // Convert to JPEG instead of PNG to reduce size
+      const dataURL = canvas.toDataURL(`image/${outputFormat}`, quality);
+      resolve(dataURL);
+    };
+
+    img.onerror = reject; 
+  });
+}
+
+
+
 export {
   capitalize,
   formatCurrency,
@@ -158,6 +222,7 @@ export {
   delay,
   capitalizeFirstCharacter,
   formData2json,
+  convertImageToBase64,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

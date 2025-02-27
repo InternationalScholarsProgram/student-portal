@@ -26,15 +26,12 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
         targetRef.current.style.backgroundColor = "white";
         targetRef.current.style.color = "black";
       }
-      const docs = await generateBlob(name, targetRef.current, 0.5);
-      const payload = {
-        name: name,
-        docs: docs,
-        proposed_course_id: transcripts?.requirements.map(
-          (item) => item.proposed_course
-        ),
-      };
-      return await admissionAPIs.updateTranscripts(payload);
+
+      return await admissionAPIs.updateTranscripts(
+        transcripts?.requirements.map((item) => item.proposed_course),
+        targetRef.current,
+        name
+      );
     },
     onSuccess: (response) => {
       if (response?.status === 200) {
@@ -48,7 +45,7 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
     <Modal title="Request Letter" open={open} setOpen={toggleModal}>
       <section className="w-[90vw] md:w-[60vw] xl:w-[40vw] col p-3 contract overflow-y-auto h-[90dvh]">
         <div className="w-full contract" ref={targetRef}>
-          <div className="col-center py-3">
+          {/* <div className="col-center py-3">
             <img
               src={ispLogo}
               alt="ISP logo"
@@ -58,8 +55,8 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
             <h6 className="text-center font-semibold mt-2 text-lg">
               The International Scholars Program
             </h6>
-          </div>
-
+          </div> */}
+          <p>The International Scholars Program</p>
           <p>{formatDate(new Date())}</p>
 
           <div className="col gap-2">

@@ -1,144 +1,277 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import { DataGrid, DataGridProps, GridColDef } from "@mui/x-data-grid";
+import { html2pdf } from "../utils/utils";
+import { ispLogo } from "../assets/imageLinks";
+import { useEffect } from "react";
 
-const items = [
-  { id: 1, item: "Paperclip", quantity: 100, price: 1.99 },
-  { id: 2, item: "Paper", quantity: 10, price: 30 },
-  { id: 3, item: "Pencil", quantity: 100, price: 1.25 },
-];
+function Test() {
+  function convertImageToBase64(url: string) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous"; // Prevents CORS issues if the image is hosted elsewhere
+      img.src = url;
 
-type Item = (typeof items)[number];
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
 
-interface SubtotalHeader {
-  id: "SUBTOTAL";
-  label: string;
-  subtotal: number;
-}
+        ctx?.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL("image/png"); // Converts image to Base64
 
-interface TaxHeader {
-  id: "TAX";
-  label: string;
-  taxRate: number;
-  taxTotal: number;
-}
+        resolve(dataURL); // Return Base64 image
+      };
 
-interface TotalHeader {
-  id: "TOTAL";
-  label: string;
-  total: number;
-}
-
-type Row = Item | SubtotalHeader | TaxHeader | TotalHeader;
-
-const rows: Row[] = [
-  ...items,
-  { id: "SUBTOTAL", label: "Subtotal", subtotal: 624 },
-  { id: "TAX", label: "Tax", taxRate: 10, taxTotal: 62.4 },
-  { id: "TOTAL", label: "Total", total: 686.4 },
-];
-
-const baseColumnOptions = {
-  sortable: false,
-  pinnable: false,
-  hideable: false,
-};
-
-const columns: GridColDef<Row>[] = [
-  {
-    field: "item",
-    headerName: "Item/Description",
-    ...baseColumnOptions,
-    flex: 3,
-    colSpan: (value, row) => {
-      if (row.id === "SUBTOTAL" || row.id === "TOTAL") {
-        return 3;
-      }
-      if (row.id === "TAX") {
-        return 2;
-      }
-      return undefined;
-    },
-    valueGetter: (value, row) => {
-      if (row.id === "SUBTOTAL" || row.id === "TAX" || row.id === "TOTAL") {
-        return row.label;
-      }
-      return value;
-    },
-  },
-  {
-    field: "quantity",
-    headerName: "Quantity",
-    ...baseColumnOptions,
-    flex: 1,
-    sortable: false,
-  },
-  {
-    field: "price",
-    headerName: "Price",
-    flex: 1,
-    ...baseColumnOptions,
-    valueGetter: (value, row) => {
-      if (row.id === "TAX") {
-        return `${row.taxRate}%`;
-      }
-      return value;
-    },
-  },
-  {
-    field: "total",
-    headerName: "Total",
-    flex: 1,
-    ...baseColumnOptions,
-    valueGetter: (value, row) => {
-      if (row.id === "SUBTOTAL") {
-        return row.subtotal;
-      }
-      if (row.id === "TAX") {
-        return row.taxTotal;
-      }
-      if (row.id === "TOTAL") {
-        return row.total;
-      }
-      return row.price * row.quantity;
-    },
-  },
-];
-
-const getCellClassName: DataGridProps["getCellClassName"] = ({
-  row,
-  field,
-}) => {
-  if (row.id === "SUBTOTAL" || row.id === "TOTAL" || row.id === "TAX") {
-    if (field === "item") {
-      return "bold";
-    }
+      img.onerror = reject; // Handle errors
+    });
   }
-  return "";
-};
 
-export default function ColumnSpanningFunction() {
+  function generatePDF() {
+    const element = document.getElementById("pdf-content");
+
+    html2pdf()
+      .set({
+        margin: [45, 10, 50, 10], // Top margin for the first page
+        filename: "document_with_letterhead.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+      })
+      .from(element)
+      .toPdf()
+      .get("pdf")
+      .then(async function (pdf: any) {
+        const totalPages = pdf.internal.getNumberOfPages();
+
+        const header = await convertImageToBase64(
+          "https://internationalscholars.qhtestingserver.com/logo/scholars-logo.png"
+        );
+        const footer = await convertImageToBase64(
+          "/src/assets/Footer_Letterhead.png"
+        );
+        console.log(pdf.internal.pageSize.getWidth(), "width");
+        for (let i = 1; i <= totalPages; i++) {
+          pdf.setPage(i);
+          pdf.addImage(header, "PNG", 5, 0, 40, 40);
+          pdf.addImage(
+            footer,
+            "PNG",
+            0,
+            pdf.internal.pageSize.getHeight() - 40,
+            pdf.internal.pageSize.getWidth(),
+            40
+          );
+        }
+
+        pdf.save("document_with_letterhead.pdf");
+      });
+  }
+
+  // useEffect(() => {
+  //   generatePDF();
+  // }, []);
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        "& .bold": {
-          fontWeight: 600,
-        },
-      }}
-    >
-      <DataGrid
-        disableColumnFilter
-        disableRowSelectionOnClick
-        hideFooter
-        showCellVerticalBorder
-        showColumnVerticalBorder
-        getCellClassName={getCellClassName}
-        columns={columns}
-        rows={rows}
-      />
-    </Box>
+    <div id="pdf-content" className="contract">
+      <div className="letterhead">
+        <p>Your Company Name</p>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div className="page home">
+        <h1>Welcome to Home Page</h1>
+        <p>
+          This is the home page where you can find the latest updates and
+          information about our services.
+        </p>
+        <section>
+          <h2>Featured Section</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            vitae malesuada nulla. Vestibulum at neque ut turpis fermentum
+            viverra.
+          </p>
+        </section>
+        <footer>
+          <p>© 2025 My Website. All Rights Reserved.</p>
+        </footer>
+      </div>
+      <div id="pdf-content">
+        <div className="content">
+          <p>This is page 1 content.</p>
+        </div>
+        <div className="page"></div>
+        <div className="content">
+          <p>This is page 2 content.</p>
+        </div>
+        <div className="page"></div>
+        <div className="content">
+          <p>This is page 3 content.</p>
+        </div>
+      </div>
+      <button onClick={generatePDF}> Generate PDF</button>
+    </div>
   );
 }
+
+export default Test;

@@ -1,6 +1,11 @@
 import { toast } from "react-toastify";
-import api, { baseDirectory } from "../../../services/api/base";
-import { json2formData } from "../../../utils/utils";
+import api, { baseDirectory, multipart } from "../../../services/api/base";
+import {
+  convertImageToBase64,
+  html2pdf,
+  json2formData,
+} from "../../../utils/utils";
+import axios from "axios";
 
 const url = `${baseDirectory}/school_application/`;
 const admissionsUrl = `${url}/school_admission.php`;
@@ -64,31 +69,63 @@ class AdmissionAPIs {
     });
     return response;
   };
-  updateTranscripts = async (payload: {
-    name: string;
-    docs: any;
-    proposed_course_id: string[] | number[];
-  }) => {
-    const file = new File([payload.docs.blob], payload.name, {
+  transcriptsToPdf = async (element: HTMLElement, fileName: string) => {
+    const pdf = await html2pdf()
+      .set({
+        margin: [45, 10, 50, 10], // Top margin for the first page
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+      })
+      .from(element)
+      .toPdf()
+      .get("pdf");
+    const totalPages = pdf.internal.getNumberOfPages();
+    const header = await convertImageToBase64("/src/assets/isp.png");
+    const footer = await convertImageToBase64(
+      "/src/assets/Footer_Letterhead.png"
+    );
+    
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.addImage(header, "PNG", 5, 0, 40, 40);
+      pdf.addImage(
+        footer,
+        "PNG",
+        0,
+        pdf.internal.pageSize.getHeight() - 40,
+        pdf.internal.pageSize.getWidth(),
+        40
+      );
+    }
+    return {
+      blob: pdf.output("blob"),
+      download: () => pdf.save(fileName),
+    };
+  };
+  updateTranscripts = async (
+    proposed_course_id: string[] | number[],
+    element: HTMLElement,
+    fileName: string
+  ) => {
+    const docs = await this.transcriptsToPdf(element, fileName);
+    const file = new File([docs.blob], fileName, {
       type: "application/pdf",
     });
+    console.log(file);
 
     const data = json2formData({
-      ...payload,
+      proposed_course_id,
       letter: file,
       action: "save_transcript_request",
-    });    
-    const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
-    const response = await api.post(endpoint, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     });
+    docs.download();
 
-    if (response?.status === 200) {
-      payload.docs.download();
-    }
-    return response;
+    // const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
+    // const response = await api.post(endpoint, data, multipart);
+    // if (response?.status === 200) docs.download();
+    return api.get("https://ipapi.co/json/");
   };
   submitSchoolApplication = async (payload: any) => {
     try {

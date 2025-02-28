@@ -5,7 +5,6 @@ import {
   html2pdf,
   json2formData,
 } from "../../../utils/utils";
-import axios from "axios";
 
 const url = `${baseDirectory}/school_application/`;
 const admissionsUrl = `${url}/school_admission.php`;
@@ -63,6 +62,12 @@ class AdmissionAPIs {
     if (data.code === 204) return null;
     return null;
   };
+  getGPA = async () => {
+    const response = await api.post(`${admissionsUrl}`, {
+      action: "fetch_GPA",
+    });
+    return response.data?.message;
+  };
   transcripts = async (app_id: string) => {
     const response = await api.post(`${admissionsUrl}?app_id=${app_id}`, {
       action: "check_transcript_verification",
@@ -72,7 +77,7 @@ class AdmissionAPIs {
   transcriptsToPdf = async (element: HTMLElement, fileName: string) => {
     const pdf = await html2pdf()
       .set({
-        margin: [45, 10, 50, 10], // Top margin for the first page
+        margin: [45, 10, 50, 10],
         image: { type: "jpeg", quality: 1 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
@@ -86,7 +91,7 @@ class AdmissionAPIs {
     const footer = await convertImageToBase64(
       "/src/assets/Footer_Letterhead.png"
     );
-    
+
     for (let i = 1; i <= totalPages; i++) {
       pdf.setPage(i);
       pdf.addImage(header, "PNG", 5, 0, 40, 40);

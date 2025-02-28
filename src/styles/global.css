@@ -30,7 +30,6 @@
 
 /* Buttons */
 
-
 /* Sidebar */
 .sidebar-link {
   @apply p-2 text-sm flex flex-row items-center space-x-3 rounded-md 
@@ -168,4 +167,7 @@ p {
 }
 .title-sm {
   @apply opacity-70 sm:text-lg font-semibold;
+}
+.alert {
+  @apply border-l-4 border-primary-main p-2 drop-shadow-lg shadow-lg;
 }

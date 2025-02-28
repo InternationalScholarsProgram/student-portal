@@ -4,12 +4,13 @@ import useFetchUser from "../../../services/hooks/useFetchUser";
 import {
   Consent,
   DocRequirements,
+  GPAReport,
   School,
   SchoolConsentDocumentArray,
   TranscriptsProps,
   UploadedDocument,
 } from "../types/types";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();
@@ -23,6 +24,7 @@ const useAdmissions = () => {
     intakes: [...admissionKey, "intakes"],
     consents: [...admissionKey, "consents"],
     transcripts: [...admissionKey, "transcripts"],
+    gpaReport: [...admissionKey, "gpaReport"],
   };
   const invalidateDocs = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.uploadedDocs });
@@ -70,6 +72,11 @@ const useAdmissions = () => {
     queryKey: queryKeys.uploadedDocs,
     queryFn: admissionAPIs.getUploadedDocs,
     enabled: !!appDocs,
+  });
+  const { data: gpaReport } = useQuery<GPAReport>({
+    queryKey: queryKeys.gpaReport,
+    queryFn: admissionAPIs.getGPA,
+    enabled: !!uploadedDocs,
   });
 
   const { data: currentIntake } = useQuery({
@@ -157,6 +164,14 @@ const useAdmissions = () => {
     hasAppliedToAllSchools,
     isLoading: isLoading || transcriptsLoading,
     uploadedDocs,
+    gpaReport: {
+      ...gpaReport,
+      gpa_status: 3,
+      gpa: 3.5,
+      gpa_remark: "Please provide valid transcripts",
+      status: gpaReport?.gpa_status ? gpaReport?.gpa_status - 1 : null,
+      document_name: gpaReport?.gpa_doc,
+    },
     queryKeys,
     consentsWithSchool,
     queryClient,

@@ -25,14 +25,6 @@ function Transcripts() {
 
   const noSchoolRecords = transcripts?.school_count === 0;
 
-  console.log(
-    "noSchoolRecords :",
-    noSchoolRecords,
-    "hasApprovedTranscript :",
-    hasApprovedTranscript,
-    "allVerified ",
-    allVerified
-  );
   // Exit early if all conditions are met
   if ((noSchoolRecords && hasApprovedTranscript) || allVerified) return null;
 

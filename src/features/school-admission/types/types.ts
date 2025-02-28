@@ -79,6 +79,13 @@ type TranscriptsRequestProps = {
   transcript: string | null;
 };
 
+type GPAReport = {
+  gpa: string;
+  gpa_doc: string;
+  gpa_remark: string | null;
+  gpa_status: number;
+};
+
 export type {
   SchoolConsentDocument,
   SchoolConsentDocumentArray,
@@ -87,4 +94,5 @@ export type {
   School,
   DocRequirements,
   TranscriptsProps,
+  GPAReport,
 };

@@ -1,15 +1,14 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DocsModal from "./DocsModal";
-import { SchoolConsentDocument } from "../../../types/types";
+import { GPAReport, SchoolConsentDocument } from "../../../types/types";
 import Transcripts from "./transcripts/Transcripts";
+import GPAstatus from "./GPAstatus";
 
 export const handleStatus = (params: any) => {
   if (!params) return "Not Uploaded";
-
   if (typeof params === "string" || typeof params === "number") {
     return getStatus(params);
   }
-
   if (Array.isArray(params)) {
     if (params.length === 0) return "Not Uploaded";
     if (params.length === 3) {
@@ -17,7 +16,6 @@ export const handleStatus = (params: any) => {
     }
     return params.map((item: any) => getStatus(item.status));
   }
-
   return "Invalid Input";
 };
 
@@ -31,7 +29,7 @@ export const columns: GridColDef[] = [
     field: "uploaded_documents",
     headerName: "Status",
     flex: 1,
-    minWidth: 200,
+    minWidth: 250,
     colSpan: (value, row) => {
       if (row.id === "transcripts") return 2;
       return undefined;
@@ -76,10 +74,11 @@ export const columns: GridColDef[] = [
           </div>
         );
       }
-      if (params.row.id === "transcripts") return <Transcripts />;
+      if (params.row.id === "13")
+        return <GPAstatus gpaReport={params.row.uploaded_documents[0]} />;
       return (
         <p className={statusClass(params.value[0], "text-sm")}>
-          {params.value}
+          {params.value[0]}
         </p>
       );
     },
@@ -91,6 +90,11 @@ export const columns: GridColDef[] = [
     headerAlign: "center",
     renderCell: (params) => {
       if (params.row.id === "14" && !params.row.consents) return null;
+      if (
+        params.row.id === "13" &&
+        params.row.uploaded_documents[0].gpa_status !== 4
+      )
+        return null;
       return <DocsModal row={params.row} />;
     },
   },

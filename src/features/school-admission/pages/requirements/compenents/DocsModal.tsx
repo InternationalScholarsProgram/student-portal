@@ -24,6 +24,7 @@ function DocsModal({ row }: any) {
   const [open, setOpen] = useState(false);
   const [file, setFiles] = useState<File | null>(null);
   const uploadedDocs = row?.uploaded_documents;
+  const doc = uploadedDocs?.[0]?.document_name;
   const documentStatus = handleStatus(uploadedDocs)[0];
 
   const data = {
@@ -61,7 +62,7 @@ function DocsModal({ row }: any) {
   const viewOnClick = () => {
     console.log(row, "row");
     console.log(statusData, "statusData");
-
+    if (row.id === "13") return window.open(doc, "_blank");
     setOpen(true);
   };
 
@@ -124,11 +125,11 @@ function DocsModal({ row }: any) {
                     <div className="row items-center gap-1">
                       <p> Uploaded Document :</p>
                       <a
-                        href={docUrl + uploadedDocs[0]?.document_name}
+                        href={docUrl + doc}
                         target="_blank"
                         className="text-primary-light text-base flex-1 truncate"
                       >
-                        {uploadedDocs[0]?.document_name}
+                        {doc}
                       </a>
                     </div>
                     <div className="row gap-2">

@@ -20,7 +20,7 @@ function VisaPaymentModal({ open, toggleModal }: ModalProps) {
     formData.append("country", user?.country);
     handlePayment.mutate(formData);
   };
-  
+
   const handlePayment = useMutation({
     mutationFn: visaEndpoints.visaPayments,
     onSuccess: (response) => {
@@ -38,8 +38,15 @@ function VisaPaymentModal({ open, toggleModal }: ModalProps) {
           {formFields.map((field) => (
             <InputsWithLabel key={field.name} {...field} />
           ))}
-          <InputsWithLabel inputLabel="Visa Voucher" type="file" name="visaVoucher" />
-          <FormFooterBtns onClose={toggleModal}/>
+          <InputsWithLabel
+            inputLabel="Visa Voucher"
+            type="file"
+            name="visaVoucher"
+          />
+          <FormFooterBtns
+            btnText={handlePayment.isPending ? "Processing" : "Request Payment"}
+            onClose={toggleModal}
+          />
         </form>
       </div>
     </Modal>

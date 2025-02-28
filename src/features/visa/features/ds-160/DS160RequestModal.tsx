@@ -1,5 +1,5 @@
 import { FormEvent } from "react";
-import { InputsWithLabel } from "../../../../components/inputs/InputField";
+import InputField from "../../../../components/inputs/InputField";
 import Modal from "../../../../components/Modal";
 import { ModalProps } from "../../../../types";
 import useVisa from "../../services/hooks/useVisa";
@@ -20,7 +20,7 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
       (item: any) => item?.school_name === schoolName
     )?.program_name;
 
-    formData.set("course", course);
+    if (course) formData.set("course", course);
     formData.append("fullnames", user?.fullnames);
 
     await ds160RequestReview.mutateAsync(formData);
@@ -59,6 +59,7 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
                   <Select
                     key={input?.name}
                     placeholder={input?.inputLabel}
+                    title={input?.inputLabel}
                     {...input}
                   >
                     {input?.name === "school-name"
@@ -78,7 +79,13 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
                   </Select>
                 );
               }
-              return <InputsWithLabel key={input?.name} {...input} />;
+              return (
+                <InputField
+                  label={input.inputLabel}
+                  key={input?.name}
+                  {...input}
+                />
+              );
             })}
           </div>
           <div className="row justify-end gap-2">

@@ -26,12 +26,10 @@ class VisaEndpoints {
     return api.post(`${url}/visa_payment.php`, data);
   };
   requestVisaTrainingResources = async (data: any) => {
-    console.log(data);
     return api.post(`${url}request_visa_training.php`, data);
   };
   test = async (data?: any) => {
-    const response = await fetchIp();
-    return response;
+    return await fetchIp();
   };
 }
 const visaEndpoints = new VisaEndpoints();

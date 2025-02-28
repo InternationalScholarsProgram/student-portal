@@ -2,9 +2,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 import useAdmissions from "../../../school-admission/services/useAdmissions";
+import { useEffect } from "react";
 
 function useVisa() {
-  const { appliedSchools } = useAdmissions();
+  // const { appliedSchools } = useAdmissions();
+  const appliedSchools: any = [];
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
   const queryKeys = {
@@ -30,7 +32,11 @@ function useVisa() {
   const visa = status?.value?.visa;
   const ds160Req = status?.value?.ds160req;
   const ds160Review = status?.value?.ds160review;
-  const hasPaidedForVisa = !!visa?.payment;
+  const visaPayments = status?.value?.payments;
+  
+  useEffect(() => {
+    console.log(status);
+  }, []);
 
   return {
     applicationVideo,
@@ -44,7 +50,7 @@ function useVisa() {
     visa,
     ds160Req,
     ds160Review,
-    hasPaidedForVisa,
+    visaPayments,
   };
 }
 

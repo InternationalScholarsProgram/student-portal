@@ -23,18 +23,26 @@ function DS160Review() {
       {declined === 0 ? (
         <VisaPaymentStatus />
       ) : (
-        <div className="alert alert-danger mt-2">
-          <p>
-            Sorry, your DS-160 review request was not approved. Please check the
-            comment below, fix the issue, and resubmit.
-          </p>
-          <strong>
-            <p className="">
-              <em>Reviewer's Comment: {comment}</em>
+        <div className="col my-2">
+          <p className="title-sm">DS-160 review request</p>
+          <div className="col card p-3">
+            <p>
+              Sorry, your DS-160 review request was not approved. Please check
+              the comment below, fix the issue, and resubmit.
             </p>
-          </strong>
-          <button onClick={() => setOpen(true)}>Resubmit</button>
-          <DS160RequestModal open={open} toggleModal={() => setOpen(false)} />
+            <p className="">
+              <strong>
+                <em>Reviewer's Comment: {comment}</em>
+              </strong>
+            </p>
+            <button
+              className="primary-btn self-end"
+              onClick={() => setOpen(!open)}
+            >
+              Resubmit
+            </button>
+            <DS160RequestModal open={open} toggleModal={() => setOpen(false)} />
+          </div>
         </div>
       )}
     </div>

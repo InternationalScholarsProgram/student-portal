@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Guides from "../../components/Guides";
 import Loader from "../../../../components/loaders/Loader";
 import BookMeeting from "../../components/BookMeeting";
@@ -15,10 +14,6 @@ function SchoolAdmission() {
   const { eligibility, status, isLoading, currentIntake, transcripts } =
     useAdmissions();
 
-  useEffect(() => {
-    console.log(transcripts);
-  }, [transcripts]);
-
   if (!eligibility || isLoading) return <main children={<Loader />} />;
 
   if (eligibility?.code !== 200)
@@ -29,19 +24,17 @@ function SchoolAdmission() {
   if (status?.code === 3) return <Meeting />;
   if (status?.code === 4 || status?.code === 5)
     return (
-      <main className="">
-        <section className="col gap-4 w-full sm:px-3">
-          <IntakeStatus currentIntake={currentIntake} />
-          <div>
-            <Guides />
-          </div>
-          <Transcripts />
-          {transcripts?.hasAnyVerified && (
-            <UploadDocuments canApply={status?.code === 5} />
-          )}
-          <ProposedSchools />
-        </section>
-      </main>
+      <div className="col gap-3">
+        <IntakeStatus currentIntake={currentIntake} />
+        <div>
+          <Guides />
+        </div>
+        <Transcripts />
+        {transcripts?.hasAnyVerified && (
+          <UploadDocuments canApply={status?.code === 5} />
+        )}
+        <ProposedSchools />
+      </div>
     );
 }
 

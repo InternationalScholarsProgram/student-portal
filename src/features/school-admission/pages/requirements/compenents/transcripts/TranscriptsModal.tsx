@@ -7,8 +7,6 @@ import {
   formatDate,
 } from "../../../../../../utils/utils";
 import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
-import { ispLogo } from "../../../../../../assets/imageLinks";
-import { generateBlob } from "../../../../../user/contracts/utils/utils";
 import { admissionAPIs } from "../../../../services/admissionAPIs";
 import { toast } from "react-toastify";
 import { useRef } from "react";
@@ -45,18 +43,6 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
     <Modal title="Request Letter" open={open} setOpen={toggleModal}>
       <section className="w-[90vw] md:w-[60vw] xl:w-[40vw] col p-3 contract overflow-y-auto h-[90dvh]">
         <div className="w-full contract" ref={targetRef}>
-          {/* <div className="col-center py-3">
-            <img
-              src={ispLogo}
-              alt="ISP logo"
-              className="rounded mx-auto"
-              width="140px"
-            />
-            <h6 className="text-center font-semibold mt-2 text-lg">
-              The International Scholars Program
-            </h6>
-          </div> */}
-          <p>The International Scholars Program</p>
           <p>{formatDate(new Date())}</p>
 
           <div className="col gap-2">

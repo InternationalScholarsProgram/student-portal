@@ -169,7 +169,7 @@ export async function printPDF(filename: string, element: any) {
 function convertImageToBase64(url: string, quality: number = 0.7) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "Anonymous"; 
+    img.crossOrigin = "Anonymous";
     img.src = url;
 
     img.onload = function () {
@@ -196,18 +196,25 @@ function convertImageToBase64(url: string, quality: number = 0.7) {
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       ctx?.drawImage(img, 0, 0, width, height);
-      const outputFormat = "png"
+      const outputFormat = "png";
 
       // Convert to JPEG instead of PNG to reduce size
       const dataURL = canvas.toDataURL(`image/${outputFormat}`, quality);
       resolve(dataURL);
     };
 
-    img.onerror = reject; 
+    img.onerror = reject;
   });
 }
-
-
+function isValidURL(str: string) {
+  try {
+    new URL(str); // Try to create a URL object
+    return true; // If successful, return true (it's a valid URL)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return false; // If an error occurs, return false (invalid URL)
+  }
+}
 
 export {
   capitalize,
@@ -223,6 +230,7 @@ export {
   capitalizeFirstCharacter,
   formData2json,
   convertImageToBase64,
+  isValidURL,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

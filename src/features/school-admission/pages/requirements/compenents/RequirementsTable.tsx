@@ -7,8 +7,13 @@ import Loader from "../../../../../components/loaders/Loader";
 import GridTable from "../../../../../components/tables/GridTable";
 
 function RequirementsTable() {
-  const { appDocs, uploadedDocs, proposedSchools, consentsWithSchool } =
-    useAdmissions();
+  const {
+    appDocs,
+    uploadedDocs,
+    proposedSchools,
+    consentsWithSchool,
+    gpaReport,
+  } = useAdmissions();
 
   const filterUploadedDocs = (docType: string) =>
     uploadedDocs?.filter((doc) => doc.doc_id?.toString() === docType);
@@ -16,12 +21,13 @@ function RequirementsTable() {
   const rowData = appDocs
     ?.filter((item) => {
       if (item.id === "3" && proposedSchools?.length === 0) return false;
-      if (item.id === "14" && !consentsWithSchool) return false;
+      if (item.id === "14" && !consentsWithSchool) return false; //remove consents if not applicable in that course
       return true;
     })
     ?.map((item) => ({
       ...item,
-      uploaded_documents: filterUploadedDocs(item.id) || [],
+      uploaded_documents:
+        item.id === "13" ? [gpaReport] : filterUploadedDocs(item.id) || [],
       schools: proposedSchools,
       consents: consentsWithSchool,
     }));

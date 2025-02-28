@@ -1,24 +1,23 @@
 import dayjs from "dayjs";
 import useVisa from "../../services/hooks/useVisa";
 import TrainingGuide from "./TrainingGuide";
-import { FullLoader } from "../../../../components/loaders/Loader";
 import { formatDate } from "../../../../utils/utils";
 import RequestMockInterviewModal from "./mock-interview/RequestMockInterviewModal";
 import { useState } from "react";
 
-function Training() {
+function VisaTraining() {
+  const { visa } = useVisa();
   const [openMockModal, setOpenMockModal] = useState(false);
   const toggleMockModal = () => setOpenMockModal(!openMockModal);
-  const { visa, isLoading } = useVisa();
   const is7daysAfter = dayjs(visa?.interview_date)?.isSame(
     dayjs(new Date()).subtract(7, "day"),
     "day"
   );
-  if (isLoading) return <FullLoader />;
+  
   return (
-    <div>
+    <div className="col gap-2">
       <TrainingGuide />
-      <div>
+      <div className="col">
         {is7daysAfter ? (
           <span className="text-danger">
             Your interview is scheduled for more than 7 days from now ({" "}
@@ -26,7 +25,9 @@ function Training() {
             mock interview once it is within 7 days.
           </span>
         ) : (
-          <button onClick={toggleMockModal}>Request Mock Visa Interview</button>
+          <button className="primary-border-btn self-end" onClick={toggleMockModal}>
+            Request Mock Visa Interview
+          </button>
         )}
       </div>
       <div>
@@ -42,4 +43,4 @@ function Training() {
   );
 }
 
-export default Training;
+export default VisaTraining;

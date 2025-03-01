@@ -1,8 +1,15 @@
+import { useState } from "react";
 import Accordion from "../../../../components/Accordion";
 
 function TrainingGuide() {
+  const [expanded, setExpanded] = useState(true);
   return (
-    <Accordion title="Training Resources Guide" label>
+    <Accordion
+      expanded={expanded}
+      onChange={() => setExpanded(!expanded)}
+      title="Training Resources Guide"
+      label
+    >
       <li>
         The visa interview transcripts provided to you represent the feedback
         for the most recent real-case student experiences at the US consulate.

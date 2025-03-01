@@ -11,7 +11,9 @@ function VisaTrainingStatus() {
   const toggleModal = () => setOpen(!open);
   return (
     <>
-      <h3 className="title-sm py-2">Visa training resources</h3>{" "}
+      {status !== 2 && (
+        <h3 className="title-sm py-2">Visa training resources{status}</h3>
+      )}
       {status === 2 || status === 9 ? (
         <VisaTraining />
       ) : (

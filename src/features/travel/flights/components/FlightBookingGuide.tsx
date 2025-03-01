@@ -1,13 +1,11 @@
 import { tabs } from "./utils";
 import Accordion from "../../../../components/Accordion";
-import { useState } from "react";
 
 const FlightBookingGuide = ({ openTab }: any) => {
-  const [expanded, setExpanded] = useState(true);
   const viewExplore = () => openTab(tabs[1]);
 
   return (
-    <Accordion title="Flight Booking Guide" expanded={expanded}>
+    <Accordion title="Flight Booking Guide" expanded={true}>
       <p className="mb-4">
         Please read the instructions below to successfully navigate through this
         module.

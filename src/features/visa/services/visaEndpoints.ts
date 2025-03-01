@@ -1,5 +1,6 @@
 import api from "../../../services/api/base";
 import { fetchIp, formData2json, json2formData } from "../../../utils/utils";
+import { Counter } from "../types/visaTypes";
 
 const url = "/login/member/dashboard/APIs/visa-processing/";
 class VisaEndpoints {
@@ -24,6 +25,9 @@ class VisaEndpoints {
   };
   visaPayments = async (data: any) => {
     return api.post(`${url}/visa_payment.php`, data);
+  };
+  updateCounter = async (counter: Counter) => {
+    return api.get(`${url}/counters.php?counter=${counter}`);
   };
   requestVisaTrainingResources = async (data: any) => {
     return api.post(`${url}request_visa_training.php`, data);

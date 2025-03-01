@@ -10,7 +10,7 @@ import {
   TranscriptsProps,
   UploadedDocument,
 } from "../types/types";
-import { useCallback, useMemo } from "react";
+import {  useMemo } from "react";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();

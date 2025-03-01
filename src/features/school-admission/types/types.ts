@@ -9,6 +9,7 @@ type School = {
   SOP: string;
   SOP_status: string;
   application_status: string;
+  application_details?: any;
 };
 
 type Consent = {

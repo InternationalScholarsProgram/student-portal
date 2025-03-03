@@ -1,10 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
-import useAdmissions from "../../../school-admission/services/useAdmissions";
+// import useAdmissions from "../../../school-admission/services/useAdmissions";
+import { VisaObject } from "../../types/visaTypes";
 
 function useVisa() {
-  const { appliedSchools } = useAdmissions();
+  // const { appliedSchools } = useAdmissions();
+  const  appliedSchools : any[]  = [];
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
   const queryKeys = {
@@ -27,7 +29,7 @@ function useVisa() {
   const schools = appliedSchools?.filter(
     (school) => !school?.application_details?.feedback
   );
-  const visa = status?.value?.visa;
+  const visa = status?.value?.visa as VisaObject;
   const ds160Req = status?.value?.ds160req;
   const ds160Review = status?.value?.ds160review;
   const visaPayments = status?.value?.payments;

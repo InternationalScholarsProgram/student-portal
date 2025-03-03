@@ -171,3 +171,12 @@ p {
 .alert {
   @apply border-l-4 border-primary-main p-2 drop-shadow-lg shadow-lg;
 }
+.transcript-details {
+  @apply col gap-2;
+}
+.transcript-details p {
+  @apply font-semibold opacity-85;
+}
+.transcript-details span {
+  @apply px-2 opacity-75 font-normal;
+}

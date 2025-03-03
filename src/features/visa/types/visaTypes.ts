@@ -11,4 +11,58 @@ interface CounterModal extends ModalProps {
     unknown
   >;
 }
-export type { Counter, CounterModal };
+
+type VisaVideos = {
+  description: string | null;
+  det_desc: string | null;
+  det_id: string;
+  det_link: string;
+  det_watched: string;
+  level: string | null;
+  res_id: string;
+  slide_name: string;
+};
+type Transcripts = {
+  id: string;
+  interview_date: string;
+  interview_feedback: string;
+  interview_time: string;
+  kcse_grade: string;
+  mock_score: string | null;
+  program: string;
+  region: string;
+  school: string;
+  visa_outcome: string;
+};
+type VisaObject = {
+  advisor: string;
+  cancel_url: string;
+  category: string | null;
+  denied_visa: number;
+  end_time: string;
+  event: string;
+  interview_date: string; // Format: "DD-MM-YYYY"
+  interview_feedback: string | null;
+  interview_time: string; // Format: "HH:MM AM/PM"
+  ivr_no: string | null;
+  mock_comment: string;
+  mock_date: string | null;
+  mock_marks: number | null;
+  mock_questions: string;
+  mock_score: number | null;
+  mock_time: string | null;
+  remark: string;
+  reschedule_url: string;
+  status: number;
+  stu_email: string;
+  stu_id: number;
+  stu_name: string;
+  transcript_counter: number;
+  video_counter: number;
+  visa_doc: string;
+  visa_outcome: string | null;
+  visa_slip: string | null;
+  zoom_link: string | null;
+};
+
+export type { Counter, CounterModal, VisaVideos,Transcripts, VisaObject };

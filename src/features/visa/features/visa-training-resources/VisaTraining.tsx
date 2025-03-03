@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 type keys = "transcripts" | "videos" | "mock" | "supportDocuments";
 
 function VisaTraining() {
-  const { visa } = useVisa();
+  const { visa, inValidateStatus } = useVisa();
   const [open, setOpen] = useState({
     transcripts: false,
     videos: false,
@@ -29,13 +29,11 @@ function VisaTraining() {
 
   const updateCounter = useMutation({
     mutationFn: visaEndpoints.updateCounter,
-    onSuccess: (response) => {
-      toast.success(response.data.message);
-    },
+    onSuccess: inValidateStatus,
   });
 
   return (
-    <div className="col gap-2">
+    <div className="col gap-2 my-2">
       <TrainingGuide />
       <div className="col">
         {is7daysAfter ? (
@@ -46,14 +44,14 @@ function VisaTraining() {
           </span>
         ) : (
           <button
-            className="primary-border-btn self-end"
+            // className="primary-border-btn self-end"
             onClick={() => toggleModal("mock")}
           >
-            Request Mock Visa Interview
+            {/* Request Mock Visa Interview */}
           </button>
         )}
       </div>
-      <div className="row gap-2">
+      <div className="row-center gap-2">
         <button
           className="primary-border-btn"
           onClick={() => toggleModal("transcripts")}

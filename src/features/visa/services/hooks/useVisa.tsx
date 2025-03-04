@@ -2,11 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 // import useAdmissions from "../../../school-admission/services/useAdmissions";
-import { VisaObject } from "../../types/visaTypes";
+import { Ds160Review, VisaObject } from "../../types/visaTypes";
+import { useCallback, useMemo } from "react";
 
 function useVisa() {
   // const { appliedSchools } = useAdmissions();
-  const  appliedSchools : any[]  = [];
+  const appliedSchools: any[] = [];
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
   const queryKeys = {
@@ -29,9 +30,21 @@ function useVisa() {
   const schools = appliedSchools?.filter(
     (school) => !school?.application_details?.feedback
   );
-  const visa = status?.value?.visa as VisaObject;
+  const getDate = useCallback(() => {
+    const date = status?.value?.visa?.interview_date?.split("-").map(Number);
+    return new Date(date?.[2], date?.[1] - 1, date?.[0]);
+  }, [status?.value?.visa?.interview_date]);
+
+  const visa: VisaObject = useMemo(
+    () => ({
+      ...status?.value?.visa,
+      interview_date: getDate(),
+    }),
+    [status?.value?.visa]
+  );
+
   const ds160Req = status?.value?.ds160req;
-  const ds160Review = status?.value?.ds160review;
+  const ds160Review = status?.value?.ds160review as Ds160Review;
   const visaPayments = status?.value?.payments;
 
   return {

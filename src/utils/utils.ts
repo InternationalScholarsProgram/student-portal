@@ -93,7 +93,8 @@ function json2formData(json: any) {
 }
 
 const formatDate = (date: string | Date, format?: string) => {
-  return dayjs(new Date(date)).format(format || "dddd, MMMM D, YYYY");
+  const _date = new Date(date);
+  return dayjs(_date).format(format || "dddd, MMMM D, YYYY");
 };
 function capitalizeFirstCharacter(str: string) {
   if (!str) return ""; // Handle empty or undefined strings

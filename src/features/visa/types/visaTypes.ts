@@ -64,5 +64,28 @@ type VisaObject = {
   visa_slip: string | null;
   zoom_link: string | null;
 };
+type Ds160Review = {
+  application_id: string;
+  approved_before: "yes" | "no";
+  birth_year: number;
+  comment: string | null;
+  course: string;
+  declined: boolean;
+  denied_before: "yes" | "no";
+  financial: "Loan" | "Scholarship" | "Statement" | "";
+  intake: string;
+  name: string;
+  reporting_date: string;
+  req_id: number;
+  reviewed: boolean;
+  school_name: string;
+  security_answer: string;
+  stu_email: string;
+  support: string | null;
+  surname: string;
+  visa_attempt: "First" | "Second" | "Third+" | string;
+  with_family: "Alone" | "Family" | "Friends" | string;
+};
 
-export type { Counter, CounterModal, VisaVideos,Transcripts, VisaObject };
+
+export type { Counter, CounterModal, VisaVideos, Transcripts, VisaObject,Ds160Review };

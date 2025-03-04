@@ -180,3 +180,10 @@ p {
 .transcript-details span {
   @apply px-2 opacity-75 font-normal;
 }
+
+.form-group {
+  @apply col gap-3 my-3;
+}
+.form-group label {
+  @apply text-sm mb-1;
+}

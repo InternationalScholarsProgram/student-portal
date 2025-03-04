@@ -1,10 +1,17 @@
-type Props = {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClose: () => void;
   onSubmit?: () => void;
   btnText?: string;
   hideBtn?: boolean;
-};
-function FormFooterBtns({ onClose, onSubmit, btnText, hideBtn }: Props) {
+}
+const FormFooterBtns = ({
+  onClose,
+  onSubmit,
+  btnText,
+  hideBtn,
+  ...props
+}: Props) => {
+  console.log(props, "props");
   return (
     <footer
       data-html2canvas-ignore // ignore html2canvas when generating pdf
@@ -15,7 +22,8 @@ function FormFooterBtns({ onClose, onSubmit, btnText, hideBtn }: Props) {
       </button>
       {!hideBtn && (
         <button
-          className="primary-btn"
+          {...props}
+          className={`primary-btn ${props.disabled && "disabled-btn"}`}
           {...(onSubmit ? { onClick: onSubmit } : { type: "submit" })}
         >
           {btnText ? btnText : "Submit"}
@@ -23,6 +31,6 @@ function FormFooterBtns({ onClose, onSubmit, btnText, hideBtn }: Props) {
       )}
     </footer>
   );
-}
+};
 
 export default FormFooterBtns;

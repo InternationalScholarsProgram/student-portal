@@ -59,7 +59,7 @@ function RequestModal({ open, toggleModal }: ModalProps) {
                 minDate={dayjs()}
                 maxDate={dayjs().add(3, "week")}
                 name="visa_interview_date"
-                format="DD-MM-YYYY"
+                format="YYYY-MM-DD"
               />
             </div>
 

@@ -92,9 +92,14 @@ function json2formData(json: any) {
   return formData;
 }
 
-const formatDate = (date: string | Date, format?: string) => {
+const formatDate = (date: string | Date | null, format?: string) => {
+  if (!date) return "";
   const _date = new Date(date);
   return dayjs(_date).format(format || "dddd, MMMM D, YYYY");
+};
+const splitDate = (_date: string) => {
+  const date = _date?.split("-").map(Number);
+  return new Date(date?.[0], date?.[1] - 1, date?.[2]);
 };
 function capitalizeFirstCharacter(str: string) {
   if (!str) return ""; // Handle empty or undefined strings
@@ -211,7 +216,7 @@ function isValidURL(str: string) {
   try {
     new URL(str); // Try to create a URL object
     return true; // If successful, return true (it's a valid URL)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return false; // If an error occurs, return false (invalid URL)
   }
@@ -232,6 +237,7 @@ export {
   formData2json,
   convertImageToBase64,
   isValidURL,
+  splitDate,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

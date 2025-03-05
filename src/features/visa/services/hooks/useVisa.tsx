@@ -32,13 +32,16 @@ function useVisa() {
   );
   const getDate = useCallback(() => {
     const date = status?.value?.visa?.interview_date?.split("-").map(Number);
-    return new Date(date?.[2], date?.[1] - 1, date?.[0]);
+    return new Date(date?.[0], date?.[1] - 1, date?.[2]);
   }, [status?.value?.visa?.interview_date]);
 
   const visa: VisaObject = useMemo(
     () => ({
       ...status?.value?.visa,
       interview_date: getDate(),
+      interviewDateAndTime: getDate().setHours(
+        status?.value?.visa?.interview_time?.split(":")[0]
+      ),
     }),
     [status?.value?.visa]
   );

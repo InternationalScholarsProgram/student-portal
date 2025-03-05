@@ -12,9 +12,11 @@ function VisaTrainingStatus() {
   return (
     <>
       {status !== 2 && (
-        <h3 className="title-sm py-2">Visa training resources{status}</h3>
+        <h3 className="title-sm py-2">Visa training resources</h3>
       )}
-      {status === 2 || status === 9 ? (
+
+      {/* Content */}
+      {status === 2 || status === 9 || status === 4 ? (
         <VisaTraining />
       ) : (
         <section className="card p-3 my-2">

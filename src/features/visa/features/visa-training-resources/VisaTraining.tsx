@@ -1,8 +1,6 @@
-import dayjs from "dayjs";
 import useVisa from "../../services/hooks/useVisa";
 import TrainingGuide from "./TrainingGuide";
-import { formatDate } from "../../../../utils/utils";
-import RequestMockInterviewModal from "./mock-interview/RequestMockInterviewModal";
+import MockInterview from "./mock-interview/MockInterview";
 import { useState } from "react";
 import InterviewTranscriptsModal from "./InterviewTranscriptsModal";
 import SupportDocumentsModal from "./SupportDocumentsModal";
@@ -10,7 +8,7 @@ import TrainingVideosModal from "./TrainingVideosModal";
 import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 
-type keys = "transcripts" | "videos" | "mock" | "supportDocuments";
+type keys = "transcripts" | "videos" | "supportDocuments";
 
 function VisaTraining() {
   const { visa, inValidateStatus, ds160Review } = useVisa();
@@ -18,7 +16,6 @@ function VisaTraining() {
     transcripts: false,
     videos: false,
     supportDocuments: false,
-    mock: false,
   });
   const toggleModal = (key: keys) => setOpen({ ...open, [key]: !open[key] });
 
@@ -31,11 +28,7 @@ function VisaTraining() {
     <div className="col gap-2 my-2">
       <TrainingGuide />
       {ds160Review.support ? (
-        <RequestMockInterviewModal
-          open={open.mock}
-          toggleModal={() => toggleModal("mock")}
-          visa={visa}
-        />
+        <MockInterview />
       ) : (
         <div className="col">
           <p>View Training resources</p>

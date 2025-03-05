@@ -41,7 +41,8 @@ type VisaObject = {
   denied_visa: number;
   end_time: string;
   event: string;
-  interview_date: string; // Format: "DD-MM-YYYY"
+  interview_date: string | Date; // Format: "DD-MM-YYYY"
+  interviewDateAndTime: Date;
   interview_feedback: string | null;
   interview_time: string; // Format: "HH:MM AM/PM"
   ivr_no: string | null;

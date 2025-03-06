@@ -64,6 +64,7 @@ type VisaObject = {
   visa_outcome: string | null;
   visa_slip: string | null;
   zoom_link: string | null;
+  mockDateAndTime: Date | null;
 };
 type Ds160Review = {
   application_id: string;

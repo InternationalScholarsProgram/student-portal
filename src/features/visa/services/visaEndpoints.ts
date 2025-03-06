@@ -29,7 +29,7 @@ class VisaEndpoints {
       `${url}/get-video.php?action=visa_transcripts`
     );
     console.log(response?.data?.data, "response");
-    
+
     return response?.data?.data as Transcripts;
   };
   ds160RequestReview = async (data: any) => {
@@ -37,11 +37,15 @@ class VisaEndpoints {
     const response = await api.post(`${url}/ds160_request_review.php`, payload);
     return response?.data;
   };
-  visaPayments = async (data: any) => {
-    return api.post(`${url}/visa_payment.php`, data);
+  payments = async (data: any) => {
+    return api.post(`${url}/payment.php`, data);
   };
   updateCounter = async (counter: Counter) => {
     return api.get(`${url}/counters.php?counter=${counter}`);
+  };
+  getMockQuestions = async (id: number) => {
+    const response = api.get(`${url}/mock_questions.php?visa_id=${id}`);
+    return (await response).data.data;
   };
   requestVisaTrainingResources = async (data: any) => {
     return api.post(`${url}request_visa_training.php`, data);

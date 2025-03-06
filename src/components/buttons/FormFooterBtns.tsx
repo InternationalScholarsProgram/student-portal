@@ -17,7 +17,7 @@ const FormFooterBtns = ({
       data-html2canvas-ignore // ignore html2canvas when generating pdf
       className="row justify-end gap-2 py-1 "
     >
-      <button onClick={onClose} className="text-btn">
+      <button type="button" onClick={onClose} className="text-btn">
         Close
       </button>
       {!hideBtn && (

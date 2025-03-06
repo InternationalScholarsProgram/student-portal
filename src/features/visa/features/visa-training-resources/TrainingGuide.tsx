@@ -7,7 +7,7 @@ function TrainingGuide() {
     <Accordion
       expanded={expanded}
       onChange={() => setExpanded(!expanded)}
-      title="Training Resources Guide"
+      title="Visa Training Resources Guide"
       label
     >
       <li>

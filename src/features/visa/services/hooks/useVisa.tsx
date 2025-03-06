@@ -4,6 +4,7 @@ import useFetchUser from "../../../../services/hooks/useFetchUser";
 // import useAdmissions from "../../../school-admission/services/useAdmissions";
 import { Ds160Review, VisaObject } from "../../types/visaTypes";
 import { useCallback, useMemo } from "react";
+import { splitDate } from "../../../../utils/utils";
 
 function useVisa() {
   // const { appliedSchools } = useAdmissions();
@@ -11,7 +12,7 @@ function useVisa() {
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
   const queryKeys = {
-    statusCheck: ["visa", "status-check"],
+    statusCheck: [user?.email, "visa", "status-check"],
   };
   const inValidate = (queryKey: any) =>
     queryClient.invalidateQueries({ queryKey: queryKey });
@@ -35,6 +36,17 @@ function useVisa() {
     return new Date(date?.[0], date?.[1] - 1, date?.[2]);
   }, [status?.value?.visa?.interview_date]);
 
+  const mockDateAndTime = () => {
+    const visa = status?.value?.visa;
+    if (!visa?.mock_date) return null;
+    const date = splitDate(visa?.mock_date);
+    date.setHours(
+      Number(visa?.mock_time?.split(":")[0] || 0),
+      Number(visa?.mock_time?.split(":")[1] || 0)
+    );
+    return date;
+  };
+
   const visa: VisaObject = useMemo(
     () => ({
       ...status?.value?.visa,
@@ -42,13 +54,15 @@ function useVisa() {
       interviewDateAndTime: getDate().setHours(
         status?.value?.visa?.interview_time?.split(":")[0]
       ),
+      mockDateAndTime: mockDateAndTime(),
     }),
     [status?.value?.visa]
   );
 
   const ds160Req = status?.value?.ds160req;
   const ds160Review = status?.value?.ds160review as Ds160Review;
-  const visaPayments = status?.value?.payments;
+  const visaPayments = status?.value?.payments.visa;
+  const sevisPayments = status?.value?.payments.sevis;
 
   return {
     applicationVideo,
@@ -63,6 +77,7 @@ function useVisa() {
     ds160Req,
     ds160Review,
     visaPayments,
+    sevisPayments,
   };
 }
 

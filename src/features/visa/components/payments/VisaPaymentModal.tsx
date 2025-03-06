@@ -7,7 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
 import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
-import PickFileButton from "../../../../components/buttons/PickFileButton";
 
 function VisaPaymentModal({ open, toggleModal }: ModalProps) {
   const { user, inValidateStatus } = useVisa();
@@ -18,11 +17,12 @@ function VisaPaymentModal({ open, toggleModal }: ModalProps) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("country", user?.country);
+    formData.append("type", "visa");
     handlePayment.mutate(formData);
   };
 
   const handlePayment = useMutation({
-    mutationFn: visaEndpoints.visaPayments,
+    mutationFn: visaEndpoints.payments,
     onSuccess: (response) => {
       if (response.status === 200) {
         toast.success(response.data.message);

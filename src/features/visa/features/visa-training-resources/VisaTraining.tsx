@@ -1,6 +1,6 @@
 import useVisa from "../../services/hooks/useVisa";
 import TrainingGuide from "./TrainingGuide";
-import MockInterview from "./mock-interview/MockInterview";
+import AccessMock from "./mock-interview/AccessMock";
 import { useState } from "react";
 import InterviewTranscriptsModal from "./InterviewTranscriptsModal";
 import SupportDocumentsModal from "./SupportDocumentsModal";
@@ -28,7 +28,7 @@ function VisaTraining() {
     <div className="col gap-2 my-2">
       <TrainingGuide />
       {ds160Review.support ? (
-        <MockInterview />
+        <AccessMock />
       ) : (
         <div className="col">
           <p>View Training resources</p>
@@ -66,22 +66,22 @@ function VisaTraining() {
               Upload support document
             </button>
           </div>
+          <InterviewTranscriptsModal
+            open={open.transcripts}
+            toggleModal={() => toggleModal("transcripts")}
+            updateCounter={updateCounter}
+          />
+          <SupportDocumentsModal
+            open={open.supportDocuments}
+            toggleModal={() => toggleModal("supportDocuments")}
+          />
+          <TrainingVideosModal
+            open={open.videos}
+            toggleModal={() => toggleModal("videos")}
+            updateCounter={updateCounter}
+          />
         </div>
       )}
-      <InterviewTranscriptsModal
-        open={open.transcripts}
-        toggleModal={() => toggleModal("transcripts")}
-        updateCounter={updateCounter}
-      />
-      <SupportDocumentsModal
-        open={open.supportDocuments}
-        toggleModal={() => toggleModal("supportDocuments")}
-      />
-      <TrainingVideosModal
-        open={open.videos}
-        toggleModal={() => toggleModal("videos")}
-        updateCounter={updateCounter}
-      />
     </div>
   );
 }

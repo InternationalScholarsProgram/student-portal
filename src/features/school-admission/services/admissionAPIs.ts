@@ -125,12 +125,13 @@ class AdmissionAPIs {
       letter: file,
       action: "save_transcript_request",
     });
-    docs.download();
-
-    // const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
-    // const response = await api.post(endpoint, data, multipart);
-    // if (response?.status === 200) docs.download();
-    return api.get("https://ipapi.co/json/");
+    
+    const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
+    const response = await api.post(endpoint, data, multipart);
+    if (response?.status === 200) docs.download();
+    return response
+    // docs.download();
+    // return api.get("https://ipapi.co/json/");
   };
   submitSchoolApplication = async (payload: any) => {
     try {

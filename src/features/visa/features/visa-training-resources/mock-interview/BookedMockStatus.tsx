@@ -50,6 +50,7 @@ function BookedMockStatus() {
             <CalendlyMockVisaInterview
               text="Reschedule Mock Interview"
               classes="text-btn"
+              url={visa?.reschedule_url}
             />
             <a
               href={visa?.zoom_link || ""}

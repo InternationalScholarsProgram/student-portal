@@ -1,7 +1,7 @@
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClose: () => void;
   onSubmit?: () => void;
-  btnText?: string;
+  btnText?: string | React.ReactNode;
   hideBtn?: boolean;
 }
 const FormFooterBtns = ({

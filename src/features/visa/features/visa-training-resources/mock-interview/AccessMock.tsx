@@ -4,17 +4,26 @@ import useVisa from "../../../services/hooks/useVisa";
 import CanBookMock from "./CanBookMock";
 import GradedMock from "./GradedMock";
 import RejectedMockRequest from "./RejectedMockRequest";
+import SevisFees from "../../../components/payments/SevisFees";
+import VisaFeedback from "../../../components/visa-feedback/VisaFeedback";
 
 function AccessMock() {
-  const { visa } = useVisa();
+  const { visa, sevisPayments } = useVisa();
   // Memoize the 7-day check result
   const within7Days = useMemo(
     () => isWithin7Days(visa?.interview_date),
     [visa?.interview_date]
   );
 
+  if (visa?.hasInterviewDatePassed) return <VisaFeedback />;
   if (visa.status === 6) return <RejectedMockRequest />;
-  if (visa.status === 7) return <GradedMock />;
+  if (visa.status === 7)
+    return (
+      <div className="col gap-7">
+        <SevisFees />
+        {!sevisPayments && <GradedMock />}
+      </div>
+    );
 
   return (
     <div className="col">
@@ -51,3 +60,5 @@ function isWithin7Days(dateStr: Date | string) {
 
   return dateToCheck >= today && dateToCheck <= sevenDaysFromNow;
 }
+
+// mysqli_query($conn, "UPDATE visa_interview SET status = 4, mock_time = '$start_time', mock_date = '$date', reschedule_url = '$reschedule_url', end_time = '$end_time', cancel_url = '$cancel_url', event = '$event_uri', zoom_link = '$zoom_link', advisor = '$advisor' WHERE stu_id = '$intake_id'") or die(mysqli_error($conn));

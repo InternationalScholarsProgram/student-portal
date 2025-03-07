@@ -2,7 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 // import useAdmissions from "../../../school-admission/services/useAdmissions";
-import { Ds160Review, VisaObject } from "../../types/visaTypes";
+import {
+  Ds160Review,
+  MockQuestion,
+  SevisFeePayment,
+  VisaObject,
+} from "../../types/visaTypes";
 import { useCallback, useMemo } from "react";
 import { splitDate } from "../../../../utils/utils";
 
@@ -31,38 +36,49 @@ function useVisa() {
   const schools = appliedSchools?.filter(
     (school) => !school?.application_details?.feedback
   );
-  const getDate = useCallback(() => {
-    const date = status?.value?.visa?.interview_date?.split("-").map(Number);
-    return new Date(date?.[0], date?.[1] - 1, date?.[2]);
-  }, [status?.value?.visa?.interview_date]);
 
-  const mockDateAndTime = () => {
-    const visa = status?.value?.visa;
-    if (!visa?.mock_date) return null;
-    const date = splitDate(visa?.mock_date);
-    date.setHours(
-      Number(visa?.mock_time?.split(":")[0] || 0),
-      Number(visa?.mock_time?.split(":")[1] || 0)
+  const visa: VisaObject = useMemo(() => {
+    const _visa = status?.value?.visa;
+    const interview_date = splitDate(_visa?.interview_date);
+    const interviewDateAndTime = new Date(
+      splitDate(_visa?.interview_date).setHours(
+        _visa?.interview_time?.split(":")[0]
+      )
     );
-    return date;
-  };
+    const mockDateAndTime = () => {
+      if (!_visa?.mock_date) return null;
+      const date = splitDate(_visa?.mock_date);
+      date.setHours(
+        Number(_visa?.mock_time?.split(":")[0] || 0),
+        Number(_visa?.mock_time?.split(":")[1] || 0)
+      );
+      return date;
+    };
 
-  const visa: VisaObject = useMemo(
-    () => ({
-      ...status?.value?.visa,
-      interview_date: getDate(),
-      interviewDateAndTime: getDate().setHours(
-        status?.value?.visa?.interview_time?.split(":")[0]
-      ),
+    return {
+      ..._visa,
+      interview_date,
+      interviewDateAndTime,
+      hasInterviewDatePassed: interviewDateAndTime < new Date(),
       mockDateAndTime: mockDateAndTime(),
-    }),
-    [status?.value?.visa]
+    };
+  }, [status?.value?.visa]);
+
+  const { data: mockQuestions = [] } = useQuery<MockQuestion[]>({
+    queryKey: [user?.email, "mock-interview-questions"],
+    queryFn: () => visaEndpoints.getMockQuestions(visa?.stu_id),
+    enabled: Boolean(visa?.mockDateAndTime && visa?.status >= 6),
+  });
+
+  const mockTotalMarks = mockQuestions?.reduce(
+    (acc, item) => acc + item.marks,
+    0
   );
 
   const ds160Req = status?.value?.ds160req;
   const ds160Review = status?.value?.ds160review as Ds160Review;
   const visaPayments = status?.value?.payments.visa;
-  const sevisPayments = status?.value?.payments.sevis;
+  const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
 
   return {
     applicationVideo,
@@ -78,6 +94,9 @@ function useVisa() {
     ds160Review,
     visaPayments,
     sevisPayments,
+    mockQuestions,
+    mockTotalMarks,
+    // hasInterviewDatePassed,
   };
 }
 

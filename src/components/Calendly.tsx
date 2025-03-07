@@ -23,10 +23,14 @@ const Calendly = ({ text, classes, url }: Props) => {
   );
 };
 export default Calendly;
-
-const CalendlyMockVisaInterview = ({ text, classes }: { text?: string; classes?: string }) => (
+type MockProps = {
+  text?: string;
+  classes?: string;
+  url?: string;
+};
+const CalendlyMockVisaInterview = ({url, text, classes }: MockProps) => (
   <Calendly
-    url="https://calendly.com/accounts-u9w/visa-interview"
+    url={url||"https://calendly.com/accounts-u9w/visa-interview"}
     text={text || "Request Mock Visa Interview"}
     classes={classes || "primary-border-btn self-end"}
   />

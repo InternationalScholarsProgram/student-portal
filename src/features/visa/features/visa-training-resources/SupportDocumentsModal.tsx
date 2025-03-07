@@ -49,6 +49,9 @@ function SupportDocumentsModal({ open, toggleModal }: ModalProps) {
       toggleModal();
       inValidateStatus();
     },
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
+    }
   });
   return (
     <Modal
@@ -133,6 +136,7 @@ function SupportDocumentsModal({ open, toggleModal }: ModalProps) {
                 <PickFileButton
                   type="file"
                   name="supportLetter"
+                  accept=".pdf, .png, .jpg, .jpeg"
                   max={1}
                   className="w-full p-2 border rounded"
                   onChange={(e) => {

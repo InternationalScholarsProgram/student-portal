@@ -42,16 +42,14 @@ function VisaPaymentStatus() {
       );
     case 2:
       return (
-        <section>
-          <div>
-            <p className="my-2 p-3">
-              Your visa fee payment has been approved and disbursed to you. You
-              may now submit it to the embassy and schedule a visa interview
-              date. You have also been granted access to visa expedite letter
-              (if you need it). To access the visa training resources, please
-              submit the request using the button below.
-            </p>
-          </div>
+        <section className="col gap-5">
+          <p className="mt-2 px-3">
+            Your visa fee payment has been approved and disbursed to you. You
+            may now submit it to the embassy and schedule a visa interview date.
+            You have also been granted access to visa expedite letter (if you
+            need it). To access the visa training resources, please submit the
+            request using the button below.
+          </p>
           <VisaTrainingStatus />
           <Expedite />
         </section>

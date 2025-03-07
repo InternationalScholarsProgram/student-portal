@@ -7,6 +7,7 @@ import SupportDocumentsModal from "./SupportDocumentsModal";
 import TrainingVideosModal from "./TrainingVideosModal";
 import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
+import ContentComponent from "../../../../components/ContentComponent";
 
 type keys = "transcripts" | "videos" | "supportDocuments";
 
@@ -26,46 +27,45 @@ function VisaTraining() {
 
   return (
     <div className="col gap-2 my-2">
-      <TrainingGuide />
+      {visa?.status <= 6 && <TrainingGuide />}
       {ds160Review.support ? (
         <AccessMock />
       ) : (
-        <div className="col">
-          <p>View Training resources</p>
-          <div className="row justify-end gap-2">
-            {visa.transcript_counter > 0 && visa.video_counter > 0 ? (
-              <>
-                <button
-                  className="primary-border-btn"
-                  onClick={() => toggleModal("transcripts")}
-                >
-                  View transcripts
-                </button>
-                <button
-                  className="primary-border-btn"
-                  onClick={() => toggleModal("videos")}
-                >
-                  View videos
-                </button>
-              </>
-            ) : (
-              <p className="w-full text-left">
-                No training resources available
-              </p>
-            )}
-          </div>
-          <div className="col">
+        <div className="col gap-4">
+          <ContentComponent header="Visa interview training resources">
             <p>
-              To be able to book the mock interview, you need to upload the
-              support document.
+              Access a variety of training resources to enhance your
+              preparation.
+            </p>
+            <p>Choose from the available options below:</p>
+            <div className="row justify-end gap-2">
+              <button
+                className="primary-border-btn"
+                onClick={() => toggleModal("transcripts")}
+              >
+                View Training Transcripts
+              </button>
+              <button
+                className="primary-border-btn"
+                onClick={() => toggleModal("videos")}
+              >
+                Watch Training Videos
+              </button>
+            </div>
+          </ContentComponent>
+          <ContentComponent header="Mock Interview">
+            <p>
+              In order to proceed with booking your mock interview, you are
+              required to upload the necessary support document. This helps
+              ensure a smooth and efficient process.
             </p>
             <button
               className="primary-btn self-end"
               onClick={() => toggleModal("supportDocuments")}
             >
-              Upload support document
+              Upload Documents
             </button>
-          </div>
+          </ContentComponent>
           <InterviewTranscriptsModal
             open={open.transcripts}
             toggleModal={() => toggleModal("transcripts")}

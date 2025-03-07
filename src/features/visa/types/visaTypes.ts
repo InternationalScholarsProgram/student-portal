@@ -48,9 +48,9 @@ type VisaObject = {
   ivr_no: string | null;
   mock_comment: string;
   mock_date: string | null;
-  mock_marks: number | null;
+  mock_marks: number;
   mock_questions: string;
-  mock_score: number | null;
+  mock_score: number;
   mock_time: string | null;
   remark: string;
   reschedule_url: string;
@@ -65,6 +65,7 @@ type VisaObject = {
   visa_slip: string | null;
   zoom_link: string | null;
   mockDateAndTime: Date | null;
+  hasInterviewDatePassed : boolean;
 };
 type Ds160Review = {
   application_id: string;
@@ -72,14 +73,14 @@ type Ds160Review = {
   birth_year: number;
   comment: string | null;
   course: string;
-  declined: boolean;
+  declined: number;
   denied_before: "yes" | "no";
   financial: "Loan" | "Scholarship" | "Statement" | "";
   intake: string;
   name: string;
   reporting_date: string;
   req_id: number;
-  reviewed: boolean;
+  reviewed: number;
   school_name: string;
   security_answer: string;
   stu_email: string;
@@ -89,5 +90,41 @@ type Ds160Review = {
   with_family: "Alone" | "Family" | "Friends" | string;
 };
 
+type MockQuestion = {
+  email: string;
+  id: number;
+  marks: number;
+  question: string;
+  quiz_id: number;
+  visa_interview_id: 124;
+};
+type SevisFeePayment = {
+  id: number;
+  email: string;
+  reason: string;
+  document: string;
+  fullname_mpesa: string | number | null;
+  phone_number_mpesa: string | number | null;
+  sevis_number: string;
+  school_app_id: string | number | null;
+  visa_date: string | null;
+  amt_kes: number | null;
+  amt_usd: number | null;
+  dateapp: string;
+  status: number;
+  reason_denied: string | null;
+  i901_number: number | null;
+  sevis_pay_date: string | null;
+  visa_status: string | number | null;
+};
 
-export type { Counter, CounterModal, VisaVideos, Transcripts, VisaObject,Ds160Review };
+export type {
+  Counter,
+  CounterModal,
+  VisaVideos,
+  Transcripts,
+  VisaObject,
+  Ds160Review,
+  MockQuestion,
+  SevisFeePayment,
+};

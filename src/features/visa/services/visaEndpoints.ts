@@ -54,6 +54,10 @@ class VisaEndpoints {
     console.log(data, "data");
     return api.post(`${url}upload_support_letter.php`, data);
   };
+  postFeedback = async (data: any) => {
+    console.log(data, "data");
+    return api.post(`${url}feedback.php`, data);
+  };
   test = async (data?: any) => {
     return await fetchIp();
   };

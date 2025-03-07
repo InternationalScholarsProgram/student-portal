@@ -19,7 +19,7 @@ export default function Select<T = unknown>({
   ...props
 }: SelectProps<T>) {
   return (
-    <FormControl variant={variant || "standard"} sx={{ minWidth: 120 }}>
+    <FormControl variant={variant || "standard"} className="w-full">
       <InputLabel id={props.labelId || "select-label"}>
         {placeholder}
       </InputLabel>

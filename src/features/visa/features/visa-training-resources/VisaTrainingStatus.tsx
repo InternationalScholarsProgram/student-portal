@@ -3,6 +3,7 @@ import RequestModal from "./RequestModal";
 import { Link } from "react-router-dom";
 import useVisa from "../../services/hooks/useVisa";
 import VisaTraining from "./VisaTraining";
+import ContentComponent from "../../../../components/ContentComponent";
 
 function VisaTrainingStatus() {
   const { visa } = useVisa();
@@ -13,37 +14,38 @@ function VisaTrainingStatus() {
   const hasAccess = [2, 4, 5, 6, 7].includes(status); // Users with access
 
   const renderStatus = () => {
-    if (hasAccess) {
-      return <VisaTraining />;
-    }
+    if (hasAccess) return <VisaTraining />;
+
     switch (status) {
       case 1:
         return (
-          <div className="col gap-3">
-            <p>
-              Your request to access Visa interview training resources is
-              currently under<b> review </b>by our team. We are processing all
-              requests as quickly as possible to ensure that you receive the
-              necessary materials to prepare for your interview.
-            </p>
-            <p>
-              Kindly be patient as our team works on it. You will receive an
-              update via email or through your dashboard once your request has
-              been approved. If you have any urgent concerns or need further
-              assistance, please feel free to reach out to our support team.
-            </p>
-            <p>
-              We appreciate your patience and are committed to helping you
-              succeed in your visa interview.
-            </p>
-            <Link
-              to="/create-ticket"
-              className="primary-btn self-end"
-              type="button"
-            >
-              Create Ticket
-            </Link>
-          </div>
+          <ContentComponent header="Visa interview training resources">
+            <div className="col gap-3">
+              <p>
+                Your request to access Visa interview training resources is
+                currently under<b> review </b>by our team. We are processing all
+                requests as quickly as possible to ensure that you receive the
+                necessary materials to prepare for your interview.
+              </p>
+              <p>
+                Kindly be patient as our team works on it. You will receive an
+                update via email or through your dashboard once your request has
+                been approved. If you have any urgent concerns or need further
+                assistance, please feel free to reach out to our support team.
+              </p>
+              <p>
+                We appreciate your patience and are committed to helping you
+                succeed in your visa interview.
+              </p>
+              <Link
+                to="/create-ticket"
+                className="primary-btn self-end"
+                type="button"
+              >
+                Create Ticket
+              </Link>
+            </div>
+          </ContentComponent>
         );
       case 3:
         return (
@@ -67,22 +69,23 @@ function VisaTrainingStatus() {
         );
       default: //has not requested training
         return (
-          <div className="col gap-2">
-            <h3>Need Visa Training Resources for Your Interview?</h3>
-            <p>
-              Access our comprehensive Visa training materials, including
-              step-by-step video guides, expert tips, and common interview
-              questions to boost your confidence.
-            </p>
-            <p>
-              Click the button below to request access to our exclusive Visa
-              training videos and ensure you're fully prepared for your upcoming
-              interview.
-            </p>
-            <button className="primary-btn self-end" onClick={toggleModal}>
-              Request Visa Training Resources
-            </button>
-          </div>
+          <ContentComponent header="Need Visa Training Resources for Your Interview?">
+            <div className="col gap-2">
+              <p>
+                Access our comprehensive Visa training materials, including
+                step-by-step video guides, expert tips, and common interview
+                questions to boost your confidence.
+              </p>
+              <p>
+                Click the button below to request access to our exclusive Visa
+                training videos and ensure you're fully prepared for your
+                upcoming interview.
+              </p>
+              <button className="primary-btn self-end" onClick={toggleModal}>
+                Request Visa Training Resources
+              </button>
+            </div>
+          </ContentComponent>
         );
     }
   };
@@ -103,6 +106,7 @@ export default VisaTrainingStatus;
 
 /*
   1,2,3 -- request resources
+  4 --booked mock interview
   status = 7  -- has done mock interview
 
 */

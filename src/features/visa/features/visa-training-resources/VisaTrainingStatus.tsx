@@ -12,7 +12,6 @@ function VisaTrainingStatus() {
   const toggleModal = () => setOpen(!open);
 
   const hasAccess = [2, 4, 5, 6, 7].includes(status); // Users with access
-
   const renderStatus = () => {
     if (hasAccess) return <VisaTraining />;
 

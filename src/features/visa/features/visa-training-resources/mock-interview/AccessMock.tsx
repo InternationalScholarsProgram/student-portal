@@ -5,7 +5,6 @@ import CanBookMock from "./CanBookMock";
 import GradedMock from "./GradedMock";
 import RejectedMockRequest from "./RejectedMockRequest";
 import SevisFees from "../../../components/payments/SevisFees";
-import VisaFeedback from "../../../components/visa-feedback/VisaFeedback";
 
 function AccessMock() {
   const { visa, sevisPayments } = useVisa();
@@ -15,7 +14,6 @@ function AccessMock() {
     [visa?.interview_date]
   );
 
-  if (visa?.hasInterviewDatePassed) return <VisaFeedback />;
   if (visa.status === 6) return <RejectedMockRequest />;
   if (visa.status === 7)
     return (

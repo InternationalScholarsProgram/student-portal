@@ -4,6 +4,7 @@ import useFetchUser from "../../../../services/hooks/useFetchUser";
 // import useAdmissions from "../../../school-admission/services/useAdmissions";
 import {
   Ds160Review,
+  FeedBack,
   MockQuestion,
   SevisFeePayment,
   VisaObject,
@@ -79,6 +80,7 @@ function useVisa() {
   const ds160Review = status?.value?.ds160review as Ds160Review;
   const visaPayments = status?.value?.payments.visa;
   const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
+  const feedback = status?.value?.feedback as FeedBack;
 
   return {
     applicationVideo,
@@ -96,7 +98,7 @@ function useVisa() {
     sevisPayments,
     mockQuestions,
     mockTotalMarks,
-    // hasInterviewDatePassed,
+    feedback,
   };
 }
 

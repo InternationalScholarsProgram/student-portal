@@ -65,7 +65,7 @@ type VisaObject = {
   visa_slip: string | null;
   zoom_link: string | null;
   mockDateAndTime: Date | null;
-  hasInterviewDatePassed : boolean;
+  hasInterviewDatePassed: boolean;
 };
 type Ds160Review = {
   application_id: string;
@@ -117,6 +117,24 @@ type SevisFeePayment = {
   sevis_pay_date: string | null;
   visa_status: string | number | null;
 };
+type FeedBack = {
+  id: number;
+  name: string;
+  email: string;
+  visa_outcome: number;
+  interview_feedback: string;
+  visa_doc: null | string;
+  county: string;
+  school: string;
+  program: string;
+  cover_story: null | string;
+  status: number;
+  denied_visa: number;
+  app_id: number;
+  publish: number;
+  remarks: string;
+  pending_comments: string;
+};
 
 export type {
   Counter,
@@ -127,4 +145,5 @@ export type {
   Ds160Review,
   MockQuestion,
   SevisFeePayment,
+  FeedBack,
 };

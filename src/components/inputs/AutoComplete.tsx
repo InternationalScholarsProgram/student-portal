@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentProps } from "react";
-import { Autocomplete, CircularProgress, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { inputStyles } from "../../styles/styles";
 
 interface Props extends ComponentProps<typeof TextField> {
@@ -11,10 +11,9 @@ interface Props extends ComponentProps<typeof TextField> {
 }
 
 const AutoComplete: React.FC<Props> = ({
-  options,
+  options = [],
   handleSelect,
   getOptionLabel,
-  isLoading = false,
   ...props
 }) => {
   return (
@@ -22,7 +21,6 @@ const AutoComplete: React.FC<Props> = ({
       getOptionLabel={getOptionLabel}
       options={options}
       onChange={handleSelect}
-      loading={isLoading}
       renderInput={(params) => (
         <TextField {...params} {...props} sx={inputStyles} />
       )}

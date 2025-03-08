@@ -24,9 +24,6 @@ export default function Select<T = unknown>({
         {placeholder}
       </InputLabel>
       <MuiSelect {...props} labelId={props.labelId || "select-label"}>
-        {/* <MenuItem value="">
-          <em>None</em>
-        </MenuItem> */}
         {children}
       </MuiSelect>
     </FormControl>

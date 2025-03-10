@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
-// import useAdmissions from "../../../school-admission/services/useAdmissions";
 import {
   Ds160Review,
   FeedBack,
@@ -9,14 +8,15 @@ import {
   SevisFeePayment,
   VisaObject,
 } from "../../types/visaTypes";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { splitDate } from "../../../../utils/utils";
+import useAdmissions from "../../../school-admission/services/useAdmissions";
 
 function useVisa() {
-  // const { appliedSchools } = useAdmissions();
-  const appliedSchools: any[] = [];
+  const { appliedSchools, proposedSchools } = useAdmissions();
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
+
   const queryKeys = {
     statusCheck: [user?.email, "visa", "status-check"],
   };
@@ -35,7 +35,7 @@ function useVisa() {
     queryFn: visaEndpoints.ds_160_application_video,
   });
   const schools = appliedSchools?.filter(
-    (school) => !school?.application_details?.feedback
+    (school) => school?.application_details?.feedback
   );
 
   const visa: VisaObject = useMemo(() => {
@@ -81,10 +81,11 @@ function useVisa() {
   const visaPayments = status?.value?.payments.visa;
   const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
   const feedback = status?.value?.feedback as FeedBack;
+  // console.log(proposedSchools, "schools");
 
   return {
     applicationVideo,
-    schools: schools,
+    schools: schools?.length > 0 ? schools : proposedSchools,
     user,
     status,
     isLoading,

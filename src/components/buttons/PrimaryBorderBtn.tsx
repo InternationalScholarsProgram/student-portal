@@ -1,8 +1,8 @@
-import { CustomButtonProps } from "../../types";
-
-function PrimaryBorderBtn(props: CustomButtonProps) {
+function PrimaryBorderBtn(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
+) {
   return (
-    <button {...props} className={` primary-border-btn ${props.btnstyles} `}>
+    <button {...props} className={` primary-border-btn ${props.className}`}>
       {props.children}
     </button>
   );

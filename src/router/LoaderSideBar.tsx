@@ -1,12 +1,12 @@
-import Loader from "../components/loaders/Loader";
+import { FullLoader } from "../components/loaders/Loader";
 
 function LoaderSideBar() {
   return (
     <div className="row h-screen-dvh w-screen">
       <aside className="sidebar" />
-      <main className="flex-1 col-center bg-default">
+      <main className="flex-1 col bg-default">
         <nav className="w-full h-[9vh] bg-paper" />
-        <Loader />
+        <FullLoader />
       </main>
     </div>
   );

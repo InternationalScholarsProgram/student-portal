@@ -17,6 +17,7 @@ function InputField(props: TextFieldProps) {
         slotProps={{
           textField: { ...rest, size: "medium" },
         }}
+        format="YYYY-MM-DD"
       />
     );
   if (props.type === "datetime-local")
@@ -24,7 +25,7 @@ function InputField(props: TextFieldProps) {
       <DateTimePicker
         onChange={(e: any) => onChange?.(e)}
         slotProps={{
-          textField: { ...rest, size: "small" },
+          textField: { ...rest, size: "medium" },
         }}
       />
     );
@@ -33,8 +34,9 @@ function InputField(props: TextFieldProps) {
       <TimePicker
         onChange={(e: any) => onChange?.(e)}
         slotProps={{
-          textField: { ...rest, size: "small" },
+          textField: { ...rest, size: "medium" },
         }}
+        format="HH:mm"
       />
     );
   return (

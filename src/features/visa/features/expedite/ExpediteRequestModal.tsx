@@ -9,11 +9,14 @@ import useVisa from "../../services/hooks/useVisa";
 import Guide from "./Guide";
 import { useNavigate } from "react-router";
 import { formData2json } from "../../../../utils/utils";
+import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
+import { useMutation } from "@tanstack/react-query";
+import visaEndpoints from "../../services/visaEndpoints";
 
 function ExpediteRequestModal({ open, toggleModal }: ModalProps) {
   const [read, setRead] = useState(false);
   const [marked, setMarked] = useState(false);
-  const { schools } = useVisa();
+  const { schools, user } = useVisa();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,12 +24,24 @@ function ExpediteRequestModal({ open, toggleModal }: ModalProps) {
     console.log(schools);
   }, [open]);
 
-  const requestTrainingResources = (e: FormEvent) => {
+  const requestTrainingResources = async (e: FormEvent) => {
     e.preventDefault();
-    navigate("/visa-processing/expedite-letter", {
-      state: formData2json(new FormData(e.target as HTMLFormElement)),
-    });
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.append("student_name", user?.fullnames);
+    formData.append("country", user?.country);
+    formData.append("semester", "spring");
+    const response = await expediteVisa.mutateAsync(formData);
+    if (response.status === 200) {
+      navigate("/visa-processing/expedite-letter", {
+        state: formData2json(formData),
+      });
+    }
   };
+
+  const expediteVisa = useMutation({
+    mutationFn: visaEndpoints.expediteVisa,
+  });
+
   return (
     <Modal
       open={open}
@@ -63,42 +78,36 @@ function ExpediteRequestModal({ open, toggleModal }: ModalProps) {
           </>
         ) : (
           <form
-            className="ease-in-out transition-all"
+            className="ease-in-out transition-all col gap-3"
             onSubmit={requestTrainingResources}
           >
-            <div className="col p-4 gap-3">
-              <div className="grid grid-cols-1 gap-2">
-                {formInputs?.map((input) => {
-                  if (input?.type === "select") {
-                    return (
-                      <Select
-                        key={input?.name}
-                        placeholder={input?.inputLabel}
-                        {...input}
-                      >
-                        {schools?.map((school: any) => (
+            <div className="grid grid-cols-1 gap-2">
+              {formInputs?.map((input) => {
+                if (input?.type === "select") {
+                  const { inputLabel, ...rest } = input;
+                  return (
+                    <div key={input?.name}>
+                      <label>{inputLabel}</label>
+                      <Select variant="outlined" {...rest}>
+                        {schools?.map((school) => (
                           <MenuItem
                             key={school?.school_name}
-                            value={school?.school_name || ""}
+                            value={school?.school_name}
                           >
                             {school?.school_name + " - " + school?.program_name}
                           </MenuItem>
                         ))}
                       </Select>
-                    );
-                  }
-                  return <InputsWithLabel key={input?.name} {...input} />;
-                })}
-              </div>
+                    </div>
+                  );
+                }
+                return <InputsWithLabel key={input?.name} {...input} />;
+              })}
             </div>
-            <div className="row justify-end gap-2 my-3">
-              <button className="text-btn" onClick={toggleModal}>
-                Close
-              </button>
-              <button className="primary-btn" type="submit">
-                Get Letter
-              </button>
-            </div>
+            <FormFooterBtns
+              onClose={toggleModal}
+              btnText={expediteVisa.isPending ? "Processing..." : "Get Letter"}
+            />
           </form>
         )}
       </div>
@@ -111,39 +120,38 @@ const formInputs = [
   {
     type: "select",
     name: "university",
-    inputLabel: "University Attending",
-    placeholder: "Select or Enter School Name",
+    inputLabel: "Select School Name",
     required: true,
   },
   {
     type: "text",
-    name: "servis",
+    name: "sevis_no",
     inputLabel: "SEVIS No as per your I-20",
     placeholder: "Enter SEVIS No as per your I-20",
     required: true,
   },
   {
     type: "date",
-    name: "visa_date",
+    name: "visa_interview_date",
     inputLabel: "Current Visa Interview Date",
     required: true,
   },
   {
     type: "time",
-    name: "visa_time",
+    name: "visa_interview_time",
     inputLabel: "Current Visa Interview Time",
     required: true,
   },
   {
     type: "text",
-    name: "ivr",
+    name: "ivr_account_number",
     inputLabel: "IVR Account No (As per your visa appointment record)",
     placeholder: "IVR123456",
     required: true,
   },
   {
     type: "date",
-    name: "admission_date",
+    name: "reporting_date",
     inputLabel: "Earliest admission date as per your I-20",
     required: true,
   },

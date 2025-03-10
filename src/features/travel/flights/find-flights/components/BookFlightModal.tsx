@@ -36,7 +36,7 @@ function BookFlightModal({ open, setOpen, offer }: any) {
       time_of_day: timeOfDay,
     };
     console.log(payload, user?.package.toLowerCase());
-    await bookFlight.mutateAsync(payload);
+    bookFlight.mutate(payload);
   };
   const bookFlight = useMutation({
     mutationFn: flightApi.bookFlight,

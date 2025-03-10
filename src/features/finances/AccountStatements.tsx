@@ -74,7 +74,6 @@ function AccountStatements({ hideBalance }: any) {
                 names: user?.fullnames,
               });
             }}
-            btnstyles=""
           >
             Receipt
           </PrimaryBorderBtn>

@@ -82,7 +82,7 @@ function CreateTicket() {
             <button type="button" className="text-btn" onClick={resetForm}>
               Cancel
             </button>
-            <PrimaryBtn btnstyles="px-5" type="submit">
+            <PrimaryBtn className="px-5" type="submit">
               Create Ticket
             </PrimaryBtn>
           </div>

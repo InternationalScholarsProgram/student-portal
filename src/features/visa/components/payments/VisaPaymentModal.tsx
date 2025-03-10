@@ -33,22 +33,20 @@ function VisaPaymentModal({ open, toggleModal }: ModalProps) {
   });
   return (
     <Modal open={open} setOpen={toggleModal} title="Request For Visa Payment">
-      <div className="modal">
-        <form onSubmit={onSubmit} className="col gap-2">
-          {formFields.map((field) => (
-            <InputsWithLabel key={field.name} {...field} />
-          ))}
-          <InputsWithLabel
-            inputLabel="Visa Voucher"
-            type="file"
-            name="visaVoucher"
-          />
-          <FormFooterBtns
-            btnText={handlePayment.isPending ? "Processing" : "Request Payment"}
-            onClose={toggleModal}
-          />
-        </form>
-      </div>
+      <form onSubmit={onSubmit} className="modal col gap-2">
+        {formFields.map((field) => (
+          <InputsWithLabel key={field.name} {...field} />
+        ))}
+        <InputsWithLabel
+          inputLabel="Visa Voucher"
+          type="file"
+          name="voucher"
+        />
+        <FormFooterBtns
+          btnText={handlePayment.isPending ? "Processing..." : "Request Payment"}
+          onClose={toggleModal}
+        />
+      </form>
     </Modal>
   );
 }

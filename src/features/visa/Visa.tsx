@@ -10,17 +10,23 @@ import FeedbackStatus from "./features/visa-feedback/FeedbackStatus";
 function Visa() {
   const { stage, isLoading, visa } = useVisa();
   if (isLoading) return <FullLoader />;
+
+  const getStageComponent = () => {
+    if (stage === 0) return <CheckI20 />;
+    if (stage === 1) return <DS160req />;
+    if (stage === 2) return <DS160Review />;
+    if (stage === 3) {
+      if (visa?.hasInterviewDatePassed) return <FeedbackStatus />;
+      return <VisaTrainingStatus />;
+    }
+    return (
+      <p className="text-center">Invalid stage. Please contact support.</p>
+    );
+  };
   return (
     <main>
       <VisaGuide />
-      {stage === 0 && <CheckI20 />}
-      {stage === 1 && <DS160req />}
-      {stage === 2 && <DS160Review />}
-      {visa?.hasInterviewDatePassed ? (
-        <FeedbackStatus />
-      ) : (
-        <VisaTrainingStatus />
-      )}
+      {getStageComponent()}
     </main>
   );
 }

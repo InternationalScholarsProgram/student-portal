@@ -33,7 +33,7 @@ export default function Loans({ loan }: { loan: string }) {
             issuance, for 24 months. Interest rate for this loan is 1% per month
             reducing balance.
           </p>
-          <PrimaryBtn btnstyles="self-end w-fit" onClick={() => {}}>
+          <PrimaryBtn className="self-end w-fit" onClick={() => {}}>
             Proceed to Relocation Loan
           </PrimaryBtn>
         </section>

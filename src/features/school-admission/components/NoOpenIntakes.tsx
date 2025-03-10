@@ -17,7 +17,7 @@ function NoOpenIntakes() {
           the next intake opens.
         </p>
         <PrimaryBtn
-          btnstyles="self-end row-center gap-2"
+          className="self-end row-center gap-2"
           onClick={() =>
             window.open("https://t.me/+0jwhmTwF2zU0Mzlh", "_blank")
           }

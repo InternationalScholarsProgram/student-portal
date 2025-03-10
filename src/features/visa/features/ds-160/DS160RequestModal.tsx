@@ -8,6 +8,7 @@ import { MenuItem } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
+import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
 
 function DS160RequestModal({ open, toggleModal }: ModalProps) {
   const { schools, user, inValidateStatus } = useVisa();
@@ -23,7 +24,7 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
     if (course) formData.set("course", course);
     formData.append("fullnames", user?.fullnames);
 
-    await ds160RequestReview.mutateAsync(formData);
+    ds160RequestReview.mutate(formData);
   };
 
   const ds160RequestReview = useMutation({
@@ -43,61 +44,55 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
   });
   return (
     <Modal open={open} setOpen={toggleModal} title="DS-160 Request for Review">
-      <div className="p-6">
+      <form
+        onSubmit={requestReview}
+        className="w-[98vw] md:w-[80vw] xl:w-[70vw] overflow-y-auto h-[80vh] sm:p-3 p-1 col gap-3"
+      >
         <p>
           The following information is required to request your DS-160
           application review
         </p>
-        <form
-          onSubmit={requestReview}
-          className="w-[98vw] md:w-[80vw] xl:w-[70vw] overflow-y-auto h-[80vh] p-3 gap-3 col"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-            {formInputs?.map((input) => {
-              if (input?.type === "select") {
-                return (
-                  <Select
-                    key={input?.name}
-                    placeholder={input?.inputLabel}
-                    title={input?.inputLabel}
-                    {...input}
-                  >
-                    {input?.name === "school-name"
-                      ? schools?.map((school: any) => (
-                          <MenuItem
-                            key={school?.school_name}
-                            value={school?.school_name}
-                          >
-                            {school?.school_name + " - " + school?.program_name}
-                          </MenuItem>
-                        ))
-                      : input?.options?.map((option) => (
-                          <MenuItem key={option?.value} value={option?.value}>
-                            {option?.label}
-                          </MenuItem>
-                        ))}
-                  </Select>
-                );
-              }
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+          {formInputs?.map((input) => {
+            if (input?.type === "select") {
               return (
-                <InputField
-                  label={input.inputLabel}
+                <Select
                   key={input?.name}
+                  placeholder={input?.inputLabel}
+                  title={input?.inputLabel}
                   {...input}
-                />
+                >
+                  {input?.name === "school-name"
+                    ? schools?.map((school: any) => (
+                        <MenuItem
+                          key={school?.school_name}
+                          value={school?.school_name}
+                        >
+                          {school?.school_name + " - " + school?.program_name}
+                        </MenuItem>
+                      ))
+                    : input?.options?.map((option) => (
+                        <MenuItem key={option?.value} value={option?.value}>
+                          {option?.label}
+                        </MenuItem>
+                      ))}
+                </Select>
               );
-            })}
-          </div>
-          <div className="row justify-end gap-2">
-            <button className="text-btn" onClick={toggleModal}>
-              Close
-            </button>
-            <button className="primary-btn" type="submit">
-              {ds160RequestReview.isPending ? "Submiting..." : "Submit"}
-            </button>
-          </div>
-        </form>
-      </div>
+            }
+            return (
+              <InputField
+                label={input.inputLabel}
+                key={input?.name}
+                {...input}
+              />
+            );
+          })}
+        </div>
+        <FormFooterBtns
+          onClose={toggleModal}
+          btnText={ds160RequestReview.isPending ? "Submiting..." : "Submit"}
+        />
+      </form>
     </Modal>
   );
 }

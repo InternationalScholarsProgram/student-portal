@@ -18,44 +18,45 @@ function VisaTrainingStatus() {
     switch (status) {
       case 1:
         return (
-          <ContentComponent header="Visa interview training resources">
-            <div className="col gap-3">
-              <p>
-                Your request to access Visa interview training resources is
-                currently under<b> review </b>by our team. We are processing all
-                requests as quickly as possible to ensure that you receive the
-                necessary materials to prepare for your interview.
-              </p>
-              <p>
-                Kindly be patient as our team works on it. You will receive an
-                update via email or through your dashboard once your request has
-                been approved. If you have any urgent concerns or need further
-                assistance, please feel free to reach out to our support team.
-              </p>
-              <p>
-                We appreciate your patience and are committed to helping you
-                succeed in your visa interview.
-              </p>
-              <Link
-                to="/create-ticket"
-                className="primary-btn self-end"
-                type="button"
-              >
-                Create Ticket
-              </Link>
-            </div>
+          <ContentComponent
+            className="mt-4"
+            header="Visa interview training resources"
+          >
+            <p>
+              Your request to access Visa interview training resources is
+              currently under<b> review </b>by our team. We are processing all
+              requests as quickly as possible to ensure that you receive the
+              necessary materials to prepare for your interview.
+            </p>
+            <p>
+              Kindly be patient as our team works on it. You will receive an
+              update via email or through your dashboard once your request has
+              been approved. If you have any urgent concerns or need further
+              assistance, please feel free to reach out to our support team.
+            </p>
+            <p>
+              We appreciate your patience and are committed to helping you
+              succeed in your visa interview.
+            </p>
+            <Link
+              to="/create-ticket"
+              className="primary-btn self-end"
+              type="button"
+            >
+              Create Ticket
+            </Link>
           </ContentComponent>
         );
       case 3:
         return (
-          <div className="col gap-2">
-            <h4 className="font-semibold">Request Rejected</h4>
+          <ContentComponent className="col gap-2" header="Request Rejected">
             <p>
               Unfortunately, your request has been rejected. Please review the
               remark below for further details.
             </p>
             <p className="">
-              Reason: {visa?.remark || "No specific reason provided."}
+              <b>Reason: </b>{" "}
+              <em>{visa?.remark || "No specific reason provided."}</em>
             </p>
             <p>
               If you believe this was a mistake or if corrections are needed,
@@ -64,7 +65,7 @@ function VisaTrainingStatus() {
             <button className="primary-btn self-end" onClick={toggleModal}>
               Resubmit
             </button>
-          </div>
+          </ContentComponent>
         );
       default: //has not requested training
         return (

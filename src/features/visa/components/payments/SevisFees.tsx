@@ -3,7 +3,7 @@ import SevisFeesPayment from "./SevisFeesPayment";
 import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
 import Modal from "../../../../components/Modal";
 import useVisa from "../../services/hooks/useVisa";
-import { CalendlyMockVisaInterview } from "../../../../components/Calendly";
+import ContentComponent from "../../../../components/ContentComponent";
 
 function SevisFees() {
   const { sevisPayments, mockTotalMarks } = useVisa();
@@ -18,7 +18,7 @@ function SevisFees() {
         ) : (
           <div>
             <p>
-              Regrettably, you didn't achieve an 70% or higher on your mock
+              Regrettably, you didn't achieve 70% or higher on your mock
               interview. However, the program will cover your SEVIS fee after
               your real visa interview, once you receive positive feedback
               (whether an approved visa or administrative processing) from your
@@ -34,7 +34,7 @@ function SevisFees() {
   switch (sevisPayments?.status) {
     case 1:
       return (
-        <StatusComponent header="Your SEVIS fee payment request has been received">
+        <ContentComponent header="Your SEVIS fee payment request has been received">
           <p>
             Your SEVIS fee request has been received and is being processed.
             Kindly be patient as our team reviews your request.
@@ -43,11 +43,11 @@ function SevisFees() {
             Kindly be patient as our team reviews it. When it is approved, you
             will receive further instructions here.
           </p>
-        </StatusComponent>
+        </ContentComponent>
       );
     case 2:
       return (
-        <StatusComponent header="Your payment has been approved">
+        <ContentComponent header="Your payment has been approved">
           <p>
             Your SEVIS fee payment request has been approved. The payment will
             be processed by our team as requested, based on the visa approval
@@ -55,11 +55,11 @@ function SevisFees() {
             visa interview. Please ensure you return to this module to provide
             your actual visa interview feedback.
           </p>
-        </StatusComponent>
+        </ContentComponent>
       );
     case 3:
       return (
-        <StatusComponent header="Payment Rejected">
+        <ContentComponent header="Payment Rejected">
           <p>
             Your SEVIS fee request has been denied. Please read the reviewers
             comment below and resubmit your request.
@@ -73,11 +73,11 @@ function SevisFees() {
             Request SEVIS Fees Payment
           </button>
           <PaymentModal />
-        </StatusComponent>
+        </ContentComponent>
       );
     case 4:
       return (
-        <StatusComponent header="Your payment has been completed">
+        <ContentComponent header="Your payment has been completed">
           <p>
             Your SEVIS fee request has been completed. Please use your SEVIS
             number to track your status. In case your SEVIS payment is not
@@ -90,11 +90,11 @@ function SevisFees() {
           >
             Track Sevis Status
           </a>
-        </StatusComponent>
+        </ContentComponent>
       );
     default:
       return (
-        <StatusComponent header="Request SEVIS Fee Payment">
+        <ContentComponent header="Request SEVIS Fee Payment">
           <p>
             The SEVIS fee is a mandatory payment required for your visa
             application process. If you need assistance covering this fee, you
@@ -111,15 +111,9 @@ function SevisFees() {
             </button>
           </div>
           <PaymentModal />
-        </StatusComponent>
+        </ContentComponent>
       );
   }
 }
 
 export default SevisFees;
-const StatusComponent = ({ header, children }: any) => (
-  <div>
-    <h3 className="title-sm">{header}</h3>
-    <div className="col card p-3">{children}</div>
-  </div>
-);

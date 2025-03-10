@@ -5,31 +5,20 @@ import { formatDate } from "../../../../utils/utils";
 import { FullLoader } from "../../../../components/loaders/Loader";
 import { Link } from "react-router-dom";
 import { Download } from "@mui/icons-material";
-import { generatePdf } from "../../../user/contracts/utils/utils";
-import { useRef } from "react";
-
-interface VisaData {
-  admission_date: string;
-  ivr: string;
-  servis: string;
-  university: string;
-  visa_date: string;
-  visa_time: string;
-}
+import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
 
 function ExpediteLetter() {
   const { targetRef, toPDF } = usePDF();
-  const print = useRef<HTMLDivElement>(null);
   const { state } = useLocation();
   const { user } = useFetchUser();
 
   if (!user) return <FullLoader />;
-  if (!state) return <Navigate to="/visa-processing" replace />;
+  // if (!state) return <Navigate to="/visa-processing" replace />;
 
   return (
     <div className="content-container col-center">
-      <main>
-        <header className="" ref={targetRef}>
+      <main ref={targetRef}>
+        <header>
           <b>Head of Consular Section, Visa Services</b>
           <br />
           <b>
@@ -53,12 +42,12 @@ function ExpediteLetter() {
           </p>
           <p>
             I am scheduled for a visa interview on{" "}
-            <b>{formatDate(state?.visa_date)}</b> at{"  "}
-            <b>{state?.visa_time}</b> under IVR Account Number{" "}
-            <b>{state?.ivr}</b>. I am writing to request you to kindly
-            reschedule my interview to any date falling before{" "}
-            <b>{formatDate(state?.admission_date)}</b> because the starting date
-            for the classes is <b>{formatDate(state?.admission_date)}</b>.
+            <b>{formatDate(state?.visa_interview_date)}</b> at{"  "}
+            <b>{state?.visa_interview_time}</b> under IVR Account Number{" "}
+            <b>{state?.ivr_account_number}</b>. I am writing to request you to
+            kindly reschedule my interview to any date falling before{" "}
+            <b>{formatDate(state?.reporting_date)}</b> because the starting date
+            for the classes is <b>{formatDate(state?.reporting_date)}</b>.
             <br />
           </p>
           <p>
@@ -76,31 +65,29 @@ function ExpediteLetter() {
 
         <br />
 
-        <div className="">
+        <div>
           <p>Kind Regards,</p>
-          <b className="">{user?.fullnames}</b>
+          <b>{user?.fullnames}</b>
         </div>
       </main>
       <footer className="row w-full justify-end gap-2 m-2">
-        <Link to="/" className="text-btn">
-          Home
+        <Link to="/visa-processing" className="text-btn">
+          Go Back
         </Link>
-        <button
-          onClick={() => {
-            // generatePdf(`${user?.fullnames}.pdf`, targetRef.current);
+        <PrimaryBtn
+          onClick={() =>
             toPDF({
-              filename: `${user?.fullnames}.pdf`,
+              filename: `${user?.fullnames}_Expedite_Letter.pdf`,
               page: {
                 format: "A4",
                 margin: 5,
                 orientation: "portrait",
               },
-            });
-          }}
-          className="primary-btn"
+            })
+          }
         >
           <Download /> Download Letter
-        </button>
+        </PrimaryBtn>
       </footer>
     </div>
   );

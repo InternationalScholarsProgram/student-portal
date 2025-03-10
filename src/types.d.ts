@@ -6,10 +6,8 @@ import React from "react";
 //   }
 // }
 
-interface CustomButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  btnstyles?: string;
-}
+type CustomButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
 interface ModalProps {
   open: boolean;
   toggleModal: () => void;

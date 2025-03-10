@@ -58,6 +58,12 @@ class VisaEndpoints {
     console.log(data, "data");
     return api.post(`${url}feedback.php`, data);
   };
+  deniedVisa = async (data: string) => {
+    return api.get(`${url}denied_visa.php?action=${data}`);
+  };
+  expediteVisa = async (data: FormData) => {
+    return api.post(`${url}expedite_visa.php`, data);
+  };
   test = async (data?: any) => {
     return await fetchIp();
   };

@@ -1,31 +1,33 @@
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import React from "react";
 import {
   InputLabel,
   Select as MuiSelect,
   SelectProps as MuiSelectProps,
 } from "@mui/material";
-import React from "react";
+import FormControl from "@mui/material/FormControl";
 
-type SelectProps<T = unknown> = {
-  placeholder: string;
+type SelectProps = MuiSelectProps & {
+  placeholder?: string;
   children: React.ReactNode;
-} & MuiSelectProps<T>;
+};
 
-export default function Select<T = unknown>({
+const Select: React.FC<SelectProps> = ({
   placeholder,
   children,
   variant = "standard",
   ...props
-}: SelectProps<T>) {
+}) => {
   return (
-    <FormControl variant={variant || "standard"} className="w-full">
-      <InputLabel id={props.labelId || "select-label"}>
-        {placeholder}
-      </InputLabel>
+    <FormControl variant={variant} className="w-full">
+      {placeholder && (
+        <InputLabel id={props.labelId || "select-label"}>
+          {placeholder}
+        </InputLabel>
+      )}
       <MuiSelect {...props} labelId={props.labelId || "select-label"}>
         {children}
       </MuiSelect>
     </FormControl>
   );
-}
+};
+export default Select;

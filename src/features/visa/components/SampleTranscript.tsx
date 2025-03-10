@@ -7,7 +7,7 @@ const SampleTranscript = () => {
   const toggleModal = () => setOpen(!open);
   return (
     <>
-      <div className="col alert">
+      <div className="col border-30 p-2">
         <p>
           PLEASE NOTE: Please take your time to submit a detailed feedback of
           what exactly happened during your encounter with the visa officer. A
@@ -19,7 +19,7 @@ const SampleTranscript = () => {
         </p>
       </div>
       <button onClick={toggleModal} className="self-end primary-border-btn">
-        View Sample Transcript
+        Sample Transcript
       </button>
       <Modal title="Sample Transcript" open={open} setOpen={toggleModal}>
         <div className="modal col gap-1 h-[80vh] overflow-y-auto">

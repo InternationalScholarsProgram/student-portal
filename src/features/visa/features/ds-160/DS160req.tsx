@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import DS160RequestModal from "./DS160RequestModal";
 import useVisa from "../../services/hooks/useVisa";
+import ContentComponent from "../../../../components/ContentComponent";
 
 function DS160req() {
   const { applicationVideo, ds160Req } = useVisa();
@@ -10,7 +11,10 @@ function DS160req() {
   return (
     <div>
       {ds160Req?.reviewed === 0 && (
-        <section className="col card my-5 gap-4 p-3">
+        <ContentComponent
+          header="Request to access the DS-160 instruction resource"
+          className="my-5 gap-4"
+        >
           <p>
             Your request to access the DS-160 instruction resource is pending
             approval. Please allow some time for the review process to be
@@ -26,7 +30,7 @@ function DS160req() {
               Create Ticket
             </Link>
           </div>
-        </section>
+        </ContentComponent>
       )}
       {ds160Req?.reviewed === 1 && (
         <section className="col my-5 gap-4">

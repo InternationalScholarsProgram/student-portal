@@ -1,17 +1,19 @@
+import React from "react";
+
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClose: () => void;
   onSubmit?: () => void;
   btnText?: string | React.ReactNode;
   hideBtn?: boolean;
 }
-const FormFooterBtns = ({
+
+const FormFooterBtns: React.FC<Props> = ({
   onClose,
   onSubmit,
   btnText,
   hideBtn,
   ...props
-}: Props) => {
-  console.log(props, "props");
+}) => {
   return (
     <footer
       data-html2canvas-ignore // ignore html2canvas when generating pdf

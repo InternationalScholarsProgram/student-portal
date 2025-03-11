@@ -41,7 +41,7 @@ function Profile() {
             Membership Number : {user?.member_no}
           </span>
           <span className="opacity-50">
-            Program Option: {user?.package === "Parallel" ? "Prime" : "Regular"}
+            Program Option: {user?.package}
           </span>
 
           <div className="documents">

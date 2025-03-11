@@ -19,7 +19,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
             made.
           </p>
           <p>Thank you for choosing our program. We wish you all the best.</p>
-          <PrimaryBtn onClick={toogleStatements} btnstyles="w-1/3 self-end">
+          <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
             Review
           </PrimaryBtn>
         </div>
@@ -38,7 +38,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
             please feel free to contact us.
           </p>
           <p> Thank you for being a part of our community.</p>
-          {/* <PrimaryBtn onClick={toogleStatements} btnstyles="w-1/3 self-end">
+          {/* <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
             Review
           </PrimaryBtn> */}
         </div>
@@ -57,7 +57,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
               </p>
               <PrimaryBtn
                 onClick={() => cancelRequest.mutate()}
-                btnstyles="w-1/3 self-end"
+                className="w-1/3 self-end"
               >
                 {cancelRequest.isPending ? "Canceling..." : "Cancel Request"}
               </PrimaryBtn>
@@ -74,7 +74,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
               </p>
               <PrimaryBtn
                 onClick={() => cancelRequest.mutate()}
-                btnstyles="w-1/3 self-end"
+                className="w-1/3 self-end"
               >
                 {cancelRequest.isPending ? "Canceling..." : "Cancel Request"}
               </PrimaryBtn>
@@ -96,7 +96,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
                 Please note, if there is a refund due to you, it will be
                 processed within 4 months.
               </p>
-              <PrimaryBtn onClick={toogleStatements} btnstyles="w-1/3 self-end">
+              <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
                 Review
               </PrimaryBtn>
             </div>
@@ -129,7 +129,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
               </div>
               <PrimaryBtn
                 onClick={() => cancelRequest.mutate()}
-                btnstyles="self-end"
+                className="self-end"
               >
                 {cancelRequest.isPending ? "Loading..." : "Resubmit"}
               </PrimaryBtn>

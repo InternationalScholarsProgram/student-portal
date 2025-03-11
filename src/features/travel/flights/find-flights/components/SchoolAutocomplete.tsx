@@ -44,7 +44,8 @@ const SchoolAutocomplete = ({ suggestedAirport, ...props }: Props) => {
             {...params}
             {...props}
             sx={inputStyles}
-            size="medium"
+            size="small"
+            placeholder="Enter School Name"
             slotProps={{
               input: {
                 ...params.InputProps,

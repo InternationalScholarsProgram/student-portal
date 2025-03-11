@@ -1,4 +1,6 @@
 @import "custom-utilities.css";
+@import "../features/tickets/tickets.css";
+@import "../components/loaders/loaders.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +8,6 @@
 .test-imports {
   @apply dark:bg-test;
 }
-
 .sidebar {
   @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
 }
@@ -29,25 +30,6 @@
 
 /* Buttons */
 
-.primary-btn {
-  @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.secondary-btn {
-  @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.primary-border-btn {
-  @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 btn
-  hover:text-white hover:bg-primary-main;
-}
-.warning-btn {
-  @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
-  dark:hover:outline-light-background-paper/50 btn;
-}
-.text-btn {
-  @apply hover:outline hover:outline-2 text-primary-light hover:text-white hover:bg-primary-main btn;
-}
 /* Sidebar */
 .sidebar-link {
   @apply p-2 text-sm flex flex-row items-center space-x-3 rounded-md 
@@ -151,4 +133,63 @@ p {
   100% {
     transform: scale(1);
   }
+}
+.contract {
+  @apply col mx-1 gap-3;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.contract div {
+  @apply col gap-2;
+  page-break-before: auto;
+}
+.contract p,
+.contract span,
+.contract b,
+.contract h5,
+.contract li,
+.contract ul,
+.contract ol {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+.contract h5 {
+  @apply font-semibold;
+}
+.contract ul {
+  @apply mx-3 p-3 pl-5 list-disc list-inside;
+}
+.modal {
+  @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col p-3;
+}
+.title {
+  @apply text-xl sm:text-2xl font-semibold;
+}
+.title-sm {
+  @apply opacity-70 sm:text-lg font-semibold;
+}
+.alert {
+  @apply border-l-4 border-primary-main p-2 drop-shadow-lg shadow-lg;
+}
+.transcript-details {
+  @apply col gap-2;
+}
+.transcript-details p {
+  @apply font-semibold opacity-85;
+}
+.transcript-details span {
+  @apply px-2 opacity-75 font-normal;
+}
+
+.form-group {
+  @apply col gap-3 my-3;
+}
+.form-group label {
+  @apply text-sm mb-1;
+}
+.row-buttons {
+  @apply row gap-3 items-center justify-center;
+}
+.row-buttons button {
+  @apply primary-btn;
 }

@@ -6,31 +6,35 @@ import { useState } from "react";
 import Modal from "../../../../components/Modal";
 import BookingMessages from "./BookingMessages";
 import OrderHistoryModal from "./OrderHistoryModal";
+import { formatDate } from "../../../../utils/utils";
 
 const History = ({ setShow }: { setShow: any }) => {
   const [open, setOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { orderHistory } = useFlightHook();
-  const viewTableOrders = () => {
-    console.log("Back button clicked");
-  };
+
   const columns: GridColDef[] = [
+    {
+      field: "departure_time",
+      headerName: "Departure Time",
+      valueGetter: (params: any) =>
+        formatDate(params?.replace("TANYT", ""), "MMM D, YYYY"),
+      minWidth: 150,
+    },
     {
       field: "departure_airport",
       headerName: "Departure",
-      flex: 1,
-      minWidth: 90,
+      minWidth: 100,
     },
+
     {
       field: "destination_airport",
       headerName: "Destination",
-      flex: 1,
       minWidth: 150,
     },
     {
       field: "status",
       headerName: "Status",
-      flex: 1,
       minWidth: 150,
       cellClassName: "row-center",
       renderCell: (params) => (
@@ -50,18 +54,20 @@ const History = ({ setShow }: { setShow: any }) => {
     {
       field: "",
       headerName: "Action",
-      flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => (
-        <button
-          onClick={() => {
-            setOpen(true);
-            setSelectedOrder({ ...params.row, setShow: setShow });
-          }}
-          className="primary-border-btn py-1 px-2 cursor-pointer"
-        >
-          View
-        </button>
+        <div className="col-center h-full w-full">
+          <button
+            onClick={() => {
+              console.log(params.row);
+              setOpen(true);
+              setSelectedOrder({ ...params.row, setShow: setShow });
+            }}
+            className="primary-border-btn"
+          >
+            View
+          </button>
+        </div>
       ),
     },
   ];
@@ -71,24 +77,21 @@ const History = ({ setShow }: { setShow: any }) => {
   return (
     <div>
       <div className="p-6">
-        <h3 className="text-center text-2xl font-semibold">Order History</h3>
-        <div className="w-full min-h-[20vh] col-center">
-          {orderHistory ? (
-            <GridTable
-              sx={{ height: "100%", width: "100%" }}
-              columns={columns}
-              rows={orderHistory || []}
-              getRowId={(row) => JSON.stringify(row)}
-              name="Order History"
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-            />
-          ) : (
-            <Loader />
-          )}
+        <h3 className="text-2xl font-semibold opacity-75">
+          Your Order History
+        </h3>
+        <div className="w-full min-h-[20vh] col-center overfl">
+          <GridTable
+            columns={columns}
+            rows={orderHistory}
+            getRowId={(row) => JSON.stringify(row)}
+            name="Order History"
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+          />
         </div>
       </div>
       <OrderHistoryModal

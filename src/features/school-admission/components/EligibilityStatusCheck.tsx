@@ -2,6 +2,16 @@ import { Link } from "react-router-dom";
 import Guides from "./Guides";
 import useFetchUser from "../../../services/hooks/useFetchUser";
 
+const EligibilityStatusCheck = ({ eligibility }: any) => {
+  if (eligibility?.code === 409)
+    return <UpgradeVersion message={eligibility.message} />;
+  if (eligibility?.code === 402)
+    return <CompletePayment balance={eligibility?.message?.deficit} />;
+  if (eligibility?.code === 400) return <NotFound />;
+};
+
+export default EligibilityStatusCheck;
+
 function CompletePayment({ balance }: { balance: string }) {
   return (
     <main>
@@ -92,23 +102,16 @@ function NotFound() {
   return (
     <main>
       <Guides />
-      <section className="col gap-2 w-full mt-4 p-3"></section>
-      <p className="text-error-main text-xl">Cannot proceed</p>
-      <p className="p-3">You are not eligible for admission</p>
-      <p>Please create a ticket to contact support</p>
-      <Link to="/create-ticket" className="self-end my-2 primary-btn">
-        Create Ticket
-      </Link>
+      <section className="col gap-2 w-full mt-4">
+        <p className="text-error-main text-xl">Cannot proceed</p>
+        <div className="col card p-3">
+          <p className="py-3">You are not eligible for admission</p>
+          <p>Please create a ticket to contact support</p>
+          <Link to="/create-ticket" className="self-end my-2 primary-btn">
+            Create Ticket
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
-
-const EligibilityStatusCheck = ({ eligibility }: any) => {
-  if (eligibility?.code === 409)
-    return <UpgradeVersion message={eligibility.message} />;
-  if (eligibility?.code === 402)
-    return <CompletePayment balance={eligibility?.message?.deficit} />;
-  if (eligibility?.code === 400) return <NotFound />;
-};
-
-export default EligibilityStatusCheck;

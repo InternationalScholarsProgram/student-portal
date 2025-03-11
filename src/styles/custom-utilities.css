@@ -20,9 +20,7 @@
   .test-borders {
     @apply border border-green-500;
   }
-  .btn {
-    @apply py-2 px-3 text text-center rounded-md w-fit;
-  }
+
   .bg-paper {
     @apply dark:bg-dark-background-paper bg-light-background-paper;
   }
@@ -36,20 +34,61 @@
     @apply outline-light-background-paper dark:outline-dark-background-paper;
   }
   .content-width {
-    @apply w-full max-w-[100vw] sm:max-w-[600px] md:max-w-[768px] xl:max-w-[900px] mx-auto my-4 sm:px-2;
+    @apply w-full max-w-[100vw] sm:max-w-[600px] md:max-w-[768px] xl:max-w-[900px] mx-auto my-4;
   }
   .card {
     @apply bg-default outline outline-1 outline-color drop-shadow-lg shadow-lg rounded-md space-y-2;
   }
 
-  .borders-30 {
+  .border-30 {
     @apply border dark:border-light-background-paper/30 border-dark-background-paper/30;
   }
-  .borders-b-30 {
+  .border-b-30 {
+    @apply border-b dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-t-30 {
+    @apply border-t dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-b-30 {
     @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
+  }
+  .btn {
+    @apply p-2 sm:py-2 sm:px-3 text-center rounded-md w-fit;
+  }
+  .btn-sm {
+    @apply p-0 text-center rounded-md w-1/2;
   }
 }
 @layer components {
+  .primary-btn {
+    @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .secondary-btn {
+    @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .primary-border-btn {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main btn;
+  }
+  .warning-btn {
+    @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .text-btn {
+    @apply hover:outline hover:outline-2 text-primary-light  btn;
+  }
+  .btn-outline {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main;
+  }
+  .table-btn {
+    @apply btn-outline rounded cursor-pointer p-1 px-2;
+  }
+  .disabled-btn {
+    @apply opacity-60 cursor-default btn;
+  }
   /* Hide scrollbar */
   .scrollbar-hidden {
     scrollbar-width: none;

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import useFetchUser from "../../../../services/hooks/useFetchUser";
 import api from "../../../../services/api/base";
+import useAccountStatement from "../../../../services/hooks/useAccountStatement";
 
 function useFlightHook() {
-  const { user } = useFetchUser();
+  const { accountStatements, user } = useAccountStatement();
   const { data: orderHistory } = useQuery({
     queryKey: ["flights", user?.email],
     queryFn: async () => {
@@ -15,6 +15,6 @@ function useFlightHook() {
     },
   });
 
-  return { orderHistory };
+  return { orderHistory, user, accountStatements };
 }
 export default useFlightHook;

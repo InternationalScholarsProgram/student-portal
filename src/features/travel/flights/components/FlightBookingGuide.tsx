@@ -1,14 +1,11 @@
-import React from "react";
 import { tabs } from "./utils";
 import Accordion from "../../../../components/Accordion";
 
 const FlightBookingGuide = ({ openTab }: any) => {
-  const viewExplore = () => {
-    openTab(tabs[1]);
-  };
+  const viewExplore = () => openTab(tabs[1]);
 
   return (
-    <Accordion title="Flight Booking Guide">
+    <Accordion title="Flight Booking Guide" expanded={true}>
       <p className="mb-4">
         Please read the instructions below to successfully navigate through this
         module.
@@ -18,7 +15,7 @@ const FlightBookingGuide = ({ openTab }: any) => {
         <h2 className="text-xl font-semibold mb-3">
           1: Input Your Travel Details
         </h2>
-        <ol className="list-decimal list-inside mb-4 space-y-2">
+        <ul className="list-disc px-2 list-inside mb-4 space-y-2">
           <li>
             <strong>Enter Your School:</strong> Input the name of your school.
             The system will suggest the closest airport.
@@ -27,11 +24,11 @@ const FlightBookingGuide = ({ openTab }: any) => {
             <strong>Set Your Departure Details:</strong> Select your departure
             location and enter your preferred travel dates.
           </li>
-        </ol>
+        </ul>
 
         {/* Step 2 */}
         <h2 className="text-xl font-semibold mb-3">2: Search for Flights</h2>
-        <ol className="list-decimal list-inside mb-4 space-y-2">
+        <ul className="list-disc px-2 list-inside mb-4 space-y-2">
           <li>
             <strong>Click "Search":</strong> The system will display a list of
             available flights.
@@ -40,13 +37,13 @@ const FlightBookingGuide = ({ openTab }: any) => {
             <strong>Select Your Flight:</strong> Choose your preferred flight
             from the results.
           </li>
-        </ol>
+        </ul>
 
         {/* Step 3 */}
         <h2 className="text-xl font-semibold mb-3">
           3: Upload a valid Visa and Contact Details
         </h2>
-        <ol className="list-decimal list-inside mb-4 space-y-2">
+        <ul className="list-disc px-2 list-inside mb-4 space-y-2">
           <li>
             <strong>Upload Visa:</strong> Provide a scanned copy of your valid
             visa.
@@ -55,16 +52,16 @@ const FlightBookingGuide = ({ openTab }: any) => {
             <strong>Enter Contact Information:</strong> Input your phone number
             for communication.
           </li>
-        </ol>
+        </ul>
 
         {/* Step 4 */}
         <h2 className="text-xl font-semibold mb-3">4: Request Booking</h2>
-        <ol className="list-decimal list-inside mb-4 space-y-2">
+        <ul className="list-disc px-2 list-inside mb-4 space-y-2">
           <li>
             <strong>Click "Request Booking":</strong> Submit your flight booking
             request to the admin.
           </li>
-        </ol>
+        </ul>
 
         {/* Step 5 */}
         <h2 className="text-xl font-semibold mb-3">5: Booking Approval</h2>
@@ -114,12 +111,12 @@ const FlightBookingGuide = ({ openTab }: any) => {
       </div>
 
       {/* Button */}
-      {/* <button
+      <button
         onClick={viewExplore}
         className="primary-btn w-fit self-end px-7 mt-4"
       >
         Find Flight
-      </button> */}
+      </button>
     </Accordion>
   );
 };

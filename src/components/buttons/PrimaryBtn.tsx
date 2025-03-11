@@ -1,11 +1,17 @@
-import { CustomButtonProps } from "../../../../types";
+import { CustomButtonProps } from "../../types";
 
-function PrimaryBtn(props: CustomButtonProps) {
-  return (
-    <button {...props} className={` primary-btn ${props.btnstyles}`}>
-      {props.children}
-    </button>
-  );
-}
-
+const PrimaryBtn: React.FC<CustomButtonProps> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <button
+    {...props}
+    className={`${props.disabled && "disabled-btn"} primary-btn ${
+      className ?? ""
+    }`}
+  >
+    {children}
+  </button>
+);
 export default PrimaryBtn;

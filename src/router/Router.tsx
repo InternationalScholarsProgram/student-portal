@@ -1,9 +1,13 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import LoaderSideBar from "./LoaderSideBar";
+import PageLayout from "../styles/layouts/PageLayout";
+import Visa from "../features/visa/Visa";
+import Test from "./Test";
+import Receipt from "../features/finances/Receipt";
 
 // Layouts
-const PortalLayout = lazy(() => import("../PortalLayout"));
+const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
 const FinancesLayout = lazy(
   () => import("../features/finances/layout/FinancesLayout")
 );
@@ -21,7 +25,8 @@ const Resources = lazy(() => import("../features/info-resources/Resources"));
 const Funding = lazy(() => import("../features/funding/Funding"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
 const SchoolAdmission = lazy(
-  () => import("../features/school-admission/requirements/SchoolAdmission")
+  () =>
+    import("../features/school-admission/pages/requirements/SchoolAdmission")
 );
 const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
@@ -32,24 +37,47 @@ const Gre = lazy(() => import("../features/entranceExams/gre/Gre"));
 const TrainingResources = lazy(
   () => import("../features/entranceExams/components/TrainingResources")
 );
-const SwitchOptions = lazy(
-  () => import("../features/program/switch/SwitchOptions")
+const SwitchPrograms = lazy(
+  () => import("../features/program/switch/SwitchPrograms")
 );
 const Withdraw = lazy(() => import("../features/program/withdraw/Withdraw"));
 const CreateTicket = lazy(
   () => import("../features/tickets/pages/CreateTicket")
 );
-const ViewTickets = lazy(() => import("../features/tickets/pages/ViewTickets"));
+const ViewTickets = lazy(
+  () => import("../features/tickets/pages/view-tickets/ViewTickets")
+);
 const SchoolApplication = lazy(
   () =>
-    import("../features/school-admission/school-application/SchoolApplication")
+    import(
+      "../features/school-admission/pages/school-application/SchoolApplication"
+    )
+);
+const OnboardingAgreement = lazy(
+  () => import("../features/user/contracts/OnboardingAgreement")
+);
+const ExpediteLetter = lazy(
+  () => import("../features/visa/features/expedite/ExpediteLetter")
 );
 
 function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+      }}
+    >
       <Suspense fallback={<LoaderSideBar />} name="router">
         <Routes>
+          <Route element={<PageLayout />}>
+            <Route path="contract" element={<Outlet />}>
+              <Route
+                path="onboarding-agreement"
+                element={<OnboardingAgreement />}
+              />
+            </Route>
+            <Route path="/visa-processing/expedite-letter" element={<ExpediteLetter />} />
+          </Route>
           <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
@@ -57,8 +85,9 @@ function Router() {
             <Route path="resources" element={<Resources />} />
             <Route path="funding" element={<Funding />} />
             <Route path="flights" element={<Flights />} />
+            <Route path="test" element={<Test />} />
+            <Route path="visa-processing" element={<Visa />} />
             <Route path="school-admission" element={<SchoolAdmission />} />
-
             <Route element={<FinancesLayout />}>
               <Route path="make-payments">
                 <Route index element={<MakePayments />} />
@@ -68,6 +97,7 @@ function Router() {
                 path="account-statements"
                 element={<AccountStatements />}
               />
+              <Route path="/finances/receipt" element={<Receipt />} />
             </Route>
 
             <Route element={<Outlet />}>
@@ -77,7 +107,10 @@ function Router() {
             </Route>
 
             <Route element={<Outlet />}>
-              <Route path="switch-option" element={<SwitchOptions />} />
+              <Route
+                path="switch-program-package"
+                element={<SwitchPrograms />}
+              />
               <Route path="withdraw" element={<Withdraw />} />
             </Route>
 

@@ -1,5 +1,9 @@
+import { toast } from "react-toastify";
 import api from "../../../../services/api/base";
+import { json2formData } from "../../../../utils/utils";
 import { filterFlights } from "../components/utils";
+
+const flightsApiUrl = `/login/member/dashboard/flights/functions.php`;
 
 class FlightApi {
   fetchAirports = async (keyword?: string) => {
@@ -35,11 +39,10 @@ class FlightApi {
   searchFlights = async function (departureDate: string, from: any, to: any) {
     const url = `/login/member/dashboard/flights/api/search_flights.php`;
     const req = {
+      departure_date: departureDate,
       origin: from?.iata_code || "NBO",
       destination: to?.iata_code || "JFK",
-      departure_date: departureDate,
     };
-
     try {
       const response = await api.post(url, req);
       const data = await response.data.data;
@@ -49,6 +52,7 @@ class FlightApi {
           offer.payment_requirements.requires_instant_payment === false
       );
       const filteredFlights = filterFlights(offers);
+      console.log(filteredFlights, "\n");
 
       return filteredFlights;
     } catch (error: any) {
@@ -64,6 +68,23 @@ class FlightApi {
       return response.data.data;
     } catch (error: any) {
       console.error(error.response.data);
+    }
+  };
+  bookFlight = async (reqData: any) => {
+    try {
+      const payload = json2formData(reqData);
+      const savingResponse = await api.post(
+        "/login/member/dashboard/flights/functions.php?action=book_flight",
+        payload
+      );
+      if (savingResponse?.data?.code === "201") {
+        toast.success("Booking Request successfully made");
+        return true;
+      }
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response?.data?.message);
+      return error.response.data;
     }
   };
 }

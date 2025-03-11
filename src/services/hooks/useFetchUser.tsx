@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import api, { activeStudentId } from "../api/base";
+import { UserProfile } from "../../types";
 
-function useFetchUser() {
+const useFetchUser = () => {
   const userQueryKey = ["user", activeStudentId];
 
   const { data, isLoading, error } = useQuery({
@@ -19,12 +20,16 @@ function useFetchUser() {
     },
     enabled: !!activeStudentId, // Only fetch if studentId exists
   });
+  const user: UserProfile = {
+    ...data?.message,
+    country: data?.message?.country?.toLowerCase(),
+  };
   return {
-    user: { ...data?.message, country: data?.message?.country?.toLowerCase() },
+    user,
     isLoading,
     error,
     userQueryKey,
   };
-}
+};
 
 export default useFetchUser;

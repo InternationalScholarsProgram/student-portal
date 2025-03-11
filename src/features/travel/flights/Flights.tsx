@@ -21,9 +21,9 @@ function Flights() {
         ))}
       </ul>
       <section className="w-full p-3">
-        {show === "Guide" ? (
+        {show === tabs[0] ? (
           <FlightBookingGuide openTab={setShow} />
-        ) : show === "Flights" ? (
+        ) : show === tabs[1] ? (
           <FindFlights />
         ) : (
           <History setShow={setShow} />

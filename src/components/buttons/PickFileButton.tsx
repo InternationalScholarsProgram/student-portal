@@ -3,7 +3,7 @@ import TopicIcon from "@mui/icons-material/Topic";
 import { useState } from "react";
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   setFiles?: (file: any) => void;
-  text?: string;
+  text?: string | React.ReactNode;
   file?: any;
 }
 
@@ -33,8 +33,11 @@ function PickFileButton({ setFiles, text, file, ...props }: Props) {
           accept={props.accept || ".pdf, .doc, .docx, .txt,"}
           onChange={(e: any) => {
             props.onChange?.(e);
-            if (setFiles) setFiles(e.target.files[0]);
-            setPickedFile(e.target.files[0]);
+            const _file = e.target.files;
+            if (_file) {
+              if (setFiles) setFiles(_file[0]);
+              setPickedFile(_file[0]);
+            }
           }}
         />
         <TopicIcon fontSize="small" />

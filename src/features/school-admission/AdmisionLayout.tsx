@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
-import useAdmissions from "./components/api/useAdmissions";
+import useAdmissions from "./services/useAdmissions";
 
 const tabs = [
   { to: "/school-admission-requirements", label: "Requirements" },

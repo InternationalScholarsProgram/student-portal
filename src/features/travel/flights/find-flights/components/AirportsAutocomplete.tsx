@@ -59,7 +59,7 @@ const AirportsAutocomplete = ({
           {...params}
           {...props}
           sx={inputStyles}
-          size="medium"
+          size="small"
           slotProps={{
             input: {
               ...params.InputProps,

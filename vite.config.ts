@@ -29,6 +29,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "^/logo/": {
+        target: "https://finkapinternational.qhtestingserver.com/",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   }
 })

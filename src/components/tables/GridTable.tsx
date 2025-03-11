@@ -21,12 +21,12 @@ const CustomToolBar = (props: any) => {
     )
   );
   return (
-    <div className="row justify-between m-4">
+    <div className="row justify-between p-4">
       <TableHeader fileName={props.name} data={props.headerData || data} />
       <GridToolbarQuickFilter
         variant="outlined"
         size="small"
-        sx={inputStyles}
+        sx={{ ...inputStyles }}
       />
     </div>
   );
@@ -36,19 +36,15 @@ function GridTable(props: GridTableProps) {
   return (
     <DataGrid
       {...props}
-      pagination={true}
-      initialState={{
-        ...props.initialState,
-        pagination: {
-          paginationModel: { page: 0, pageSize: 10 },
-        },
-      }}
-      pageSizeOptions={[10, 20, 50]}
       disableRowSelectionOnClick
+      getCellClassName={
+        props.getCellClassName
+          ? props.getCellClassName
+          : () => "first-letter:uppercase"
+      }
       sx={{
         ...props.sx,
-        height: "min-content",
-        overflowX: "auto",
+        minHeight: "30vh",
       }}
       slots={{
         toolbar: (toolbarProps) => (

@@ -10,7 +10,7 @@ type Props = {
 const CareerAdvisory = ({ text, classes, url }: Props) => {
   const { user } = useFetchUser();
   return (
-    <div>
+    <>
       <PopupButton
         url={
           url || "https://calendly.com/martin-mugambi/career-advisory-meeting"
@@ -23,7 +23,7 @@ const CareerAdvisory = ({ text, classes, url }: Props) => {
           email: user?.email || "",
         }}
       />
-    </div>
+    </>
   );
 };
 

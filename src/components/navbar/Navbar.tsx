@@ -5,8 +5,8 @@ import User from "./User";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import InputField from "../InputField";
 import useThemeStore from "../../styles/theme.store";
+import InputField from "../inputs/InputField";
 
 interface NavbarProps {
   toogleSideBar: () => void;

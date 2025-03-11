@@ -1,12 +1,12 @@
 import { ispLogo } from "../../assets/imageLinks";
 import { GridColDef } from "@mui/x-data-grid";
 import PrimaryBorderBtn from "../../components/buttons/PrimaryBorderBtn";
-import useFetchUser from "../../services/hooks/useFetchUser";
 import useAccountStatement from "../../services/hooks/useAccountStatement";
 import { formatCurrency } from "../../utils/utils";
 import { useNavigate } from "react-router";
 import { useFinancesStore } from "./layout/FinancesLayout";
 import GridTable from "../../components/tables/GridTable";
+import Loader from "../../components/loaders/Loader";
 
 const expendituresColumns: GridColDef[] = [
   { field: "reference_id", headerName: "ID", minWidth: 90 },
@@ -26,36 +26,39 @@ const expendituresColumns: GridColDef[] = [
   },
 ];
 
+const contributionsCols: GridColDef[] = [
+  { field: "payment_intent_id", headerName: "ID", minWidth: 150 },
+  { field: "purpose", headerName: "Purpose", flex: 1, minWidth: 150 },
+  {
+    field: "payment_method",
+    headerName: "Payment Method",
+    flex: 1,
+    minWidth: 150,
+  },
+  {
+    field: "date_completed",
+    headerName: "Date",
+    minWidth: 150,
+    flex: 1,
+    valueFormatter: (params) => new Date(params).toDateString(),
+    type: "date",
+  },
+  {
+    field: "amount",
+    headerName: "Amount(USD)",
+    type: "number",
+    minWidth: 150,
+  },
+];
+
 function AccountStatements({ hideBalance }: any) {
   const { setSelectedTransaction } = useFinancesStore((state) => state);
-  const { user } = useFetchUser();
-  const { accountStatements, isLoading } = useAccountStatement();
+  const { accountStatements, isLoading, user } = useAccountStatement();
   const navigate = useNavigate();
-  if (isLoading || !accountStatements) return <div>Loading...</div>;
+  if (isLoading || !accountStatements) return <Loader />;
 
   const contributionsColumns: GridColDef[] = [
-    { field: "payment_intent_id", headerName: "ID", minWidth: 150 },
-    { field: "purpose", headerName: "Purpose", flex: 1, minWidth: 150 },
-    {
-      field: "payment_method",
-      headerName: "Payment Method",
-      flex: 1,
-      minWidth: 150,
-    },
-    {
-      field: "date_completed",
-      headerName: "Date",
-      minWidth: 150,
-      flex: 1,
-      valueFormatter: (params) => new Date(params).toDateString(),
-      type: "date",
-    },
-    {
-      field: "amount",
-      headerName: "Amount(USD)",
-      type: "number",
-      minWidth: 150,
-    },
+    ...contributionsCols,
     {
       field: "",
       headerName: "Action",
@@ -63,15 +66,14 @@ function AccountStatements({ hideBalance }: any) {
         <div className="col-center w-full h-full py-1 leading-none">
           <PrimaryBorderBtn
             onClick={() => {
-              navigate("/portal/finances/receipt");
+              navigate("/finances/receipt");
               setSelectedTransaction({
                 ...params.row,
                 email: user?.email,
-                country: user?.country.toLowerCase(),
+                country: user?.country?.toLowerCase(),
                 names: user?.fullnames,
               });
             }}
-            btnstyles=""
           >
             Receipt
           </PrimaryBorderBtn>
@@ -83,9 +85,9 @@ function AccountStatements({ hideBalance }: any) {
   return (
     <main className="">
       <header className="col">
-        <h1 className="header-title mb-4 font-semibold w-full text-center">
+        {/* <h1 className="header-title mb-4 font-semibold w-full text-center">
           Account Statements
-        </h1>
+        </h1> */}
         <div className="self-center w-full col-center text-center text-sm text-nowrap truncate">
           <img className="h-24 sm:h-40" src={ispLogo} alt="logo" />
           <div className="col-center text-center text-wrap">

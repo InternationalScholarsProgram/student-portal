@@ -1,5 +1,5 @@
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
-import InputField from "../../../../components/InputField";
+import InputField from "../../../../components/inputs/InputField";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 
 function WithdrawModalContent() {

@@ -3,7 +3,7 @@ import api from "../api/base";
 import useFetchUser from "./useFetchUser";
 
 function useAccountStatement() {
-  const { user } = useFetchUser();
+  const { user, isLoading : userLoading } = useFetchUser();
   const {
     data: accountStatements,
     isLoading,
@@ -33,6 +33,7 @@ function useAccountStatement() {
     user,
     accountStatements: { ...accountStatements, balance },
     isLoading,
+    userLoading,
     error,
   };
 }

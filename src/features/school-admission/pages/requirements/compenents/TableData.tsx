@@ -78,7 +78,7 @@ export const columns: GridColDef[] = [
         return <GPAstatus gpaReport={params.row.uploaded_documents[0]} />;
       return (
         <p className={statusClass(params.value[0], "text-sm")}>
-          {params.value[0]}
+          {params.row.id === "12" ? params.value : params.value[0]}
         </p>
       );
     },

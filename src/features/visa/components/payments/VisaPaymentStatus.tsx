@@ -45,7 +45,7 @@ function VisaPaymentStatus() {
         return (
           <section className="col gap-5">
             <p className="mt-2 px-3">
-              Your visa fee payment has been approved and disbursed to you. You
+              Your visa fee payment was been approved and disbursed to you. You
               may now submit it to the embassy and schedule a visa interview
               date. You have also been granted access to visa expedite letter
               (if you need it). To access the visa training resources, please
@@ -72,7 +72,7 @@ function VisaPaymentStatus() {
         );
       default:
         return (
-          <ContentComponent header="Request Visa Fee Payment" >
+          <ContentComponent header="Request Visa Fee Payment">
             <p>
               To proceed with your visa application, you need to make the
               necessary visa fee payment.
@@ -97,7 +97,8 @@ function VisaPaymentStatus() {
         );
     }
   };
-  return <div className="mt-5">{status()}</div>;
+  const Status = useCallback(status, [visaPayments?.status]);
+  return <div className="mt-5" children={<Status />} />;
 }
 
 export default VisaPaymentStatus;

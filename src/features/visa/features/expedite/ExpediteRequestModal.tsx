@@ -21,7 +21,6 @@ function ExpediteRequestModal({ open, toggleModal }: ModalProps) {
 
   useEffect(() => {
     setRead(false);
-    console.log(schools);
   }, [open]);
 
   const requestTrainingResources = async (e: FormEvent) => {

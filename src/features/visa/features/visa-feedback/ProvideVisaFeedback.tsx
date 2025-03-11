@@ -10,6 +10,7 @@ import useVisa from "../../services/hooks/useVisa";
 import AutoComplete from "../../../../components/inputs/AutoComplete";
 import ContentComponent from "../../../../components/ContentComponent";
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
+import { formatDate, formatDateAndTime } from "../../../../utils/utils";
 
 function ProvideVisaFeedback() {
   const { ds160Review, visa, user, inValidateStatus } = useVisa();
@@ -31,7 +32,7 @@ function ProvideVisaFeedback() {
 
     handleSendFeedback.mutate(formData);
   };
-  
+
   const handleSendFeedback = useMutation({
     mutationFn: visaEndpoints.postFeedback,
     onSuccess: (response) => {
@@ -46,9 +47,9 @@ function ProvideVisaFeedback() {
       <h3 className="title-sm">VISA interview feedback</h3>
       <section className="col gap-3 p-1 sm:p-3">
         <p>
-          According to our records, you had a visa interview on 2025-03-05.
-          Please provide your Visa interview feedback below so as to proceed to
-          the next steps.
+          According to our records, you had a visa interview on{" "}
+          {formatDateAndTime(visa?.interviewDateAndTime)}. Please provide your Visa
+          interview feedback below so as to proceed to the next steps.
         </p>
 
         <SampleTranscript />

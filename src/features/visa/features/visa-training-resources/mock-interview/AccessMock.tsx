@@ -7,19 +7,18 @@ import RejectedMockRequest from "./RejectedMockRequest";
 import SevisFees from "../../../components/payments/SevisFees";
 
 function AccessMock() {
-  const { visa, sevisPayments } = useVisa();
-  // Memoize the 7-day check result
+  const { visa, sevisPayments, isMockMarksQualified } = useVisa();
   const within7Days = useMemo(
-    () => isWithin7Days(visa?.interview_date),
-    [visa?.interview_date]
+    () => isWithin7Days(visa?.interviewDateAndTime),
+    [visa?.interviewDateAndTime]
   );
 
-  if (visa.status === 6) return <RejectedMockRequest />;
-  if (visa.status === 7)
+  if (visa?.status === 6) return <RejectedMockRequest />;
+  if (visa?.status === 7)
     return (
       <div className="col gap-7">
         <SevisFees />
-        {!sevisPayments && <GradedMock />}
+        {!sevisPayments ? <GradedMock /> : null}
       </div>
     );
 

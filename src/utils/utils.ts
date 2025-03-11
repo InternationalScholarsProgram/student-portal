@@ -97,6 +97,9 @@ const formatDate = (date: string | Date | null, format?: string) => {
   const _date = new Date(date);
   return dayjs(_date).format(format || "dddd, MMMM D, YYYY");
 };
+const formatDateAndTime = (date: string | Date | null) =>
+  formatDate(date, "MMM D, YYYY, h:mm A");
+
 const splitDate = (_date: string) => {
   const date = _date?.split("-").map(Number);
   return new Date(date?.[0], date?.[1] - 1, date?.[2]);
@@ -238,6 +241,7 @@ export {
   convertImageToBase64,
   isValidURL,
   splitDate,
+  formatDateAndTime,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

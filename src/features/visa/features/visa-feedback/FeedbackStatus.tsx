@@ -1,68 +1,71 @@
-import { Link } from "react-router-dom";
 import useVisa from "../../services/hooks/useVisa";
 import ContentComponent from "../../../../components/ContentComponent";
 import ProvideVisaFeedback from "./ProvideVisaFeedback";
-import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
 import DeniedVisa from "./DeniedVisa";
+import ContactSupport from "../../../../components/ContactSupport";
+import Administrative from "./Administrative";
+import GotVisa from "./GotVisa";
+import { useMemo } from "react";
 
 function FeedbackStatus() {
-  const { feedback, visa } = useVisa();
-
-  function renderStatus() {
-    switch (feedback?.status) {
-      case 1:
-        return (
-          <ContentComponent header="Your feedback is being processed.">
-            <p>Kindly be patient as our team reviews your feedback</p>
-          </ContentComponent>
-        );
-      case 2:
-        return (
-          <ContentComponent header="Your feedback has been successfully processed.">
-            <p>🎉 Congratulations on your VISA approval! 🎉</p>
-            <p>We appreciate your feedback!</p>
-            <p>
-              Please proceed to the travel & logistics module to book your
-              flight
-            </p>
-            <PrimaryBtn className="self-end">
-              <Link to="/flights">Find Flight</Link>
-            </PrimaryBtn>
-            {/* <p>
-              To proceed with the next step, please upload a copy of your VISA
-              as soon as you receive it.
-            </p>
-            <form onSubmit={onSubmit} className="col px-2">
-              <div className="form-group">
-                <label htmlFor="visa">Upload a copy of your VISA</label>
-                <PickFileButton name="visa" />
-              </div>
-              <PrimaryBtn type="submit" className="self-end">
-                Upload Visa
-              </PrimaryBtn>
-            </form> */}
-          </ContentComponent>
-        );
-      case 3:
-        return (
-          <>
-            <ContentComponent header="Your feedback has been processed.">
-              <p>Your feedback was rejected .Please view the reasons below</p>
-              <em className="px-2">{feedback?.remarks}</em>
-            </ContentComponent>
-            <div className="h-8"></div>
-            <ProvideVisaFeedback />
-          </>
-        );
-      default:
-        return <ProvideVisaFeedback />;
-    }
-  }
-  return (
-    <div className="my-2">
-      {feedback?.visa_outcome === 1 ? renderStatus() : <DeniedVisa />}
-    </div>
+  const { feedback } = useVisa();
+  const renderStatus = useMemo(
+    () => <RenderStatus feedback={feedback} />,
+    [feedback]
   );
+
+  return <div className="my-2">{renderStatus}</div>;
 }
 
 export default FeedbackStatus;
+
+function VisaOutcome({ outcome }: { outcome: number }) {
+  if (outcome === 1) return <GotVisa />;
+  if (outcome === 2) return <DeniedVisa />;
+  if (outcome === 3) return <Administrative />;
+  return null;
+}
+function RenderStatus({ feedback }: any) {
+  switch (feedback?.status) {
+    case 1:
+      return (
+        <ContentComponent header="Your feedback is under review 🕵️‍♂️">
+          <p>
+            Thank you for submitting your feedback! Our team is carefully
+            reviewing it to ensure everything is in order. We appreciate your
+            patience and will notify you here as soon as it's processed. 😊
+          </p>
+          <ContactSupport />
+        </ContentComponent>
+      );
+    case 2:
+      return <VisaOutcome outcome={feedback?.visa_outcome} />;
+    case 3:
+      return (
+        <>
+          <ContentComponent header="Your feedback needs your attention ⚠️">
+            <p>
+              Unfortunately, your feedback submission has been **rejected**. 😞
+              Below, you’ll find the specific reason provided by our team.
+              Please review it carefully.
+            </p>
+            <p>
+              <strong>Reason for rejection:</strong>
+              <em className="px-2">
+                {feedback?.remarks || "No details provided."}
+              </em>
+            </p>
+            <p>
+              Kindly update and resubmit your feedback to ensure it meets the
+              necessary requirements. We’re here to help if you need any
+              assistance!
+            </p>
+          </ContentComponent>
+          <div className="h-8"></div>
+          <ProvideVisaFeedback />
+        </>
+      );
+    default:
+      return <ProvideVisaFeedback />;
+  }
+}

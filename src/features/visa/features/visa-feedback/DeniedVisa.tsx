@@ -43,32 +43,32 @@ const DeniedVisa = () => {
   });
 
   return (
-    <ContentComponent
-      className="py-2"
-      header="Your feedback has been processed."
-    >
+    <ContentComponent className="py-2" header="Visa Application Decision">
       <p>
-        We regret to note that your visa was denied! You live to fight another
-        day. To proceed with the next steps, please follow the below
-        instructions.
+        We understand that a visa denial can be discouraging, but this is not
+        the end of your journey. Many applicants successfully reapply and
+        achieve their dreams. Stay motivated, and let's explore the next steps
+        to help you move forward. 💪
       </p>
+      <p>Follow the instructions below to continue your process:</p>
+
       <ol className="list-decimal my-2 sm:px-5 px-2">
         <li>
-          To kickstart a new school application process, please go to the school
-          application module by clicking on the relevant button below.
+          To **start a new school application**, please visit the School
+          Application module by clicking the button below.
         </li>
-        <li>To submit a new I-20, please select the ‘Submit I-20’ option.</li>
-        <li> To submit a new DS 160, please select ‘DS 160’ option.</li>
+        <li>To **submit a new I-20**, select the ‘Submit I-20’ option.</li>
+        <li>To **submit a new DS-160 form**, select the ‘DS-160’ option.</li>
         <li>
-          To get instructions about visa appointment booking, please select
-          ‘Visa Appointment Booking’ option.
+          To get **guidance on booking a visa appointment**, select the ‘Visa
+          Appointment Booking’ option.
         </li>
       </ol>
 
       <form onSubmit={onSubmit} className="col gap-2 p-2 pt-4">
         <Select
-          placeholder="Select action"
-          label="Select action"
+          placeholder="Choose an action"
+          label="Choose an action"
           name="action"
           onChange={(e) => setAction(e.target.value)}
         >
@@ -78,8 +78,9 @@ const DeniedVisa = () => {
             </MenuItem>
           ))}
         </Select>
+
         <PrimaryBtn disabled={!action} type="submit" className="self-end">
-          {handleSubmit.isPending ? "Submitting..." : "Submit"}
+          {handleSubmit.isPending ? "Processing..." : "Proceed"}
         </PrimaryBtn>
       </form>
     </ContentComponent>

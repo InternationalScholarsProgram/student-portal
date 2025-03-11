@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "../../../../components/Accordion";
+import useVisa from "../../services/hooks/useVisa";
 
 function TrainingGuide() {
   const [expanded, setExpanded] = useState(true);
+  const { ds160Review, requiredMockMarks } = useVisa();
+
+  useEffect(() => {
+    if (ds160Review?.support) setExpanded(false);
+  }, [ds160Review?.support]);
+
   return (
     <Accordion
       expanded={expanded}
@@ -39,8 +46,8 @@ function TrainingGuide() {
       </li>
       <p className="border-l-4 border-primary-main p-3">
         Note: It is mandatory to request and attend the mock visa interview. You
-        are required to score at least 80% in your mock visa interview for the
-        Program to pay your SEVIS fee.
+        are required to score at least {requiredMockMarks}% in your mock visa
+        interview for the Program to pay your SEVIS fee.
       </p>
     </Accordion>
   );

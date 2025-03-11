@@ -39,20 +39,22 @@ function useVisa() {
   );
 
   const visa: VisaObject = useMemo(() => {
+    if (!status) return null;
     const _visa = status?.value?.visa;
+
     const interview_date = splitDate(_visa?.interview_date);
+    const interviewTimes = _visa?.interview_time?.split(":");
     const interviewDateAndTime = new Date(
       splitDate(_visa?.interview_date).setHours(
-        _visa?.interview_time?.split(":")[0]
+        interviewTimes[0],
+        interviewTimes[1]
       )
     );
     const mockDateAndTime = () => {
       if (!_visa?.mock_date) return null;
       const date = splitDate(_visa?.mock_date);
-      date.setHours(
-        Number(_visa?.mock_time?.split(":")[0] || 0),
-        Number(_visa?.mock_time?.split(":")[1] || 0)
-      );
+      const mockTimes = _visa?.mock_time?.split(":");
+      date.setHours(mockTimes[0], mockTimes[1]);
       return date;
     };
 
@@ -75,7 +77,8 @@ function useVisa() {
     (acc, item) => acc + item.marks,
     0
   );
-
+  const requiredMockMarks = 70;
+  const isMockMarksQualified = mockTotalMarks >= requiredMockMarks;
   const ds160Req = status?.value?.ds160req;
   const ds160Review = status?.value?.ds160review as Ds160Review;
   const visaPayments = status?.value?.payments.visa;
@@ -99,6 +102,8 @@ function useVisa() {
     sevisPayments,
     mockQuestions,
     mockTotalMarks,
+    requiredMockMarks,
+    isMockMarksQualified,
     feedback,
   };
 }

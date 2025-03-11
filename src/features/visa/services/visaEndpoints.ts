@@ -55,8 +55,10 @@ class VisaEndpoints {
     return api.post(`${url}upload_support_letter.php`, data);
   };
   postFeedback = async (data: any) => {
-    console.log(data, "data");
     return api.post(`${url}feedback.php`, data);
+  };
+  postFeedbackComments = async (data: any) => {
+    return api.post(`${url}feedback.php?action=comments`, data);
   };
   deniedVisa = async (data: string) => {
     return api.get(`${url}denied_visa.php?action=${data}`);

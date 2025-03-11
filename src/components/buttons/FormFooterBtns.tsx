@@ -1,9 +1,10 @@
 import React from "react";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  onClose: () => void;
+  onClose?: () => void;
   onSubmit?: () => void;
   btnText?: string | React.ReactNode;
+  closeText?: string | React.ReactNode;
   hideBtn?: boolean;
 }
 
@@ -12,6 +13,7 @@ const FormFooterBtns: React.FC<Props> = ({
   onSubmit,
   btnText,
   hideBtn,
+  closeText,
   ...props
 }) => {
   return (
@@ -20,7 +22,7 @@ const FormFooterBtns: React.FC<Props> = ({
       className="row justify-end gap-2 py-1 "
     >
       <button type="button" onClick={onClose} className="text-btn">
-        Close
+        {closeText || "Close"}
       </button>
       {!hideBtn && (
         <button

@@ -7,23 +7,26 @@ import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
 import useVisa from "../../services/hooks/useVisa";
+import { useNavigate } from "react-router";
 
 const options = [
   { value: "school-application", label: "School application" },
   { value: "i-20", label: "Submit I-20" },
   { value: "ds-160", label: "DS-160" },
-  {
-    value: "visa-appointment",
-    label: "Visa Appointment Booking",
-  },
 ];
 
 const DeniedVisa = () => {
   const { inValidateStatus } = useVisa();
   const [action, setAction] = useState<any>();
+  const navigate = useNavigate()
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    if (action === "school-application") {
+      navigate("/school-admission-requirements")
+      return;
+    }
+
     handleSubmit.mutate(action);
   };
   const handleSubmit = useMutation({
@@ -43,7 +46,7 @@ const DeniedVisa = () => {
   });
 
   return (
-    <ContentComponent className="py-2" header="Visa Application Decision">
+    <ContentComponent className="py-2" header="Visa Feedback">
       <p>
         We understand that a visa denial can be discouraging, but this is not
         the end of your journey. Many applicants successfully reapply and
@@ -54,15 +57,11 @@ const DeniedVisa = () => {
 
       <ol className="list-decimal my-2 sm:px-5 px-2">
         <li>
-          To **start a new school application**, please visit the School
-          Application module by clicking the button below.
+          To <b>start a new school application</b>, please visit the School
+          Application module and request for a new career advisory meeting.
         </li>
-        <li>To **submit a new I-20**, select the ‘Submit I-20’ option.</li>
-        <li>To **submit a new DS-160 form**, select the ‘DS-160’ option.</li>
-        <li>
-          To get **guidance on booking a visa appointment**, select the ‘Visa
-          Appointment Booking’ option.
-        </li>
+        <li>To <b>submit a new I-20</b>, select the ‘Submit I-20’ option.</li>
+        <li>To <b>submit a new DS-160 form</b>, select the ‘DS-160’ option.</li>
       </ol>
 
       <form onSubmit={onSubmit} className="col gap-2 p-2 pt-4">

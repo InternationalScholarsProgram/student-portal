@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import DS160RequestModal from "./DS160RequestModal";
 import useVisa from "../../services/hooks/useVisa";
 import ContentComponent from "../../../../components/ContentComponent";
+import ContactSupport from "../../../../components/ContactSupport";
+import CheckI20 from "./CheckI20";
 
 function DS160req() {
   const { applicationVideo, ds160Req } = useVisa();
@@ -10,29 +12,20 @@ function DS160req() {
   const toggleModal = () => setOpen(!open);
   return (
     <div>
-      {ds160Req?.reviewed === 0 && (
+      {ds160Req?.reviewed === 0 ? (
         <ContentComponent
           header="Request to access the DS-160 instruction resource"
           className="my-5 gap-4"
+          childrenClassName="gap-1"
         >
           <p>
             Your request to access the DS-160 instruction resource is pending
             approval. Please allow some time for the review process to be
             completed.
           </p>
-          <p>
-            If you need urgent assistance or have any questions, feel free to
-            reach out to our support team.
-          </p>
-          <p>Thank you for your patience and understanding.</p>
-          <div className="row justify-end">
-            <Link to="/create-ticket" className="primary-btn">
-              Create Ticket
-            </Link>
-          </div>
+          <ContactSupport />
         </ContentComponent>
-      )}
-      {ds160Req?.reviewed === 1 && (
+      ) : ds160Req?.declined === 0 ? (
         <section className="col my-5 gap-4">
           <p>
             Your request to access DS-160 instruction resource has been approved
@@ -64,6 +57,21 @@ function DS160req() {
           </footer>
           <DS160RequestModal open={open} toggleModal={toggleModal} />
         </section>
+      ) : (
+        <ContentComponent className="my-2" header="Request to access the DS-160 instruction resource">
+          <p>
+            Unfortunately, your request has been **rejected**. 😞
+            Below, you’ll find the specific reason provided by our team. Please
+            review it carefully and resubmit
+          </p>
+          <p>
+            <strong>Reason for rejection:</strong>
+            <em className="px-2">
+              {ds160Req?.remark || "No details provided."}
+            </em>
+          </p>
+          <CheckI20 />
+        </ContentComponent>
       )}
     </div>
   );

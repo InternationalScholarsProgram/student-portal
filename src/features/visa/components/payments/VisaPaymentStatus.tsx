@@ -1,25 +1,27 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useVisa from "../../services/hooks/useVisa";
 import VisaPaymentModal from "./VisaPaymentModal";
 import Expedite from "../../features/expedite/Expedite";
 import VisaTrainingStatus from "../../features/visa-training-resources/VisaTrainingStatus";
 import { Link } from "react-router-dom";
 import ContentComponent from "../../../../components/ContentComponent";
+import { formatDateAndTime } from "../../../../utils/utils";
+
+const ModalBtn = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button className="primary-btn self-end" onClick={() => setOpen(!open)}>
+        Request Visa Payment
+      </button>
+      <VisaPaymentModal open={open} toggleModal={() => setOpen(!open)} />
+    </>
+  );
+};
 
 function VisaPaymentStatus() {
-  const { visaPayments } = useVisa();
-  const [open, setOpen] = useState(false);
-  const ModalBtn = useCallback(
-    () => (
-      <>
-        <button className="primary-btn self-end" onClick={() => setOpen(!open)}>
-          Request Visa Payment
-        </button>
-        <VisaPaymentModal open={open} toggleModal={() => setOpen(!open)} />
-      </>
-    ),
-    [open, setOpen]
-  );
+  const { visaPayments, pastFeedbacks } = useVisa();
+
   const status = () => {
     switch (visaPayments?.status) {
       case 1:
@@ -44,13 +46,25 @@ function VisaPaymentStatus() {
       case 2:
         return (
           <section className="col gap-5">
-            <p className="mt-2 px-3">
-              Your visa fee payment was been approved and disbursed to you. You
-              may now submit it to the embassy and schedule a visa interview
-              date. You have also been granted access to visa expedite letter
-              (if you need it). To access the visa training resources, please
-              submit the request using the button below.
-            </p>
+            <div className="mt-2 px-3">
+              {pastFeedbacks ? (
+                <p>
+                  Since we covered the cost of your previous visa interview, we
+                  are unable to fund any further attempts.
+                </p>
+              ) : (
+                <p>
+                  Your visa fee payment has been approved and disbursed to you
+                  on {formatDateAndTime(visaPayments?.dateapp)}. You may now
+                  submit the payment to the embassy and schedule your visa
+                  interview. Additionally, you have been granted access to a
+                  visa expedite letter if needed.
+                </p>
+              )}
+              {/* <p>
+                Please submit a request below to access visa training resources.
+              </p> */}
+            </div>
             <VisaTrainingStatus />
             <Expedite />
           </section>
@@ -64,7 +78,7 @@ function VisaPaymentStatus() {
               the reviewer, rectify and resubmit.
             </p>
             <p>
-              <strong>Reviewer's Comment:</strong>
+              <strong>Reviewer's Comment : </strong>
               <em>{visaPayments?.reason_denied}</em>
             </p>
             <ModalBtn />

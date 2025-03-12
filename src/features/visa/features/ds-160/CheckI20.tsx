@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 const CheckI20 = () => {
   const [hasI20, setHasI20] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const { stage, inValidateStatus } = useVisa();
+  const { inValidateStatus } = useVisa();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setHasI20(event.target.value);
@@ -26,9 +26,13 @@ const CheckI20 = () => {
   };
   const requestAccess = useMutation({
     mutationFn: visaEndpoints.requestDs160TrainingResources,
-    onSuccess: (data) => {
-      toast.success("Request sent successfully");
-      inValidateStatus();
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        toast.success("Request sent successfully");
+        inValidateStatus();
+        return;
+      }
+      toast.error(response.data?.message);
     },
     onError: (error: any) => {
       toast.error(error.response.message);
@@ -37,11 +41,9 @@ const CheckI20 = () => {
 
   return (
     <div>
-      <section className="py-9">
+      <section className="py-2">
         <p className="">
-          Before we begin, do you have your{" "}
-          <span className="font-bold">I-20</span>? It’s required to proceed with
-          your visa application.
+          You must upload your I-20 to proceed with your visa application.
         </p>
 
         <FormControl sx={{ margin: 3 }}>

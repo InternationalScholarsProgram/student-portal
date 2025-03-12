@@ -13,7 +13,7 @@ import useVisa from "../../services/hooks/useVisa";
 const minLength = 100;
 
 function Administrative() {
-  const { inValidateStatus } = useVisa();
+  const { visa, inValidateStatus } = useVisa();
   const [processed, setProcessed] = useState(false);
   const [comment, setComment] = useState("");
 
@@ -48,6 +48,7 @@ function Administrative() {
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target as HTMLFormElement);
+            formData.append("visa_id", visa?.stu_id.toString());
             handleSubmit.mutate(formData);
           }}
           className="col gap-2"

@@ -8,7 +8,7 @@ function Expedite() {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
   return (
-    <ContentComponent header="Expediting visa interview appointment">
+    <ContentComponent header="Expediting visa interview appointment?">
       <p>
         You can expedite your visa interview appointment using the link below.
       </p>

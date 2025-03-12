@@ -5,10 +5,11 @@ import CanBookMock from "./CanBookMock";
 import GradedMock from "./GradedMock";
 import RejectedMockRequest from "./RejectedMockRequest";
 import SevisFees from "../../../components/payments/SevisFees";
+import NextStepInfo from "../../visa-feedback/NextStepInfo";
 
 function AccessMock() {
-  const { visa, sevisPayments, isMockMarksQualified } = useVisa();
-  const within7Days = useMemo(
+  const { visa } = useVisa();
+  const isInterviewWithin7Days = useMemo(
     () => isWithin7Days(visa?.interviewDateAndTime),
     [visa?.interviewDateAndTime]
   );
@@ -17,15 +18,16 @@ function AccessMock() {
   if (visa?.status === 7)
     return (
       <div className="col gap-7">
+        <NextStepInfo visaDate={visa?.interviewDateAndTime} />
         <SevisFees />
-        {!sevisPayments ? <GradedMock /> : null}
+        <GradedMock />
       </div>
     );
 
   return (
     <div className="col">
       <h3 className="title-sm mt-3"> Mock Interview</h3>
-      {within7Days ? (
+      {isInterviewWithin7Days ? (
         <CanBookMock hasBooked={Boolean(visa?.mock_date && visa?.mock_time)} />
       ) : (
         <div className="col gap-2 p-3 card">

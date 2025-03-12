@@ -26,6 +26,7 @@ function BookedMockStatus() {
             </p>
           ) : (
             <div className="col">
+              <p>Use the button bellow to reschedule your mock interview</p>
               <CalendlyMockVisaInterview text="Reschedule Mock Interview" />
             </div>
           )}

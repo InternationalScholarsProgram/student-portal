@@ -21,7 +21,7 @@ const multipart = {
   },
 };
 const api = axios.create({
-  baseURL: `/`,
+  baseURL: BASE_URL,
 });
 
 api.interceptors.request.use(

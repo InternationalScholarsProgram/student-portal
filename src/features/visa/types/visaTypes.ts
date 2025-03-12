@@ -89,6 +89,18 @@ type Ds160Review = {
   visa_attempt: "First" | "Second" | "Third+" | string;
   with_family: "Alone" | "Family" | "Friends" | string;
 };
+type DS160Req = {
+  declined: number;
+  denied_visa: number;
+  i20_file: string;
+  remark: string;
+  reviewed: number;
+  school_att: null;
+  stu_email: string;
+  stu_id: number;
+  stu_name: string;
+  upload_date: string | Date;
+};
 
 type MockQuestion = {
   email: string;
@@ -146,4 +158,5 @@ export type {
   MockQuestion,
   SevisFeePayment,
   FeedBack,
+  DS160Req,
 };

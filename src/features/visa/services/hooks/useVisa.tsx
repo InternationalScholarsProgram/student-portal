@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import visaEndpoints from "../visaEndpoints";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 import {
+  DS160Req,
   Ds160Review,
   FeedBack,
   MockQuestion,
@@ -39,15 +40,15 @@ function useVisa() {
   );
 
   const visa: VisaObject = useMemo(() => {
-    if (!status) return null;
     const _visa = status?.value?.visa;
+    if (!_visa) return null;
 
     const interview_date = splitDate(_visa?.interview_date);
     const interviewTimes = _visa?.interview_time?.split(":");
     const interviewDateAndTime = new Date(
-      splitDate(_visa?.interview_date).setHours(
-        interviewTimes[0],
-        interviewTimes[1]
+      splitDate(_visa?.interview_date)?.setHours(
+        interviewTimes?.[0],
+        interviewTimes?.[1]
       )
     );
     const mockDateAndTime = () => {
@@ -67,6 +68,8 @@ function useVisa() {
     };
   }, [status?.value?.visa]);
 
+  console.log(status?.value);
+
   const { data: mockQuestions = [] } = useQuery<MockQuestion[]>({
     queryKey: [user?.email, "mock-interview-questions"],
     queryFn: () => visaEndpoints.getMockQuestions(visa?.stu_id),
@@ -79,11 +82,12 @@ function useVisa() {
   );
   const requiredMockMarks = 70;
   const isMockMarksQualified = mockTotalMarks >= requiredMockMarks;
-  const ds160Req = status?.value?.ds160req;
+  const ds160Req = status?.value?.ds160req as DS160Req;
   const ds160Review = status?.value?.ds160review as Ds160Review;
   const visaPayments = status?.value?.payments.visa;
   const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
   const feedback = status?.value?.feedback as FeedBack;
+  const pastFeedbacks = status?.value?.pastFeedbacks as FeedBack[];
   // console.log(proposedSchools, "schools");
 
   return {
@@ -105,6 +109,7 @@ function useVisa() {
     requiredMockMarks,
     isMockMarksQualified,
     feedback,
+    pastFeedbacks: pastFeedbacks?.length > 0 ? pastFeedbacks : null,
   };
 }
 

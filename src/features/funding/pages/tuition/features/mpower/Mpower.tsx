@@ -15,10 +15,13 @@ function Mpower() {
       <SchoolHeader school={school} />
       <ContentComponent
         className="my-3"
-        header={!status ? "Mpower Loan Form" : "Mpower loan application form"}
+        header={
+          status
+            ? "Mpower loan application status"
+            : "Mpower loan application form"
+        }
       >
-        {!status ? <FundingOptions /> : <MpowerLoanForm />}
-        <AppliedLoanStatus />
+        {!status ? <AppliedLoanStatus /> : <MpowerLoanForm />}
       </ContentComponent>
     </div>
   );

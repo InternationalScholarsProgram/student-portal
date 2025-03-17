@@ -6,9 +6,9 @@ function AppliedLoanStatus() {
     queryKey: ["applied-loan-status"],
     queryFn: tuitionEndpoints.trackMpowerLead,
   });
-  console.log(data)
+  console.log(data);
 
-  return <div>AppliedLoanStatus</div>;
+  return <div>{JSON.stringify(data)}</div>;
 }
 
 export default AppliedLoanStatus;

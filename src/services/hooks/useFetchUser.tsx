@@ -3,32 +3,31 @@ import api, { activeStudentId } from "../api/base";
 import { UserProfile } from "../../types";
 
 const useFetchUser = () => {
-  const userQueryKey = ["user", activeStudentId];
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: userQueryKey,
+  const { data, isLoading, error } = useQuery<UserProfile>({
+    queryKey: ["user", activeStudentId],
     queryFn: async () => {
       try {
         const response = await api.get(
           `/login/member/dashboard/APIs/functions.php?action=fetch_user`
         );
-        return response.data;
+        return response.data.message;
       } catch (error: any) {
         console.error("Error fetching user:", error.response.data);
         throw new Error("Failed to fetch user data.");
       }
     },
     enabled: !!activeStudentId, // Only fetch if studentId exists
+    select: (data) => ({
+      ...data,
+      country: data?.country?.toLowerCase(),
+    }), // Ensures reference stability
   });
-  const user: UserProfile = {
-    ...data?.message,
-    country: data?.message?.country?.toLowerCase(),
-  };
+  
   return {
-    user,
+    user: data,
     isLoading,
     error,
-    userQueryKey,
+    userQueryKey :  ["user", activeStudentId],
   };
 };
 

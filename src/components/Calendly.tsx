@@ -28,11 +28,19 @@ type MockProps = {
   classes?: string;
   url?: string;
 };
-const CalendlyMockVisaInterview = ({url, text, classes }: MockProps) => (
+const CalendlyMockVisaInterview = ({ url, text, classes }: MockProps) => (
   <Calendly
-    url={url||"https://calendly.com/accounts-u9w/visa-interview"}
+    url={url || "https://calendly.com/accounts-u9w/visa-interview"}
     text={text || "Request Mock Visa Interview"}
     classes={classes || "primary-border-btn self-end"}
   />
 );
-export { CalendlyMockVisaInterview };
+const CalendlyFundingAdvisory = ({ url, text, classes }: MockProps) => (
+  <Calendly
+    url={url || "https://calendly.com/ruth-munene/funding-advisory?hide_gdpr_banner=1"}
+    text={text || "Book Funding Advisory"}
+    classes={classes || "primary-btn self-end"}
+  />
+);
+
+export { CalendlyMockVisaInterview,CalendlyFundingAdvisory };

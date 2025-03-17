@@ -9,69 +9,64 @@ import {
   SevisFeePayment,
   VisaObject,
 } from "../../types/visaTypes";
-import { useMemo } from "react";
 import { splitDate } from "../../../../utils/utils";
-import useAdmissions from "../../../school-admission/services/useAdmissions";
+import useSchools from "../../../school-admission/services/useSchools";
 
 function useVisa() {
-  const { appliedSchools, proposedSchools } = useAdmissions();
   const { user } = useFetchUser();
+  const { schoolsWithFeedback } = useSchools(true);
   const queryClient = useQueryClient();
 
   const queryKeys = {
     statusCheck: [user?.email, "visa", "status-check"],
+    mockQuestions : [user?.email, "visa", "mock-questions"],
   };
+
   const inValidate = (queryKey: any) =>
     queryClient.invalidateQueries({ queryKey: queryKey });
-  const inValidateStatus = () =>
-    queryClient.invalidateQueries({ queryKey: queryKeys.statusCheck });
 
   const { data: status, isLoading } = useQuery({
     queryKey: queryKeys.statusCheck,
     queryFn: visaEndpoints.status,
+    select: (data) => {
+      const _visa = data?.value?.visa;
+
+      const interview_date = splitDate(_visa?.interview_date);
+      const interviewTimes = _visa?.interview_time?.split(":");
+      const interviewDateAndTime = new Date(
+        splitDate(_visa?.interview_date)?.setHours(
+          interviewTimes?.[0],
+          interviewTimes?.[1]
+        )
+      );
+      const mockDateAndTime = () => {
+        if (!_visa?.mock_date) return null;
+        const date = splitDate(_visa?.mock_date);
+        const mockTimes = _visa?.mock_time?.split(":");
+        date.setHours(mockTimes?.[0], mockTimes?.[1]);
+        return date;
+      };
+      const returnData = {
+        ...data,
+        value: {
+          ...data?.value,
+          visa: {
+            ..._visa,
+            interview_date,
+            interviewDateAndTime,
+            hasInterviewDatePassed: interviewDateAndTime < new Date(),
+            mockDateAndTime: mockDateAndTime(),
+          },
+        },
+      };
+
+      return returnData;
+    },
   });
-
-  const { data: applicationVideo } = useQuery({
-    queryKey: ["visa", "ds-160-application-video"],
-    queryFn: visaEndpoints.ds_160_application_video,
-  });
-  const schools = appliedSchools?.filter(
-    (school) => school?.application_details?.feedback
-  );
-
-  const visa: VisaObject = useMemo(() => {
-    const _visa = status?.value?.visa;
-    if (!_visa) return null;
-
-    const interview_date = splitDate(_visa?.interview_date);
-    const interviewTimes = _visa?.interview_time?.split(":");
-    const interviewDateAndTime = new Date(
-      splitDate(_visa?.interview_date)?.setHours(
-        interviewTimes?.[0],
-        interviewTimes?.[1]
-      )
-    );
-    const mockDateAndTime = () => {
-      if (!_visa?.mock_date) return null;
-      const date = splitDate(_visa?.mock_date);
-      const mockTimes = _visa?.mock_time?.split(":");
-      date.setHours(mockTimes[0], mockTimes[1]);
-      return date;
-    };
-
-    return {
-      ..._visa,
-      interview_date,
-      interviewDateAndTime,
-      hasInterviewDatePassed: interviewDateAndTime < new Date(),
-      mockDateAndTime: mockDateAndTime(),
-    };
-  }, [status?.value?.visa]);
-
-  console.log(status?.value);
+  const visa: VisaObject = status?.value?.visa;
 
   const { data: mockQuestions = [] } = useQuery<MockQuestion[]>({
-    queryKey: [user?.email, "mock-interview-questions"],
+    queryKey: queryKeys.mockQuestions,
     queryFn: () => visaEndpoints.getMockQuestions(visa?.stu_id),
     enabled: Boolean(visa?.mockDateAndTime && visa?.status >= 6),
   });
@@ -91,13 +86,12 @@ function useVisa() {
   // console.log(proposedSchools, "schools");
 
   return {
-    applicationVideo,
-    schools: schools?.length > 0 ? schools : proposedSchools,
     user,
+    schools: schoolsWithFeedback,
     status,
     isLoading,
     inValidate,
-    inValidateStatus,
+    inValidateStatus: () => inValidate(queryKeys.statusCheck),
     stage: status?.stage || 0,
     visa,
     ds160Req,
@@ -114,3 +108,14 @@ function useVisa() {
 }
 
 export default useVisa;
+
+/*
+test@gmail.com 1741946231655 new date
+test@gmail.com 1741946231656 new date
+test@gmail.com 1741946231657 new date
+test@gmail.com 1741946231663 new date
+test@gmail.com 1741946231664 new date
+test@gmail.com 1741946231666 new date
+
+
+*/

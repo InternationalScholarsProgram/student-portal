@@ -1,7 +1,6 @@
 import React from "react";
 import { ComponentProps } from "react";
-import { Autocomplete, TextField } from "@mui/material";
-import { inputStyles } from "../../styles/styles";
+import { Autocomplete as MuiAutocomplete, TextField } from "@mui/material";
 
 interface Props extends ComponentProps<typeof TextField> {
   options: any[];
@@ -17,13 +16,14 @@ const AutoComplete: React.FC<Props> = ({
   ...props
 }) => {
   return (
-    <Autocomplete
+    <MuiAutocomplete
       getOptionLabel={getOptionLabel}
       options={options}
       onChange={handleSelect}
-      renderInput={(params) => (
-        <TextField {...params} {...props} sx={inputStyles} />
-      )}
+      size="medium"
+      renderInput={(params) => {
+        return <TextField {...params} {...props} size="medium" />;
+      }}
     />
   );
 };

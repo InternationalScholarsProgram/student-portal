@@ -10,7 +10,7 @@ import sideBarStore from "./sideBarStore";
 
 function Sidebar() {
   const { openSections, setOpenSections, initialize } = useStore(sideBarStore);
-const location = useLocation();
+  const location = useLocation();
   useEffect(() => {
     initialize();
   }, [location.pathname]);
@@ -27,7 +27,7 @@ const location = useLocation();
           if (item?.type === "hidden")
             return (
               <p key={index} className="my-5">
-                {item.name}sassss
+                {item.name}
               </p>
             );
           if (item?.type === "divider") {
@@ -66,7 +66,7 @@ const location = useLocation();
                         isActive ? "active-link" : ""
                       }
                     >
-                      <p>{subItem.name}</p>
+                      <p className="first-letter:uppercase">{subItem.name}</p>
                     </NavLink>
                   ))}
                 </Collapse>

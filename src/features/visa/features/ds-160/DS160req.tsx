@@ -5,9 +5,16 @@ import useVisa from "../../services/hooks/useVisa";
 import ContentComponent from "../../../../components/ContentComponent";
 import ContactSupport from "../../../../components/ContactSupport";
 import CheckI20 from "./CheckI20";
+import { useQuery } from "@tanstack/react-query";
+import visaEndpoints from "../../services/visaEndpoints";
 
 function DS160req() {
-  const { applicationVideo, ds160Req } = useVisa();
+  const { ds160Req } = useVisa();
+  
+  const { data: applicationVideo } = useQuery({
+    queryKey: ["visa", "ds-160-application-video"],
+    queryFn: visaEndpoints.ds_160_application_video,
+  });
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
   return (
@@ -58,11 +65,14 @@ function DS160req() {
           <DS160RequestModal open={open} toggleModal={toggleModal} />
         </section>
       ) : (
-        <ContentComponent className="my-2" header="Request to access the DS-160 instruction resource">
+        <ContentComponent
+          className="my-2"
+          header="Request to access the DS-160 instruction resource"
+        >
           <p>
-            Unfortunately, your request has been **rejected**. 😞
-            Below, you’ll find the specific reason provided by our team. Please
-            review it carefully and resubmit
+            Unfortunately, your request has been **rejected**. 😞 Below, you’ll
+            find the specific reason provided by our team. Please review it
+            carefully and resubmit
           </p>
           <p>
             <strong>Reason for rejection:</strong>

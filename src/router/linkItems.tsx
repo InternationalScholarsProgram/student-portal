@@ -13,6 +13,7 @@ import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
+import { loans } from "../features/funding/utils";
 
 const linkItems = [
   {
@@ -114,6 +115,7 @@ const modules = [
     name: "Funding",
     to: "funding",
     icon: <StoreOutlinedIcon />,
+    subItems: [...loans],
   },
   {
     name: "Visa Processing",

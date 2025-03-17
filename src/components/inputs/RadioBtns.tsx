@@ -10,8 +10,12 @@ import React from "react";
 
 interface Props extends RadioGroupProps {
   title: string;
-  options: any[];
+  options: OptionsProps[];
 }
+type OptionsProps = {
+  value: any;
+  label: string;
+};
 
 const RadioBtns: React.FC<Props> = ({ title, options, ...props }) => {
   return (

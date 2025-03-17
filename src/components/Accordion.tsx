@@ -32,7 +32,7 @@ const Accordion: React.FC<AccordionProps> = ({
             aria-controls="panel2-content"
             id="panel2-header"
           >
-            {title}
+            <p className="">{title}</p>
           </AccordionSummary>
           <AccordionDetails>
             <ul className="list-decimal col p-4 gap-3 opacity-70">

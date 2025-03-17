@@ -61,4 +61,9 @@ const getCountries = async () => {
     return null;
   }
 };
-export { counties, getCountries };
+const fundingOptions = [
+  { value: "Statement", label: "Bank Statement" },
+  { value: "Loan", label: "Student Loan" },
+  { value: "Scholarship", label: "Scholarship or GA" },
+];
+export { counties, getCountries, fundingOptions };

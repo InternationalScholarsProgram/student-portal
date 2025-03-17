@@ -1,10 +1,25 @@
+import { useLocation } from "react-router";
 import Accordion from "../../../components/Accordion";
+import { useMemo } from "react";
 
-export default function LoanGuides({ loan }: { loan: string }) {
-  switch (loan) {
-    case "Tuition & Living Expenses":
+export default function LoanGuides() {
+  const location = useLocation();
+  const loanType = useMemo(
+    () => location.pathname.split("/")?.[1],
+    [location.pathname]
+  );
+  switch (loanType) {
+    case "tuition":
       return (
         <Accordion title="Tuition and Living Expenses Loan Guide">
+          <p>
+            The tuition and living expenses funding is needed for you to request
+            your I-20 from the school you have been admitted to. This loan is
+            sourced from our external lending partners. Once approved, the
+            funding will ultimately support your studies in North America. You
+            MUST request a funding advisory meeting to proceed with this funding
+            option by clicking the button above.
+          </p>
           <li>
             To start funding processing, you need to submit a funding advisory
             meeting request with our team within this module.
@@ -45,7 +60,7 @@ export default function LoanGuides({ loan }: { loan: string }) {
           </li>
         </Accordion>
       );
-    case "Relocation":
+    case "relocation":
       return (
         <Accordion title="Relocation Loan Guide">
           <li>
@@ -73,7 +88,7 @@ export default function LoanGuides({ loan }: { loan: string }) {
           </li>
         </Accordion>
       );
-    case "Alternative Study":
+    case "alternative":
       return (
         <Accordion title="Alternative Study Loan Guide">
           <li>
@@ -99,7 +114,7 @@ export default function LoanGuides({ loan }: { loan: string }) {
           </li>
         </Accordion>
       );
-    case "Personal":
+    case "personal":
       return (
         <Accordion title="Personal Loan Guide">
           <li>
@@ -125,7 +140,5 @@ export default function LoanGuides({ loan }: { loan: string }) {
           </li>
         </Accordion>
       );
-    default:
-      return "Tuition & Living Expenses";
   }
 }

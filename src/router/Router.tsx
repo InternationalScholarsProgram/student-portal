@@ -5,6 +5,10 @@ import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
 import Receipt from "../features/finances/Receipt";
+import Tuition from "../features/funding/pages/tuition/Tuition";
+import Relocation from "../features/funding/pages/relocation/Relocation";
+import Alternative from "../features/funding/pages/alternative/Alternative";
+import Personal from "../features/funding/pages/personal/Personal";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -22,7 +26,7 @@ const Dashboard = lazy(() => import("../features/Dashboard"));
 const Profile = lazy(() => import("../features/user/Profile"));
 const WebMail = lazy(() => import("../features/WebMail"));
 const Resources = lazy(() => import("../features/info-resources/Resources"));
-const Funding = lazy(() => import("../features/funding/Funding"));
+const Funding = lazy(() => import("../features/funding/Layout"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
 const SchoolAdmission = lazy(
   () =>
@@ -76,14 +80,24 @@ function Router() {
                 element={<OnboardingAgreement />}
               />
             </Route>
-            <Route path="/visa-processing/expedite-letter" element={<ExpediteLetter />} />
+            <Route
+              path="/visa-processing/expedite-letter"
+              element={<ExpediteLetter />}
+            />
           </Route>
           <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="webmail" element={<WebMail />} />
             <Route path="resources" element={<Resources />} />
-            <Route path="funding" element={<Funding />} />
+
+            <Route element={<Funding />}>
+              <Route path="tuition" element={<Tuition />} />
+              <Route path="relocation" element={<Relocation />} />
+              <Route path="alternative" element={<Alternative />} />
+              <Route path="personal" element={<Personal />} />
+            </Route>
+
             <Route path="flights" element={<Flights />} />
             <Route path="test" element={<Test />} />
             <Route path="visa-processing" element={<Visa />} />

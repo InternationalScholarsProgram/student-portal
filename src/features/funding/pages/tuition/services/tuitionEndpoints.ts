@@ -1,10 +1,18 @@
-import api, { baseDirectory } from "../../../../../services/api/base";
+import api, {
+  baseDirectory,
+  multipart,
+} from "../../../../../services/api/base";
 import { fetchIp } from "../../../../../utils/utils";
+
 const url = `${baseDirectory}funding/`;
+const mpowerUrl = `${baseDirectory}loans/m-power.php?`;
 
 class TuitionEndpoints {
-  uploadMpower = async (data: FormData) => {
-    return api.post(`${url}tuition_status.php`, data);
+  getStatus = async () => api.get(`${url}tuition_status.php`);
+
+  makeMpowerApplication = async (payload: FormData) => {
+    const apiUrl = `${mpowerUrl}action=application_request`;
+    return await api.post(apiUrl, payload, multipart);
   };
   trackMpowerLead = async () => {
     try {
@@ -16,9 +24,12 @@ class TuitionEndpoints {
       return null;
     }
   };
-  test= async (params:any) => {
-    return fetchIp()
-  }
+  mpowerStatus = async (id: string) => {
+    return api.get(`${url}mpower_status.php?app_id=${id}`);
+  };
+  test = async (params: any) => {
+    return fetchIp();
+  };
 }
 const tuitionEndpoints = new TuitionEndpoints();
 export default tuitionEndpoints;

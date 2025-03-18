@@ -1,20 +1,29 @@
-import useFunding from "../../services/useFunding";
 import CreditReview from "./features/credit-review/CreditReview";
 import FundingAdvisory from "./features/funding-advisory/FundingAdvisory";
 import Mpower from "./features/mpower/Mpower";
+import useTuition from "./services/useTuition";
 
 function Tuition() {
-  const { status, stage } = useFunding();
-
-  switch (stage) {
+  const { tuitionStatus } = useTuition();
+  // return <Mpower />
+  switch (tuitionStatus) {
     case 1:
-      return <CreditReview />;
     case 2:
-      return <FundingAdvisory />;
     case 3:
-      return <Mpower />;
+      return <CreditReview />;
+
+    case 4:
+    case 5:
+      return <FundingAdvisory />;
+
+    case 6:
+      return <CreditReview />;
+
+    case 7:
+      return <CreditReview />;
+
     default:
-      return null;
+      break;
   }
 }
 

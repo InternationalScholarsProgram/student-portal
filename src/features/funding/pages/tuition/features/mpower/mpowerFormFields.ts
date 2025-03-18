@@ -105,11 +105,11 @@ const backgroundDetails = [
     type: "select",
     required: true,
     options: [
-      "Thinking about studying",
-      "Applied to study",
-      "Accepted to study",
-      "Currently enrolled",
-      "Transferring to another school",
+      "I am thinking about studying",
+      "I have applied to study or have been conditionally accepted by my school",
+      "I have been accepted to study",
+      "I am currently enrolled at a school",
+      "I am currently enrolled at a school, but I am transferring to another school",
     ],
   },
 ];
@@ -121,7 +121,7 @@ const employmentHistory = [
     required: true,
     options: [
       "Currently employed",
-      "Not employed but been employed",
+      "Not employed but been employed in the past",
       "No employment history",
     ],
   },

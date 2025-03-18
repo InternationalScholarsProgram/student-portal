@@ -6,12 +6,13 @@ import SelectSchool from "./SelectSchool";
 import LoanApplication from "../../components/LoanApplication";
 
 function FundingAdvisory() {
-  const { status } = useTuition();
-  if (status === 1) return <BookFundingAdvisoryMeeting />;
-  if (status === 2) return <MeetingStatus />;
-  if (status === 3) return <FundingOptions />;
-  if (status === 4) return <SelectSchool />;
-  if (status === 5) return <LoanApplication />;
+  const { tuitionStatus } = useTuition();
+
+  if (tuitionStatus === 1) return <BookFundingAdvisoryMeeting />;
+  if (tuitionStatus === 2) return <MeetingStatus />;
+  if (tuitionStatus === 3) return <FundingOptions />;
+  if (tuitionStatus === 4) return <SelectSchool />;
+  if (tuitionStatus === 5) return <LoanApplication />;
 }
 
 export default FundingAdvisory;

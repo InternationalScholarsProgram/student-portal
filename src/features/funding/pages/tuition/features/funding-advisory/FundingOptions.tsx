@@ -2,10 +2,11 @@ import Select from "../../../../../../components/inputs/Select";
 import { MenuItem } from "@mui/material";
 import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
 import { fundingOptions } from "../../../../../../utils/constants";
-import { InputsWithLabel } from "../../../../../../components/inputs/InputField";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import ContentComponent from "../../../../../../components/ContentComponent";
+import PickFileButton from "../../../../../../components/buttons/PickFileButton";
+import RadioBtns from "../../../../../../components/inputs/RadioBtns";
 
 function FundingOptions() {
   const [fundingOption, setFundingOption] = useState<any>("");
@@ -16,38 +17,47 @@ function FundingOptions() {
   };
   const handleSubmit = useMutation({});
   return (
-    <>
-      <ContentComponent header="Meeting Attended">
-        <div className="col gap-4">
-          <div className="alert m-2">
-            <span>
-              Please note that the source of funding that you will be using to
-              request the I-20 from the school will be the same that you will
-              use to process your VISA at the embassy.
-            </span>
-          </div>
-          <p>
+    <div className="col gap-2">
+      <p>
+        Meeting attended successfully. The next step is to confirm your sources
+        of your funding
+      </p>
+      {/* <div className="alert m-2">
+        <span>
+          Please note that the source of funding that you will be using to
+          request the I-20 from the school will be the same that you will use to
+          process your VISA at the embassy.
+        </span>
+      </div> */}
+      <h3 className="title-sm pt-3">Confirm source of funding</h3>
+
+      <form onSubmit={onSubmit} className="col card gap-2 p-3">
+        <div className="form-group px-2">
+          <em className="mb-3">
             Apart from a student loan, do you wish to use other sources of
             funding to request your I-20 from the school and also support your
             VISA process at the embassy?
-          </p>
-          <div className="form-group">
-            <Select
-              placeholder="Select an option"
-              onChange={(e) => setFundingOption(e.target.value)}
-            >
-              <MenuItem value="yes">Yes</MenuItem>
-              <MenuItem value="no">No</MenuItem>
-            </Select>
-          </div>
+          </em>
+          <RadioBtns
+            options={[
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" },
+            ]}
+            title="Do you have any other funding sources?"
+            onChange={(e) => setFundingOption(e.target.value)}
+            row
+          />
         </div>
 
-        <form onSubmit={onSubmit} className="col gap-2 p-3">
-          {fundingOption === "yes" && (
-            <>
+        {fundingOption === "yes" && (
+          <div className="col py-3">
+            <p className="text-primary-light">
+              Please provide details of your funding source
+            </p>
+            <div className="col gap-3 p-2">
               <div className="form-group">
                 <label>Select Funding Source</label>
-                <Select variant="outlined">
+                <Select variant="standard">
                   {fundingOptions
                     .filter((option) => option.value !== "Loan")
                     .map((option) => (
@@ -57,34 +67,34 @@ function FundingOptions() {
                     ))}
                 </Select>
               </div>
-              <InputsWithLabel
-                inputLabel="Upload bank statement for approval"
-                type="file"
-                name="statement"
-              />
+
+              <div className="form-group">
+                <label htmlFor="">Upload bank statement for approval</label>
+                <PickFileButton name="statement" required />
+              </div>
 
               <div className="form-group">
                 <label>
                   Do you wish to use a student loan later to fund your studies
                   or will you be using personal funds
                 </label>
-                <Select variant="outlined" placeholder="">
+                <Select variant="standard" placeholder="">
                   <MenuItem value="Yes">Loan Later</MenuItem>
                   <MenuItem value="No">Personal Funds</MenuItem>
                 </Select>
               </div>
-            </>
-          )}
-          <PrimaryBtn
-            disabled={!fundingOption}
-            className="self-end"
-            type="submit"
-          >
-            {handleSubmit.isPending ? "Processing..." : "Proceed"}
-          </PrimaryBtn>
-        </form>
-      </ContentComponent>
-    </>
+            </div>
+          </div>
+        )}
+        <PrimaryBtn
+          disabled={!fundingOption}
+          className="self-end"
+          type="submit"
+        >
+          {handleSubmit.isPending ? "Processing..." : "Proceed"}
+        </PrimaryBtn>
+      </form>
+    </div>
   );
 }
 

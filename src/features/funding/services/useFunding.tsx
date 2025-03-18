@@ -3,7 +3,7 @@ import fundingEndpoints from "./fundingEndpoints";
 import useSchools from "../../school-admission/services/useSchools";
 
 function useFunding() {
-  const { schoolsWithFeedback } = useSchools(true);
+  const { schoolsWithFeedback, schoolAppId } = useSchools(true);
   const queryClient = useQueryClient();
 
   const { data: status } = useQuery({
@@ -17,12 +17,12 @@ function useFunding() {
     fundingStatus: item?.application_details?.feedback?.status,
   }));
 
-
   return {
     status,
-    stage: status ? 2 : 2,
+    stage: status ? 1 : 2,
     schools: schoolsEligibleForFunding,
-    school: schoolsEligibleForFunding?.[0],
+    selectedSchool: schoolsEligibleForFunding?.[0],
+    schoolAppId,
     queryClient,
   };
 }

@@ -90,7 +90,7 @@ function ProvideVisaFeedback() {
             {isKenyan === "no" ? (
               <div>
                 <label>Select Country</label>
-                <SelectCountry />
+                <SelectCountry name="country" variant="outlined" required />
               </div>
             ) : null}
 

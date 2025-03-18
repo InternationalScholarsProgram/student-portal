@@ -12,7 +12,6 @@ function SelectCountry({ ...props }) {
       {...props}
       options={countries || []}
       getOptionLabel={(option) => option.label}
-      name="country"
     />
   );
 }

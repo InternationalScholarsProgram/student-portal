@@ -2,6 +2,7 @@ import LoanGuides from "./components/LoanGuides";
 import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
 import { loans } from "./utils";
+import ErrorBoundary from "../../router/ErrorBoundary";
 
 function Funding() {
   return (
@@ -21,7 +22,9 @@ function Funding() {
       </header>
       <LoanGuides />
       <div className="py-2">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </div>
     </main>
   );

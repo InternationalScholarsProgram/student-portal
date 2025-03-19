@@ -1,6 +1,5 @@
-import { Suspense, lazy } from "react";
+import {  lazy } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import LoaderSideBar from "./LoaderSideBar";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
@@ -10,6 +9,7 @@ import Relocation from "../features/funding/pages/relocation/Relocation";
 import Alternative from "../features/funding/pages/alternative/Alternative";
 import Personal from "../features/funding/pages/personal/Personal";
 import ErrorBoundary from "./ErrorBoundary";
+import Suspense from "./Suspense";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -73,7 +73,7 @@ function Router() {
       }}
     >
       <ErrorBoundary>
-        <Suspense fallback={<LoaderSideBar />} name="router">
+        <Suspense name="router">
           <Routes>
             <Route element={<PageLayout />}>
               <Route path="contract" element={<Outlet />}>

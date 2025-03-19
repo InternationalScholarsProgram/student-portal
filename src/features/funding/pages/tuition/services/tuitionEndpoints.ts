@@ -1,4 +1,7 @@
+import axios from "axios";
 import api, {
+  activeStudentId,
+  BASE_URL,
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
@@ -6,9 +9,23 @@ import { fetchIp } from "../../../../../utils/utils";
 
 const url = `${baseDirectory}funding/`;
 const mpowerUrl = `${baseDirectory}loans/m-power.php?`;
+const tuitionUrl = `${url}/tuition_status.php`;
 
 class TuitionEndpoints {
-  getStatus = async () => api.get(`${url}tuition_status.php`);
+  getStatus = async () =>
+    api.get(`${tuitionUrl}`, {
+      params: {
+        action: "track_status",
+      },
+    });
+
+  uploadFundingOptions = async (payload: FormData) => {
+    return await api.post(
+      `${tuitionUrl}?action=upload_visa_support`,
+      payload,
+      multipart
+    );
+  };
 
   makeMpowerApplication = async (payload: FormData) => {
     const apiUrl = `${mpowerUrl}action=application_request`;

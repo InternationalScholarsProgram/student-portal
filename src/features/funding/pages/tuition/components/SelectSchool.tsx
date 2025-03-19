@@ -1,7 +1,7 @@
-import useSchools from "../../../../../school-admission/services/useSchools";
-import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
-import RadioBtns from "../../../../../../components/inputs/RadioBtns";
-import ContentComponent from "../../../../../../components/ContentComponent";
+import useSchools from "../../../../school-admission/services/useSchools";
+import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
+import RadioBtns from "../../../../../components/inputs/RadioBtns";
+import ContentComponent from "../../../../../components/ContentComponent";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import Swal from "sweetalert2";
@@ -15,13 +15,14 @@ function SelectSchool() {
     const result = await Swal.fire({
       title: "Confirmation",
       text: "Are you sure you want to select this school?",
-      icon: "question",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, Continue!",
       cancelButtonText: "Cancel",
       confirmButtonColor: palette.primary.main,
       customClass: {
-        actions: "flex flex-row-reverse justify-start  w-full", // Custom class for action buttons
+        actions: "flex flex-row-reverse justify-center  w-full", // Custom class for action buttons
+        // confirmButton: "mr-3",
       },
     });
 

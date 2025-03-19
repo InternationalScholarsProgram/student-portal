@@ -40,7 +40,7 @@ const StatusMessages: React.FC<Props> = ({ stage, remarks }) => {
             Please review the reason below and make the necessary adjustments
             before resubmitting.
           </p>
-          <div className="py-4">
+          <div className="py-">
             <p className="alert-error">
               <strong>Reason:</strong>{" "}
               {remarks || "No specific remarks provided."}

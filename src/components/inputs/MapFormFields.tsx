@@ -1,6 +1,6 @@
+import { MenuItem } from "@mui/material";
 import SelectCountry from "./SelectCountry";
 import Select from "./Select";
-import { MenuItem } from "@mui/material";
 import InputField from "./InputField";
 
 const MapFormFields: React.FC<{ fields: any[]; handleChange?: any }> = ({
@@ -9,11 +9,8 @@ const MapFormFields: React.FC<{ fields: any[]; handleChange?: any }> = ({
 }) => {
   return fields?.map((field: any, index: number) => (
     <div key={index} className="form-group">
-      <label className="">
-        {field.label}{" "}
-        {/* {field.required && <span className="text-red-500">*</span>} */}
-      </label>
-      {field.name === "citizenship" ? (
+      <label className="">{field.label}</label>
+      {field.name === "citizenship" || field.name === "country" ? (
         <SelectCountry name={field.name} required />
       ) : field.type === "select" ? (
         <Select

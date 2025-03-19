@@ -25,15 +25,14 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Initialize params if it doesn't exist
-    if (!config.params) {
-      config.params = {};
+    if (!config.params) config.params = {};
+
+    if (!config.params.student_id) {
+      config.params.student_id = activeStudentId;
     }
-    // Append the student_id to the params
-    config.params.student_id = activeStudentId;
     return config;
   },
   (error) => {
-    // Handle request error
     return Promise.reject(error);
   }
 );

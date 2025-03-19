@@ -1,5 +1,5 @@
-import ContentComponent from "../../../../../../components/ContentComponent";
-import useTuition from "../../services/useTuition";
+import ContentComponent from "../../../../../../../components/ContentComponent";
+import useTuition from "../../../services/useTuition";
 
 function AppliedLoanStatus() {
   const { mpowerStatus } = useTuition();

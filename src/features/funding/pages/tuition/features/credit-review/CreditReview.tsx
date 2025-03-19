@@ -1,17 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
 import ContentComponent from "../../../../../../components/ContentComponent";
-import useFunding from "../../../../services/useFunding";
 import StatusMessages from "./StatusMessages";
-import fundingEndpoints from "../../../../services/fundingEndpoints";
+import useTuition from "../../services/useTuition";
+import ProvideSchoolFeedback from "./ProvideSchoolFeedback";
 
 function CreditReview() {
-  const { data: creditReview } = useQuery({
-    queryKey: ["funding"],
-    queryFn: fundingEndpoints.getStatus,
-  });
+  const { creditReview } = useTuition();
+  // console.log(creditReview?.status);
+  
+
+  // if (!creditReview) return <ProvideSchoolFeedback />;
+
   return (
     <ContentComponent className="col" header="Credit Review">
-      <StatusMessages stage={3} remarks={creditReview} />
+      <StatusMessages
+        // stage={4}
+        stage={3}
+        remarks={"testing"}
+        // remarks={creditReview?.comment}
+      />
     </ContentComponent>
   );
 }

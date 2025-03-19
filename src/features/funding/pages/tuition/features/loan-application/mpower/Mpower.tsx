@@ -1,12 +1,12 @@
-import MpowerLoanForm from "./MpowerLoanForm";
-import useFunding from "../../../../services/useFunding";
-import ContentComponent from "../../../../../../components/ContentComponent";
-import AppliedLoanStatus from "./AppliedLoanStatus";
-import SchoolHeader from "../../components/SchoolHeader";
-import useTuition from "../../services/useTuition";
 import { useCallback } from "react";
-import { InputsWithLabel } from "../../../../../../components/inputs/InputField";
-import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
+import useFunding from "../../../../../services/useFunding";
+import useTuition from "../../../services/useTuition";
+import MpowerLoanForm from "./MpowerLoanForm";
+import ContentComponent from "../../../../../../../components/ContentComponent";
+import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
+import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
+import AppliedLoanStatus from "./AppliedLoanStatus";
+import SchoolHeader from "../../../components/SchoolHeader";
 
 function Mpower() {
   const { selectedSchool, status } = useFunding();

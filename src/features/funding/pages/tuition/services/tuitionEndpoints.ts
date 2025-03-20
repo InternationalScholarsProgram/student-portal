@@ -1,7 +1,4 @@
-import axios from "axios";
 import api, {
-  activeStudentId,
-  BASE_URL,
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
@@ -12,12 +9,7 @@ const mpowerUrl = `${baseDirectory}loans/m-power.php?`;
 const tuitionUrl = `${url}/tuition_status.php`;
 
 class TuitionEndpoints {
-  getStatus = async () =>
-    api.get(`${tuitionUrl}`, {
-      params: {
-        action: "track_status",
-      },
-    });
+  getStatus = () => api.get(tuitionUrl + "?action=track_status");
 
   uploadFundingOptions = async (payload: FormData) => {
     return await api.post(
@@ -31,6 +23,7 @@ class TuitionEndpoints {
     const apiUrl = `${mpowerUrl}action=application_request`;
     return await api.post(apiUrl, payload, multipart);
   };
+
   trackMpowerLead = async () => {
     try {
       const apiUrl = `${baseDirectory}loans/m-power.php?action=track_lead`;
@@ -40,6 +33,10 @@ class TuitionEndpoints {
       console.error("Error tracking Mpower lead:", error?.response?.data);
       return null;
     }
+  };
+  uploadCosigner = async (payload: FormData) => {
+    const apiUrl = `${tuitionUrl}?action=upload_cosigner`;
+    return await api.post(apiUrl, payload, multipart);
   };
   mpowerStatus = async (id: string) => {
     return api.get(`${url}mpower_status.php?app_id=${id}`);

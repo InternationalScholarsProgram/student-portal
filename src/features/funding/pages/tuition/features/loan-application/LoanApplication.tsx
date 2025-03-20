@@ -1,13 +1,22 @@
+import SchoolHeader from "../../components/SchoolHeader";
 import useTuition from "../../services/useTuition";
-import Mpower from "./mpower/Mpower";
-import SallieMae from "./sallie-mae/SallieMae";
+import LoanStatus from "./components/LoanStatus";
 
 function LoanApplication() {
-  const { loanType } = useTuition();
+  const { activeLoanApplication, tuitionStatus } = useTuition();
+  if (!activeLoanApplication) return <>An error occured</>;
+
   return (
-    <div>
-      {/* <Mpower />  */}
-       <SallieMae />
+    <div className="">
+      <h3 className="title-sm py-2">
+        Welcome to Tuition and Living Expenses loan application process
+      </h3>
+      <SchoolHeader
+        schoolName={activeLoanApplication?.school}
+        program={activeLoanApplication?.program}
+      />
+      <div className="h-2" />
+      <LoanStatus status={tuitionStatus} />
     </div>
   );
 }

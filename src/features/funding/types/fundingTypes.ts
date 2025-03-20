@@ -36,4 +36,19 @@ type FundingAdvisoryProps = {
   time: string;
   zoom_link: string;
 };
-export type { MpowerStatus, CreditReview, FundingAdvisoryProps };
+type LoanDetailsProps = {
+  app_id: string;
+  school: string;
+  program : string;
+  application_requested: number;
+  funding: "MPOWER" | "Sallie";
+  loan_app_feedback: null | any[];
+  status: number | null;
+};
+
+export type {
+  MpowerStatus,
+  CreditReview,
+  FundingAdvisoryProps,
+  LoanDetailsProps,
+};

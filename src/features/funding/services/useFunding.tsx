@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import fundingEndpoints from "./fundingEndpoints";
 import useSchools from "../../school-admission/services/useSchools";
+import { fetchIp } from "../../../utils/utils";
 
 function useFunding() {
   const { schoolsWithFeedback, schoolAppId } = useSchools(true);
@@ -8,7 +9,7 @@ function useFunding() {
 
   const { data: status } = useQuery({
     queryKey: ["funding"],
-    queryFn: fundingEndpoints.getStatus,
+    queryFn: fetchIp,
   });
 
   const schoolsEligibleForFunding = schoolsWithFeedback?.map((item) => ({

@@ -8,15 +8,14 @@ function CreditReview() {
   // console.log(creditReview?.status);
   
 
-  // if (!creditReview) return <ProvideSchoolFeedback />;
+  if (!creditReview) return <ProvideSchoolFeedback />;
 
   return (
     <ContentComponent className="col" header="Credit Review">
       <StatusMessages
-        // stage={4}
-        stage={3}
-        remarks={"testing"}
-        // remarks={creditReview?.comment}
+        stage={creditReview?.status}
+        remarks={creditReview?.comment}
+        // stage={3} remarks={"testing"}  FOR TESTING
       />
     </ContentComponent>
   );

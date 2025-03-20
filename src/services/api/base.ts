@@ -24,12 +24,12 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // Initialize params if it doesn't exist
-    if (!config.params) config.params = {};
+    // console.log("Before Request:", config.params);
 
-    if (!config.params.student_id) {
-      config.params.student_id = activeStudentId;
-    }
+    if (!config.params) config.params = {}; // Initialize params if it doesn't exist
+    config.params.student_id = activeStudentId;
+
+    // console.log("After Request:", config.params);
     return config;
   },
   (error) => {

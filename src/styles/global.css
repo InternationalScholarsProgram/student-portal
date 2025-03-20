@@ -160,7 +160,7 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col p-3;
+  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] col p-3;
 }
 .title {
   @apply text-xl sm:text-2xl font-semibold;

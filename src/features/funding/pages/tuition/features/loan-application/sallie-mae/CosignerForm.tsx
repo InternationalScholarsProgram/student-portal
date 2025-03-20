@@ -3,8 +3,22 @@ import Select from "../../../../../../../components/inputs/Select";
 import { MenuItem } from "@mui/material";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import ContentComponent from "../../../../../../../components/ContentComponent";
+import { useMutation } from "@tanstack/react-query";
+import tuitionEndpoints from "../../../services/tuitionEndpoints";
+import { toast } from "react-toastify";
 
 function CosignerForm() {
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    submitCosigner.mutate(formData);
+  };
+  const submitCosigner = useMutation({
+    mutationFn: tuitionEndpoints.uploadCosigner,
+    onSuccess: () => {
+      toast.success("Cosigner details uploaded successfully.");
+    },
+  });
   return (
     <div className="col gap-3">
       <em>
@@ -20,7 +34,7 @@ function CosignerForm() {
         cosigner has not confirmed their support.
       </p>
       <ContentComponent header="Enter cosigner details" className="col gap-3">
-        <form className="col gap-3 p-1">
+        <form onSubmit={onSubmit} className="col gap-3 p-1">
           <InputsWithLabel
             inputLabel="Full Names"
             type="text"
@@ -45,7 +59,7 @@ function CosignerForm() {
             </Select>
           </div>
           <PrimaryBtn className="self-end" type="submit">
-            Submit
+            {submitCosigner.isPending ? "Submitting..." : "Submit"}
           </PrimaryBtn>
         </form>
       </ContentComponent>

@@ -5,9 +5,9 @@ import useFunding from "../../../services/useFunding";
 import {
   CreditReview,
   FundingAdvisoryProps,
+  LoanDetailsProps,
   MpowerStatus,
 } from "../../../types/fundingTypes";
-import axios from "axios";
 
 function useTuition() {
   const { user } = useFetchUser();
@@ -15,43 +15,34 @@ function useTuition() {
   const queryClient = useQueryClient();
 
   const querKeys = {
-    tuitionStatus: [ "tuition", "tuitionStatus"],
+    tuitionStatus: [user?.email, "tuition", "tuitionStatus"],
     mpower: [user?.email, "tuition", "mpower-status"],
   };
   const { data: tuitionData, isLoading } = useQuery({
     queryKey: querKeys.tuitionStatus,
-    // queryFn: tuitionEndpoints.getStatus,
-    queryFn: () => {
-      const options = {
-        method: "GET",
-        url: "http://finkapinternational.qhtestingserver.com//login/member/dashboard/APIs/funding/tuition_status.php",
-        params: {
-          action: "track_status",
-          student_id: "test@gmail.com",
-        },
-      };
-
-      const response = axios.request(options);
-      return response;
-    },
+    queryFn: tuitionEndpoints.getStatus,
     select: (response) => {
       return response?.data?.data;
     },
   });
+
   const tuitionStatus = tuitionData?.status || 0;
   const creditReview = tuitionData?.credit_review as CreditReview | null;
   const fundingAdvisory =
     tuitionData?.funding_advisory as FundingAdvisoryProps | null;
+  const loanDetails: LoanDetailsProps[] = tuitionData?.loan_app_details;
+  const activeLoanApplication = loanDetails?.find((loan) => loan.app_id) || loanDetails?.[0];
 
   const inValidateStatus = () =>
     queryClient.invalidateQueries({ queryKey: querKeys.tuitionStatus });
 
   const { data: mpowerStatus } = useQuery({
     queryKey: querKeys.mpower,
-    queryFn: () => tuitionEndpoints.mpowerStatus(selectedSchool?.id),
-    enabled: !!selectedSchool?.id && tuitionStatus > 6,
+    queryFn: () => tuitionEndpoints.mpowerStatus(activeLoanApplication?.app_id),
+    enabled: !!activeLoanApplication?.app_id && tuitionStatus > 6,
     select: (response) => response?.data?.data as MpowerStatus | null,
   });
+
   const inValidateMpowerStatus = () =>
     queryClient.invalidateQueries({ queryKey: querKeys.mpower });
 
@@ -60,6 +51,8 @@ function useTuition() {
     tuitionStatus,
     creditReview,
     fundingAdvisory,
+    loanDetails,
+    activeLoanApplication,
     isLoading,
     stage: 2,
     queryClient,

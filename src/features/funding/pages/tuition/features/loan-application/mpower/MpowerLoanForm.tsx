@@ -7,10 +7,11 @@ import useTuition from "../../../services/useTuition";
 import tuitionEndpoints from "../../../services/tuitionEndpoints";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import MapFormFields from "../../../../../../../components/inputs/MapFormFields";
+import ContentComponent from "../../../../../../../components/ContentComponent";
 
 const MpowerLoanForm = () => {
   const { schoolAppId, selectedSchool } = useFunding();
-  const { inValidateMpowerStatus } = useTuition();
+  const { invalidate } = useTuition();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,24 +26,26 @@ const MpowerLoanForm = () => {
     mutationFn: tuitionEndpoints.makeMpowerApplication,
     onSuccess: () => {
       toast.success("Application submitted successfully");
-      inValidateMpowerStatus();
+      invalidate("mpower");
     },
   });
 
   return (
-    <form onSubmit={handleSubmit} className="col gap-2">
-      {Object.entries(mpowerFormFields).map(([key, field]) => (
-        <React.Fragment key={key}>
-          <p className="font-bold py-2">{field.label}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
-            <MapFormFields fields={field.fields} />
-          </div>
-        </React.Fragment>
-      ))}
-      <PrimaryBtn className="self-end px-5" type="submit">
-        {uploadMpower.isPending ? "Uploading..." : "Submit"}
-      </PrimaryBtn>
-    </form>
+    <ContentComponent header={"Mpower loan application form"}>
+      <form onSubmit={handleSubmit} className="col gap-2">
+        {Object.entries(mpowerFormFields).map(([key, field]) => (
+          <React.Fragment key={key}>
+            <p className="font-bold py-2">{field.label}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
+              <MapFormFields fields={field.fields} />
+            </div>
+          </React.Fragment>
+        ))}
+        <PrimaryBtn className="self-end px-5" type="submit">
+          {uploadMpower.isPending ? "Uploading..." : "Submit"}
+        </PrimaryBtn>
+      </form>
+    </ContentComponent>
   );
 };
 

@@ -7,9 +7,11 @@ import { useMutation } from "@tanstack/react-query";
 import PickFileButton from "../../../../../components/buttons/PickFileButton";
 import RadioBtns from "../../../../../components/inputs/RadioBtns";
 import tuitionEndpoints from "../services/tuitionEndpoints";
-import axios from "axios";
+import useTuition from "../services/useTuition";
+import { toast } from "react-toastify";
 
 function OtherFundingSources() {
+  const { inValidateStatus } = useTuition();
   const [anyOther, setAnyOther] = useState<"" | "yes" | "no">("");
   const [fundingSource, setFundingSource] = useState<any>("");
   const [file, setFile] = useState<File | null>(null);
@@ -18,11 +20,15 @@ function OtherFundingSources() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     if (anyOther === "no") formData.append("visa_support", "loan");
-    console.log(axios.formToJSON(formData));
-    // handleSubmit.mutate(formData);
+    // console.log(axios.formToJSON(formData));
+    handleSubmit.mutate(formData);
   };
   const handleSubmit = useMutation({
     mutationFn: tuitionEndpoints.uploadFundingOptions,
+    onSuccess: () => {
+      toast.success("Funding options uploaded successfully.");
+      inValidateStatus();
+    },
   });
   return (
     <div className="col gap-2">

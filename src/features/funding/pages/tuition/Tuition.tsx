@@ -1,19 +1,20 @@
 import { FullLoader } from "../../../../components/loaders/Loader";
 import useTuition from "./services/useTuition";
-import SelectSchool from "./components/SelectSchool";
 import CreditReview from "./features/credit-review/CreditReview";
 import LoanApplication from "./features/loan-application/LoanApplication";
 import FundingAdvisory from "./features/funding-advisory/FundingAdvisory";
 import OtherFundingSources from "./components/OtherFundingSources";
 
 function Tuition() {
-  const { tuitionStatus, isLoading } = useTuition();
+  const { tuitionStatus, isLoading, isError, error } = useTuition();
 
-  if (isLoading || !tuitionStatus) return <FullLoader />;
+  if (isLoading) return <FullLoader />;
+  // if (isError)
+  //   return <p>Something went wrong {error?.response?.data?.message}</p>;
 
+  return <LoanApplication />;
   // return <CreditReview />;
   // return <OtherFundingSources />;
-  // return <LoanApplication />;
   // return <FundingAdvisory />;
 
   switch (tuitionStatus) {
@@ -29,12 +30,10 @@ function Tuition() {
       return (
         <>
           <OtherFundingSources />
-          <SelectSchool />
+          {/* <SelectSchool /> */}
         </>
       );
     case 7:
-      return <LoanApplication />;
-    default:
       return <LoanApplication />;
   }
 }

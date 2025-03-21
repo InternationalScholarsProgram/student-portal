@@ -4,72 +4,123 @@ import ContentComponent from "../../../../../../../components/ContentComponent";
 import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import AppliedLoanStatus from "./AppliedLoanStatus";
+import ContactSupport from "../../../../../../../components/ContactSupport";
+import { useQuery } from "@tanstack/react-query";
+import tuitionEndpoints from "../../../services/tuitionEndpoints";
+import { MpowerStatus } from "../../../../../types/fundingTypes";
+import { FullLoader } from "../../../../../../../components/loaders/Loader";
 
 function Mpower() {
-  const { mpowerStatus, activeLoanApplication } = useTuition();
+  const { activeLoanApplication, querKeys } = useTuition();
+  const {
+    data: mpowerStatus,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: querKeys.mpower,
+    queryFn: () => tuitionEndpoints.mpowerStatus(activeLoanApplication?.app_id),
+    enabled: !!activeLoanApplication?.app_id,
+    select: (response) => response?.data?.data as MpowerStatus | null,
+  });
 
-  if (activeLoanApplication?.application_requested === 0)
-    return (
-      <ContentComponent header={"Mpower loan application form"}>
-        <MpowerLoanForm />
-      </ContentComponent>
-    );
-  switch (activeLoanApplication?.status) {
+  if (isLoading) return <FullLoader />;
+  if (isError) return <p>Something went wrong</p>;
+
+  if (!mpowerStatus) return <MpowerLoanForm />;
+
+  if (mpowerStatus?.mpower_started)
+    return <AppliedLoanStatus lead={mpowerStatus?.lead} />;
+
+  switch (mpowerStatus?.status) {
     case 1:
-    case 6:
     case 10:
+      // case 6:
       return (
         <ContentComponent header="Mpower loan application status">
-          <p>Application Pending review</p>
+          <p>
+            Your loan application has been received and is currently awaiting
+            review by our team. You will be notified once it moves to the next
+            stage.
+          </p>
+          <ContactSupport />
         </ContentComponent>
       );
     case 2:
       return (
-        <ContentComponent header="Mpower loan application  is in progress">
+        <ContentComponent header="Mpower loan application is in progress">
           <p>
-            Our team has verified your documents and has started working on the
-            loan application. Please keep cheking here for further action.
+            Your documents have been successfully verified, and your loan
+            application is currently being processed. Please check back here for
+            updates or further instructions.
           </p>
+          <ContactSupport />
         </ContentComponent>
       );
-    case 3:
-    case 9:
+    case 3: //total rejection
       return (
-        <ContentComponent header="Your loan application was rejected">
+        <>
           <p>
-            Kindly take note of the rejection comment below and fix the issue
-            before making another application
+            Unfortunately, your application has been <strong>rejected</strong>.
+            Please review the reason provided below, resolve the issue, and
+            submit a new application.
           </p>
           <p>
-            Remarks : <em> {mpowerStatus?.application.remark}</em>
+            <strong>Remarks:</strong>{" "}
+            <em>{mpowerStatus?.application.remark}</em>
           </p>
-          <form className="col gap-2 p-4">
-            <p>
-              Permanent physical address details (Don't give P.O.Box address)
-            </p>
-            <InputsWithLabel
-              label="Proof of address"
-              inputLabel="Building/Apartment/Suite/Land refrence number*"
-              name="address"
-            />
-
-            <InputsWithLabel
-              inputLabel="Proof of address"
-              type="file"
-              name="file"
-            />
-            <PrimaryBtn type="submit" className="self-end">
-              Upload
-            </PrimaryBtn>
-          </form>
-        </ContentComponent>
+          <p>When you're ready, please complete the form below to reapply.</p>
+          <MpowerLoanForm />
+        </>
       );
-    case 4:
-      return <AppliedLoanStatus />;
+    case 9: //rejected only proof of address
+      return (
+        <>
+          <p>
+            Your application was <b>rejected</b> due to an issue with your proof of
+            address. Please review the comment below and provide a valid
+            physical address and supporting document to continue.
+          </p>
+          <p>
+            <strong>Remarks:</strong>
+            <em>{mpowerStatus?.application.remark}</em>
+          </p>
+          <p className="title-sm my-3">Resubmit your proof of address</p>
+          <ContentComponent className="px-4" header="">
+            <form className="col gap-2 px-4">
+              <div className="alert my-3">
+                <p className="">
+                  <strong>Note:</strong> Ensure you provide your permanent
+                  physical address. PO Box addresses are not accepted.
+                </p>
+              </div>
+              <InputsWithLabel
+                label="Proof of address"
+                inputLabel="Building/Apartment/Suite/Land refrence number*"
+                name="address"
+              />
 
-    default:
-      return <AppliedLoanStatus />;
+              <InputsWithLabel
+                inputLabel="Proof of address"
+                type="file"
+                name="file"
+              />
+              <PrimaryBtn type="submit" className="self-end">
+                Upload
+              </PrimaryBtn>
+            </form>
+          </ContentComponent>
+        </>
+      );
   }
 }
 
 export default Mpower;
+/* 
+Status Code	Meaning	Badge Label	Description
+1	New	badge-info	A freshly submitted application that hasn't been processed yet.
+2 or 4	On Progress	badge-warning	The application is currently being worked on or under review.
+3	Rejected	badge-danger	The application was reviewed but not approved.
+10	Resubmitted (also "New")	badge-success + badge bg-warning	A previously rejected or returned application that has been submitted again.
+completed= "SELECT * FROM `mpower_applicants` WHERE status NOT IN(1,2,3,4)"
+
+*/

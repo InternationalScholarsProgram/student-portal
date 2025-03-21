@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useIsFetching } from "@tanstack/react-query";
 import { Bounce, ToastContainer } from "react-toastify";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import useThemeStore from "./styles/theme.store";
@@ -7,17 +8,23 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { darkTheme, lightTheme } from "./styles/theme";
 import Router from "./router/Router";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+    },
+  },
+});
 
 function AppWrapper() {
-  document.title = "Student Portal";
-
+  
   const { themeMode, setDarkTheme, setLightTheme } = useThemeStore(
     (state) => state
   );
-
+  
   useEffect(() => {
     // To set dark mode for the first time for both tailwind and mui themes
+    document.title = "Student Portal";
     if (themeMode === "dark") setDarkTheme();
     if (themeMode === "light") setLightTheme();
   }, [themeMode, setDarkTheme, setLightTheme]);
@@ -38,6 +45,7 @@ function AppWrapper() {
             pauseOnHover={true}
             transition={Bounce}
           />
+          <GlobalLoadingIndicator />
           <Router />
         </LocalizationProvider>
       </ThemeProvider>
@@ -46,3 +54,11 @@ function AppWrapper() {
 }
 
 export default AppWrapper;
+
+function GlobalLoadingIndicator() {
+  const isFetching = useIsFetching();
+
+  return isFetching ? (
+    <div>Queries are fetching in the background...</div>
+  ) : null;
+}

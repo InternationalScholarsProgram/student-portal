@@ -1,25 +1,26 @@
+import ContactSupport from "../../../../../../../components/ContactSupport";
 import ContentComponent from "../../../../../../../components/ContentComponent";
-import useTuition from "../../../services/useTuition";
+import { MpowerStatus } from "../../../../../types/fundingTypes";
 
-function AppliedLoanStatus() {
-  const { mpowerStatus } = useTuition();
-  console.log(mpowerStatus, "mpowerStatus");
-
+const AppliedLoanStatus: React.FC<{ lead: MpowerStatus["lead"] }> = ({
+  lead,
+}) => {
   return (
     <ContentComponent header="Mpower Loan Status">
       <p>
         Mpower application has been submited to mpower. Status updates will be
         sent here
       </p>
-      {mpowerStatus?.lead?.opportunities.map((school) => (
-        <div className="col p-3">
+      {lead?.opportunities.map((school, index) => (
+        <div key={index} className="col p-3">
           <p>School : {school?.schoolName}</p>
           <p>Loan Eligibility Status : {school?.eligibilityStatus}</p>
           <p>Loan Progress : {school?.borrowerStepProgress}</p>
         </div>
       ))}
+      <ContactSupport />
     </ContentComponent>
   );
-}
+};
 
 export default AppliedLoanStatus;

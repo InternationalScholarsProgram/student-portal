@@ -15,7 +15,7 @@ function CreditReview() {
       <StatusMessages
         stage={creditReview?.status}
         remarks={creditReview?.comment}
-        // stage={3} remarks={"testing"}  FOR TESTING
+        // stage={1} remarks={"testing"}  //FOR TESTING
       />
     </ContentComponent>
   );

@@ -34,7 +34,7 @@ const StatusMessages: React.FC<Props> = ({ stage, remarks }) => {
         <>
           <p>
             Unfortunately, your credit review was{" "}
-            <strong className="">not approved</strong> at this time.
+            <strong className="">not approved</strong>.
           </p>
           <p>
             Please review the reason below and make the necessary adjustments

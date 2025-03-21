@@ -10,6 +10,14 @@ const tuitionUrl = `${url}/tuition_status.php`;
 
 class TuitionEndpoints {
   getStatus = () => api.get(tuitionUrl + "?action=track_status");
+  requestCreditReiew = (
+    data: FormData //data.append('id_doc’, fs.createReadStream('0KIz_b1ag/Test Account_Signed (1).pdf'));
+  ) =>
+    api.post(
+      url + "functions.php?action=request_credit_review’",
+      data,
+      multipart
+    );
 
   uploadFundingOptions = async (payload: FormData) => {
     return await api.post(

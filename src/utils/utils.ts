@@ -117,6 +117,7 @@ type IpData = {
   city: string;
   country_name: string;
 };
+const testEndpoint = "https://ipapi.co/json/";
 
 const fetchIp = async () => {
   try {
@@ -242,6 +243,7 @@ export {
   isValidURL,
   splitDate,
   formatDateAndTime,
+  testEndpoint,
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

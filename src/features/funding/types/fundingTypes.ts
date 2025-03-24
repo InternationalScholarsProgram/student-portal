@@ -35,6 +35,7 @@ type FundingAdvisoryProps = {
   status: number;
   time: string;
   zoom_link: string;
+  dateAndTime: Date | null;
 };
 type LoanDetailsProps = {
   app_id: string;

@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import { CalendlyFundingAdvisory } from "../../../../../../../components/Calendly";
 import ContentComponent from "../../../../../../../components/ContentComponent";
 import ContactSupport from "../../../../../../../components/ContactSupport";
 import SallieApplicationForm from "./SallieApplicationForm";
 import CosignerForm from "./CosignerForm";
+import Modal from "../../../../../../../components/Modal";
+type Props = {
+  status: number | null;
+  remarks?: string;
+};
+export const CosignerStatus: React.FC<Props> = ({ status, remarks }) => {
+  const [open, setOpen] = useState(false);
+  const toggleModal = () => setOpen(!open);
 
-export const CosignerStatus: React.FC<{ status: number }> = ({ status }) => {
+  if (!status) return <CosignerForm />;
+
   switch (status) {
     case 1:
       return (
@@ -21,6 +30,7 @@ export const CosignerStatus: React.FC<{ status: number }> = ({ status }) => {
       );
 
     case 2:
+    case 6:
       return (
         <ContentComponent header="Cosigner requested to submit extra details">
           <p>
@@ -41,7 +51,7 @@ export const CosignerStatus: React.FC<{ status: number }> = ({ status }) => {
             Sorry, the cosigner you submitted was found not elligible to cosign
             for your loan because of the following: <br />
             <span className="text-dark">
-              <strong>$cosigner['remark'];</strong>
+              <strong>{remarks}</strong>
             </span>
             <br />
             Please click **Submit another cosigner** to submit another cosigner
@@ -52,25 +62,38 @@ export const CosignerStatus: React.FC<{ status: number }> = ({ status }) => {
           </p>
           <div className="row justify-end gap-2">
             <CalendlyFundingAdvisory classes="text-btn" />
-            <PrimaryBtn>Submit another cosigner</PrimaryBtn>
+            <PrimaryBtn onClick={toggleModal}>
+              Submit another cosigner
+            </PrimaryBtn>
           </div>
+          <Modal
+            open={open}
+            setOpen={toggleModal}
+            title="Funding Advisory Request"
+          >
+            <div className="modal">
+              <CosignerForm onClose={toggleModal} />
+            </div>
+          </Modal>
         </ContentComponent>
       );
     case 4:
       return (
+        <ContentComponent header="Cosigner approved">
+          <p>
+            Your cosigner has been approved to cosign you a student loan.
+            <br />
+            Please submit your details below in order to proceed with the
+            funding application process.
+          </p>
+        </ContentComponent>
+      );
+    case 5:
+      return (
         <>
-          <ContentComponent header="Cosigner approved">
-            <p>
-              Your cosigner has been approved to cosign you a student loan.
-              Please submit your details below in order to proceed with the
-              funding application process.
-            </p>
-          </ContentComponent>
-          <div className="h-5" />
-          <SallieApplicationForm />
+          <p>Your cosigner has been rejected</p>
+          <CosignerForm />;
         </>
       );
-    default:
-      return <CosignerForm />;
   }
 };

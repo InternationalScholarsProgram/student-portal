@@ -16,18 +16,18 @@ const useFetchUser = () => {
         throw new Error("Failed to fetch user data.");
       }
     },
-    enabled: !!activeStudentId, // Only fetch if studentId exists
+    enabled: !!activeStudentId,
     select: (data) => ({
       ...data,
       country: data?.country?.toLowerCase(),
-    }), // Ensures reference stability
+    }),
   });
-  
+
   return {
     user: data,
     isLoading,
     error,
-    userQueryKey :  ["user", activeStudentId],
+    userQueryKey: ["user", activeStudentId],
   };
 };
 

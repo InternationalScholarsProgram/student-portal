@@ -9,7 +9,7 @@
   @apply dark:bg-test;
 }
 .sidebar {
-  @apply hidden lg:flex lg:min-w-[25vw] xl:min-w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
+  @apply hidden lg:flex lg:min-w-[25vw] xl:min-w-[20vw] h-screen-dvh bg-paper;
 }
 
 .content-container {
@@ -42,7 +42,7 @@
   @apply sidebar-link;
 }
 .portal-sidebar-ul p {
-  @apply text-left text-nowrap;
+  @apply text-left truncate;
 }
 .portal-sidebar-ul a.active-link {
   @apply bg-primary-main/50 text-white hover:text-white;

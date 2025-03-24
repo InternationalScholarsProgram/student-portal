@@ -9,10 +9,10 @@ function Tuition() {
   const { tuitionStatus, isLoading, isError, error } = useTuition();
 
   if (isLoading) return <FullLoader />;
-  // if (isError)
-  //   return <p>Something went wrong {error?.response?.data?.message}</p>;
+  if (isError)
+    return <p>Something went wrong {error?.response?.data?.message}</p>;
 
-  return <LoanApplication />;
+  // return <LoanApplication />;
   // return <CreditReview />;
   // return <OtherFundingSources />;
   // return <FundingAdvisory />;

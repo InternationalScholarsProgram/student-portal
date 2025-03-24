@@ -8,7 +8,7 @@ const RescheduleMeeting: React.FC<{ url: string }> = ({ url }) => {
   return (
     <>
       <button onClick={toggleModal} className="text-btn self-end">
-        Reschedule Meeting
+        Reschedule
       </button>
       <Modal open={open} setOpen={toggleModal} title="Reschedule Meeting">
         <div className="p-3 w-[80vw] md:w-[55vw] xl:w-[45vw] col gap-2">

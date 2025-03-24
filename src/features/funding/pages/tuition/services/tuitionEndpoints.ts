@@ -2,22 +2,17 @@ import api, {
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
-import { fetchIp } from "../../../../../utils/utils";
+import { fetchIp, testEndpoint } from "../../../../../utils/utils";
 
 const url = `${baseDirectory}funding/`;
+const sallieMaeUrl = `${url}salliemae.php`;
 const mpowerUrl = `${baseDirectory}loans/m-power.php?`;
 const tuitionUrl = `${url}/tuition_status.php`;
 
 class TuitionEndpoints {
   getStatus = () => api.get(tuitionUrl + "?action=track_status");
-  requestCreditReiew = (
-    data: FormData //data.append('id_doc’, fs.createReadStream('0KIz_b1ag/Test Account_Signed (1).pdf'));
-  ) =>
-    api.post(
-      url + "functions.php?action=request_credit_review’",
-      data,
-      multipart
-    );
+  requestCreditReiew = () =>
+    api.post(url + "functions.php?action=request_credit_review", multipart);
 
   uploadFundingOptions = async (payload: FormData) => {
     return await api.post(
@@ -42,14 +37,25 @@ class TuitionEndpoints {
       return null;
     }
   };
-  uploadCosigner = async (payload: FormData) => {
-    const apiUrl = `${tuitionUrl}?action=upload_cosigner`;
-    return await api.post(apiUrl, payload, multipart);
+
+  mpowerStatus = (id: string) =>
+    api.get(`${url}mpower_status.php?app_id=${id}`);
+
+  salliemae = (id: string) => api.get(`${sallieMaeUrl}?app_id=${id}`);
+
+  getCosigners = (id: string) =>
+    api.get(`${sallieMaeUrl}?app_id=${id}&action=fetch_cosigner`);
+
+  uploadCosigner = async (params: any) =>
+    api.get(sallieMaeUrl, {
+      params: { ...params, action: "submit_cosigner" },
+    });
+  sallieMaeApplication = async (payload: FormData) => {
+    return await api.post(sallieMaeUrl, payload, multipart);
   };
-  mpowerStatus = async (id: string) => {
-    return api.get(`${url}mpower_status.php?app_id=${id}`);
-  };
-  test = async (params: any) => {
+  
+
+  test = (params: any) => {
     return fetchIp();
   };
 }

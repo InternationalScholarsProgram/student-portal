@@ -57,5 +57,7 @@ interface UserProfile {
   withdrwal_status: string;
   withdwal_balance: string;
 }
+type MyErrorResponse = { message: string; data: any };
+type MyAxiosError = AxiosError<MyErrorResponse>;
 
-export type { CustomButtonProps, ModalProps, UserProfile };
+export type { CustomButtonProps, ModalProps, UserProfile, MyAxiosError };

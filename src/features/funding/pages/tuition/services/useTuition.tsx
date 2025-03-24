@@ -6,14 +6,16 @@ import {
   FundingAdvisoryProps,
   LoanDetailsProps,
 } from "../../../types/fundingTypes";
+type KeyProps = "tuitionStatus" | "mpower" | "sallieMae";
 
 function useTuition() {
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
 
-  const querKeys = {
+  const querKeys: Record<KeyProps, any[]> = {
     tuitionStatus: [user?.email, "tuition", "tuitionStatus"],
     mpower: [user?.email, "tuition", "mpower-status"],
+    sallieMae: [user?.email, "tuition", "sallieMae"],
   };
   const {
     data: tuitionData,
@@ -34,24 +36,18 @@ function useTuition() {
   const fundingAdvisory = tuitionData?.funding_advisory as FundingAdvisoryProps;
 
   const fundingDateAndTime = () => {
-    if (fundingAdvisory?.date) {
-      const date = new Date(fundingAdvisory?.date);
-      const time: any = fundingAdvisory?.time?.split(":");
-      date.setHours(time[0], time[1]);
-      const options: Intl.DateTimeFormatOptions = {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      };
-      return date.toLocaleString("en-US", options);
-    }
+    if (!fundingAdvisory?.date) return null;
+    const date = new Date(fundingAdvisory?.date);
+    const time: any = fundingAdvisory?.time?.split(":");
+    date.setHours(time?.[0], time?.[1]);
+    return date;
   };
 
   const loanDetails: LoanDetailsProps[] = tuitionData?.loan_app_details;
   const activeLoanApplication =
     loanDetails?.find((loan) => loan.app_id) || loanDetails?.[0];
 
-  const invalidate = (key: "tuitionStatus" | "mpower") =>
+  const invalidate = (key: KeyProps) =>
     queryClient.invalidateQueries({ queryKey: querKeys[key] });
 
   const inValidateStatus = () => invalidate("tuitionStatus");
@@ -66,6 +62,7 @@ function useTuition() {
     },
     loanDetails,
     activeLoanApplication,
+    schoolAppId: activeLoanApplication?.app_id,
     isLoading,
     isError,
     error: error as any,

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
-  header: string | ReactNode; // `header` is a required string
+  header: string | ReactNode;
   childrenClassName?: string;
 };
 

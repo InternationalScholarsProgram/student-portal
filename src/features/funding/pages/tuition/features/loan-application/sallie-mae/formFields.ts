@@ -1,5 +1,4 @@
 const generalInformation = [
-  // General Information
   { name: "discover_phone", type: "text", label: "Phone Number" },
   { name: "discover_dob", type: "date", label: "Date of Birth" },
   {
@@ -20,14 +19,12 @@ const generalInformation = [
   },
 ];
 const addressDetails = [
-  // Address Details
   { name: "discover_address", type: "text", label: "Street Address" },
   { name: "discover_suite", type: "text", label: "Apartment, Unit or Suite" },
   { name: "discover_city", type: "text", label: "City, Province" },
   { name: "discover_code", type: "text", label: "Zip Code" },
 ];
 const employmentInformation = [
-  // Employment Information
   {
     name: "discover_emp_status",
     label: "Employment status",
@@ -44,7 +41,6 @@ const employmentInformation = [
 ];
 
 const financial = [
-  // Financial Information
   {
     name: "discover_income",
     label: "Gross annual income (USD)",
@@ -57,7 +53,6 @@ const financial = [
   },
 ];
 const residence = [
-  // Residence Information
   {
     name: "discover_housing",
     type: "select",
@@ -77,8 +72,6 @@ const residence = [
   },
 ];
 const security = [
-  // Security Questions
-
   {
     name: "discover_answer1",
     label: "Name of the city you were born in",
@@ -98,7 +91,6 @@ const security = [
   },
 ];
 const documents = [
-  // Document Uploads
   {
     name: "discover_admletter",
     label: "School Acceptance Letter",

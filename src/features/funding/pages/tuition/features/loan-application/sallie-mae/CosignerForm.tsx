@@ -1,22 +1,28 @@
 import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
 import Select from "../../../../../../../components/inputs/Select";
 import { MenuItem } from "@mui/material";
-import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import ContentComponent from "../../../../../../../components/ContentComponent";
 import { useMutation } from "@tanstack/react-query";
 import tuitionEndpoints from "../../../services/tuitionEndpoints";
 import { toast } from "react-toastify";
+import axios from "axios";
+import FormFooterBtns from "../../../../../../../components/buttons/FormFooterBtns";
+import useTuition from "../../../services/useTuition";
 
-function CosignerForm() {
+const CosignerForm: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
+  const { invalidate, activeLoanApplication } = useTuition();
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    submitCosigner.mutate(formData);
+    formData.append("appId", activeLoanApplication?.app_id);
+    submitCosigner.mutate(axios.formToJSON(formData));
   };
   const submitCosigner = useMutation({
     mutationFn: tuitionEndpoints.uploadCosigner,
     onSuccess: () => {
       toast.success("Cosigner details uploaded successfully.");
+      invalidate("sallieMae");
+      if (onClose) onClose();
     },
   });
   return (
@@ -38,14 +44,14 @@ function CosignerForm() {
           <InputsWithLabel
             inputLabel="Full Names"
             type="text"
-            name="cosigner_name"
+            name="cosignerName"
             placeholder="John"
             required
           />
           <InputsWithLabel
             inputLabel="Email Address"
             type="email"
-            name="cosigner_email"
+            name="cosignerEmail"
             placeholder="Johnsmith@gmail.com"
             required
           />
@@ -53,18 +59,20 @@ function CosignerForm() {
             <label>
               US Citizenship status <span className="text-danger">*</span>
             </label>
-            <Select name="cosigner_citizenship" required>
+            <Select name="usCitizenshipStatus" required>
               <MenuItem value="1">US Permanent Resident</MenuItem>
               <MenuItem value="2">US Citizen</MenuItem>
             </Select>
           </div>
-          <PrimaryBtn className="self-end" type="submit">
-            {submitCosigner.isPending ? "Submitting..." : "Submit"}
-          </PrimaryBtn>
+          <FormFooterBtns
+            closeText="Cancel"
+            onClose={onClose}
+            btnText={submitCosigner.isPending ? "Submitting..." : "Submit"}
+          />
         </form>
       </ContentComponent>
     </div>
   );
-}
+};
 
 export default CosignerForm;

@@ -125,11 +125,11 @@ class AdmissionAPIs {
       letter: file,
       action: "save_transcript_request",
     });
-    
+
     const endpoint = `${baseDirectory}/others/request_transcript_verification.php`;
     const response = await api.post(endpoint, data, multipart);
     if (response?.status === 200) docs.download();
-    return response
+    return response;
     // docs.download();
     // return api.get("https://ipapi.co/json/");
   };
@@ -176,12 +176,11 @@ class AdmissionAPIs {
       return error.response.data;
     }
   };
-  sendSchoolFeedback = async (payload: any) => {
+  sendSchoolFeedback = async (payload: FormData) => {
     try {
-      const formData = json2formData(payload);
       const response = await api.post(
         `${url}/school_app_feedback.php`,
-        formData
+        payload
       );
       const data = response.data;
       if (data.code === 200) toast.success(data?.message);

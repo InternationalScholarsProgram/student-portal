@@ -1,20 +1,27 @@
 import SchoolHeader from "../../components/SchoolHeader";
 import useTuition from "../../services/useTuition";
+import SubsequentMeeting from "../funding-advisory/SubsequentMeeting";
 import Mpower from "./mpower/Mpower";
 import SallieMae from "./sallie-mae/SallieMae";
 
 function LoanApplication() {
   const { activeLoanApplication } = useTuition();
-  if (!activeLoanApplication) return <>An error occured</>;
+  const funding = activeLoanApplication?.funding;
+  // if (!activeLoanApplication) return <>An error occured</>;
 
   return (
-    <div className="">
+    <div className="col gap-2">
+      <SubsequentMeeting />
       <SchoolHeader
         schoolName={activeLoanApplication?.school}
         program={activeLoanApplication?.program}
       />
-      <div className="h-2" />
-      {activeLoanApplication?.funding === "MPOWER" ? <Mpower /> : <SallieMae />}
+      {/* <div className="h-2" /> */}
+      {funding === "MPOWER" ? (
+        <Mpower />
+      ) : (
+        funding === "Sallie" && <SallieMae />
+      )}
     </div>
   );
 }

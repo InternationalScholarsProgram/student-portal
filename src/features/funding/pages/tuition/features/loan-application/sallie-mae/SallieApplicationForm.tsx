@@ -9,23 +9,22 @@ import MapFormFields from "../../../../../../../components/inputs/MapFormFields"
 import sallieFormFields from "./formFields";
 
 const SallieApplicationForm = () => {
-  const { schoolAppId, selectedSchool } = useFunding();
-  const { inValidateMpowerStatus } = useTuition();
+  const {schoolAppId, invalidate, activeLoanApplication } = useTuition();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("mpower_school", selectedSchool?.school_name);
-    formData.append("mpower_program", selectedSchool?.program_name);
+    formData.append("mpower_school", activeLoanApplication?.school);
+    formData.append("mpower_program", activeLoanApplication?.program);
     formData.append("app_id", schoolAppId);
     submitApplication.mutate(formData);
   };
 
   const submitApplication = useMutation({
-    mutationFn: tuitionEndpoints.makeMpowerApplication,
+    mutationFn: tuitionEndpoints.sallieMaeApplication,
     onSuccess: () => {
       toast.success("Application submitted successfully");
-      inValidateMpowerStatus();
+      invalidate("sallieMae");
     },
   });
 

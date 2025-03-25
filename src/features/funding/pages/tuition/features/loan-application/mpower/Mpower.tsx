@@ -1,14 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
 import useTuition from "../../../services/useTuition";
 import MpowerLoanForm from "./MpowerLoanForm";
-import ContentComponent from "../../../../../../../components/ContentComponent";
-import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
-import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
-import AppliedLoanStatus from "./AppliedLoanStatus";
-import ContactSupport from "../../../../../../../components/ContactSupport";
-import { useQuery } from "@tanstack/react-query";
 import tuitionEndpoints from "../../../services/tuitionEndpoints";
 import { MpowerStatus } from "../../../../../types/fundingTypes";
 import { FullLoader } from "../../../../../../../components/loaders/Loader";
+import LoanLenderStatus from "../components/LoanLenderStatus";
+import LeadStatus from "./LeadStatus";
 
 function Mpower() {
   const { activeLoanApplication, querKeys } = useTuition();
@@ -29,89 +26,17 @@ function Mpower() {
   if (!mpowerStatus) return <MpowerLoanForm />;
 
   if (mpowerStatus?.mpower_started)
-    return <AppliedLoanStatus lead={mpowerStatus?.lead} />;
+    return <LeadStatus lead={mpowerStatus?.lead} />;
 
-  switch (mpowerStatus?.status) {
-    case 1:
-    case 10:
-      // case 6:
-      return (
-        <ContentComponent header="Mpower loan application status">
-          <p>
-            Your loan application has been received and is currently awaiting
-            review by our team. You will be notified once it moves to the next
-            stage.
-          </p>
-          <ContactSupport />
-        </ContentComponent>
-      );
-    case 2:
-      return (
-        <ContentComponent header="Mpower loan application is in progress">
-          <p>
-            Your documents have been successfully verified, and your loan
-            application is currently being processed. Please check back here for
-            updates or further instructions.
-          </p>
-          <ContactSupport />
-        </ContentComponent>
-      );
-    case 3: //total rejection
-      return (
-        <>
-          <p>
-            Unfortunately, your application has been <strong>rejected</strong>.
-            Please review the reason provided below, resolve the issue, and
-            submit a new application.
-          </p>
-          <p>
-            <strong>Remarks:</strong>{" "}
-            <em>{mpowerStatus?.application.remark}</em>
-          </p>
-          <p>When you're ready, please complete the form below to reapply.</p>
-          <MpowerLoanForm />
-        </>
-      );
-    case 9: //rejected only proof of address
-      return (
-        <>
-          <p>
-            Your application was <b>rejected</b> due to an issue with your proof of
-            address. Please review the comment below and provide a valid
-            physical address and supporting document to continue.
-          </p>
-          <p>
-            <strong>Remarks:</strong>
-            <em>{mpowerStatus?.application.remark}</em>
-          </p>
-          <p className="title-sm my-3">Resubmit your proof of address</p>
-          <ContentComponent className="px-4" header="">
-            <form className="col gap-2 px-4">
-              <div className="alert my-3">
-                <p className="">
-                  <strong>Note:</strong> Ensure you provide your permanent
-                  physical address. PO Box addresses are not accepted.
-                </p>
-              </div>
-              <InputsWithLabel
-                label="Proof of address"
-                inputLabel="Building/Apartment/Suite/Land refrence number*"
-                name="address"
-              />
-
-              <InputsWithLabel
-                inputLabel="Proof of address"
-                type="file"
-                name="file"
-              />
-              <PrimaryBtn type="submit" className="self-end">
-                Upload
-              </PrimaryBtn>
-            </form>
-          </ContentComponent>
-        </>
-      );
-  }
+  return (
+    <LoanLenderStatus
+    // loanStatus={3}
+      loanStatus={mpowerStatus?.status}
+      loanProvider="Mpower"
+      loanForm={<MpowerLoanForm />}
+      remarks={mpowerStatus?.application.remark}
+    />
+  );
 }
 
 export default Mpower;
@@ -123,4 +48,85 @@ Status Code	Meaning	Badge Label	Description
 10	Resubmitted (also "New")	badge-success + badge bg-warning	A previously rejected or returned application that has been submitted again.
 completed= "SELECT * FROM `mpower_applicants` WHERE status NOT IN(1,2,3,4)"
 
+switch (mpowerStatus?.status) {
+  case 1:
+  case 10:
+    // case 6:
+    return (
+      <ContentComponent header="Mpower loan application status">
+        <p>
+          Your loan application has been received and is currently awaiting
+          review by our team. You will be notified once it moves to the next
+          stage.
+        </p>
+        <ContactSupport />
+      </ContentComponent>
+    );
+  case 2:
+    return (
+      <ContentComponent header="Mpower loan application is in progress">
+        <p>
+          Your documents have been successfully verified, and your loan
+          application is currently being processed. Please check back here for
+          updates or further instructions.
+        </p>
+        <ContactSupport />
+      </ContentComponent>
+    );
+  case 3: //total rejection
+    return (
+      <>
+        <p>
+          Unfortunately, your application has been <strong>rejected</strong>.
+          Please review the reason provided below, resolve the issue, and
+          submit a new application.
+        </p>
+        <p>
+          <strong>Remarks:</strong>{" "}
+          <em>{mpowerStatus?.application.remark}</em>
+        </p>
+        <p>When you're ready, please complete the form below to reapply.</p>
+        <MpowerLoanForm />
+      </>
+    );
+  case 9: //rejected only proof of address
+    return (
+      <>
+        <p>
+          Your application was <b>rejected</b> due to an issue with your proof of
+          address. Please review the comment below and provide a valid
+          physical address and supporting document to continue.
+        </p>
+        <p>
+          <strong>Remarks:</strong>
+          <em>{mpowerStatus?.application.remark}</em>
+        </p>
+        <p className="title-sm my-3">Resubmit your proof of address</p>
+        <ContentComponent className="px-4" header="">
+          <form className="col gap-2 px-4">
+            <div className="alert my-3">
+              <p className="">
+                <strong>Note:</strong> Ensure you provide your permanent
+                physical address. PO Box addresses are not accepted.
+              </p>
+            </div>
+            <InputsWithLabel
+              label="Proof of address"
+              inputLabel="Building/Apartment/Suite/Land refrence number*"
+              name="address"
+            />
+
+            <InputsWithLabel
+              inputLabel="Proof of address"
+              type="file"
+              name="file"
+            />
+            <PrimaryBtn type="submit" className="self-end">
+              Upload
+            </PrimaryBtn>
+          </form>
+        </ContentComponent>
+      </>
+    );
+}
 */

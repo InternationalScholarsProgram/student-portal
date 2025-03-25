@@ -6,7 +6,7 @@ import {
   FundingAdvisoryProps,
   LoanDetailsProps,
 } from "../../../types/fundingTypes";
-type KeyProps = "tuitionStatus" | "mpower" | "sallieMae";
+type KeyProps = "tuitionStatus" | "mpower" | "sallieMaeCosigner" | "sallieMaeApplication";
 
 function useTuition() {
   const { user } = useFetchUser();
@@ -15,7 +15,8 @@ function useTuition() {
   const querKeys: Record<KeyProps, any[]> = {
     tuitionStatus: [user?.email, "tuition", "tuitionStatus"],
     mpower: [user?.email, "tuition", "mpower-status"],
-    sallieMae: [user?.email, "tuition", "sallieMae"],
+    sallieMaeCosigner: [user?.email, "tuition", "sallieMae-cosigner"],
+    sallieMaeApplication: [user?.email, "tuition", "sallieMae-cosigner"],
   };
   const {
     data: tuitionData,

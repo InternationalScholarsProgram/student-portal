@@ -51,9 +51,12 @@ class TuitionEndpoints {
       params: { ...params, action: "submit_cosigner" },
     });
   sallieMaeApplication = async (payload: FormData) => {
-    return await api.post(sallieMaeUrl, payload, multipart);
+    return await api.post(
+      sallieMaeUrl + "?action=submit_application",
+      payload,
+      multipart
+    );
   };
-  
 
   test = (params: any) => {
     return fetchIp();

@@ -21,7 +21,7 @@ const CosignerForm: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
     mutationFn: tuitionEndpoints.uploadCosigner,
     onSuccess: () => {
       toast.success("Cosigner details uploaded successfully.");
-      invalidate("sallieMae");
+      invalidate("sallieMaeCosigner");
       if (onClose) onClose();
     },
   });

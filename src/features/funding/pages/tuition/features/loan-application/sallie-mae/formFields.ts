@@ -1,8 +1,12 @@
 const generalInformation = [
-  { name: "discover_phone", type: "text", label: "Phone Number" },
-  { name: "discover_dob", type: "date", label: "Date of Birth" },
   {
-    name: "discover_citizenship",
+    type: "text",
+    label: "Phone Number",
+    name: "phone_number",
+  },
+  { type: "date", label: "Date of Birth", name: "dob" },
+  {
+    name: "citizenship",
     type: "select",
     label: "Citizenship Status",
     options: [
@@ -13,20 +17,28 @@ const generalInformation = [
     ],
   },
   {
-    name: "discover_egd",
+    name: "grad_date",
     type: "date",
     label: "Expected graduation date (estimate is okay)  ",
   },
 ];
 const addressDetails = [
-  { name: "discover_address", type: "text", label: "Street Address" },
-  { name: "discover_suite", type: "text", label: "Apartment, Unit or Suite" },
-  { name: "discover_city", type: "text", label: "City, Province" },
-  { name: "discover_code", type: "text", label: "Zip Code" },
+  {
+    type: "text",
+    label: "Street Address",
+    name: "address",
+  },
+  {
+    type: "text",
+    label: "Apartment, Unit or Suite",
+    name: "apartment",
+  },
+  { type: "text", label: "City, Province", name: "city" },
+  { type: "text", label: "Zip Code", name: "zip_code" },
 ];
 const employmentInformation = [
   {
-    name: "discover_emp_status",
+    name: "employment",
     label: "Employment status",
     type: "select",
     options: [
@@ -37,24 +49,28 @@ const employmentInformation = [
       { value: "4", label: "Unemployed" },
     ],
   },
-  { name: "discover_occupation", label: "Occupation", type: "text" },
+  {
+    label: "Occupation",
+    type: "text",
+    name: "occupation",
+  },
 ];
 
 const financial = [
   {
-    name: "discover_income",
     label: "Gross annual income (USD)",
     type: "number",
+    name: "annual_income",
   },
   {
-    name: "discover_household",
     label: "Additional income (USD)",
     type: "number",
+    name: "additional_income",
   },
 ];
 const residence = [
   {
-    name: "discover_housing",
+    name: "housing_status",
     type: "select",
     label: "Residence type",
     options: [
@@ -66,37 +82,42 @@ const residence = [
     ],
   },
   {
-    name: "discover_rent",
     label: "Housing rent/mortgage, if renting (USD)",
     type: "number",
+    name: "house_rent",
   },
 ];
 const security = [
   {
-    name: "discover_answer1",
     label: "Name of the city you were born in",
     type: "text",
+    name: "answer_one",
   },
 
   {
-    name: "discover_answer2",
     label: "First Company you have worked for",
     type: "text",
+    name: "answer_two",
   },
 
   {
-    name: "discover_answer3",
     label: "Name of the last school attended",
     type: "text",
+    name: "answer_three",
   },
 ];
+
 const documents = [
   {
-    name: "discover_admletter",
-    label: "School Acceptance Letter",
-    type: "file",
+    label: "Any other document description e.g essay",
+    type: "text",
+    name: "file_description",
   },
-  { name: "discover_resume", label: "Resume", type: "file" },
+  {
+    label: "",
+    type: "file",
+    name: "extra_file",
+  },
 ];
 
 const sallieFormFields = {

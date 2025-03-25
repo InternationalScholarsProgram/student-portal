@@ -1,5 +1,6 @@
 "use client";
-
+import React from "react";
+import ErrorElement from "./ErrorElement";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
 function fallbackRender({ error, resetErrorBoundary }: any) {
@@ -15,14 +16,13 @@ function fallbackRender({ error, resetErrorBoundary }: any) {
     </div>
   );
 }
-import React from "react";
+
 
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
     <ReactErrorBoundary
-      fallbackRender={fallbackRender}
+      fallbackRender={ErrorElement}
       onReset={(details) => {
-        
         // Reset the state of your app so the error doesn't happen again
       }}
     >

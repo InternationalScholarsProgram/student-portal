@@ -225,8 +225,16 @@ function isValidURL(str: string) {
     return false; // If an error occurs, return false (invalid URL)
   }
 }
+const wordCounter = (count: number) => {
+  if (count === 1) return "one";
+  if (count === 2) return "two";
+  if (count === 3) return "three";
+  if (count === 4) return "four";
+  if (count === 5) return "five";
+};
 
 export {
+  wordCounter,
   capitalize,
   formatCurrency,
   contacts,

@@ -2,9 +2,7 @@ import ContactSupport from "../../../../../../../components/ContactSupport";
 import ContentComponent from "../../../../../../../components/ContentComponent";
 import { MpowerStatus } from "../../../../../types/fundingTypes";
 
-const AppliedLoanStatus: React.FC<{ lead: MpowerStatus["lead"] }> = ({
-  lead,
-}) => {
+const LeadStatus: React.FC<{ lead: MpowerStatus["lead"] }> = ({ lead }) => {
   return (
     <ContentComponent header="Mpower Loan Status">
       <p>
@@ -23,4 +21,4 @@ const AppliedLoanStatus: React.FC<{ lead: MpowerStatus["lead"] }> = ({
   );
 };
 
-export default AppliedLoanStatus;
+export default LeadStatus;

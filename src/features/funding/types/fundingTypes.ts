@@ -41,10 +41,12 @@ type LoanDetailsProps = {
   app_id: string;
   school: string;
   program : string;
+  application_details: any;
   application_requested: number;
   funding: "MPOWER" | "Sallie";
   loan_app_feedback: null | any[];
-  status: number | null;
+  status: number| null;
+  remark: string | null;
 };
 
 export type {

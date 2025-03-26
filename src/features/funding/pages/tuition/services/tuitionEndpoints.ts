@@ -26,20 +26,8 @@ class TuitionEndpoints {
     const apiUrl = `${mpowerUrl}action=application_request`;
     return await api.post(apiUrl, payload, multipart);
   };
-
-  trackMpowerLead = async () => {
-    try {
-      const apiUrl = `${baseDirectory}loans/m-power.php?action=track_lead`;
-      const response = await api.post(apiUrl);
-      return response?.data?.message?.data;
-    } catch (error: any) {
-      console.error("Error tracking Mpower lead:", error?.response?.data);
-      return null;
-    }
-  };
-
-  mpowerStatus = (id: string) =>
-    api.get(`${url}mpower_status.php?app_id=${id}`);
+  trackMpowerLead = () =>
+    api.post(`${baseDirectory}loans/m-power.php?action=track_lead`);
 
   salliemae = (id: string) => api.get(`${sallieMaeUrl}?app_id=${id}`);
 

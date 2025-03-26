@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import useTuition from "../../../services/useTuition";
@@ -7,6 +7,7 @@ import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import MapFormFields from "../../../../../../../components/inputs/MapFormFields";
 import sallieFormFields from "./formFields";
 import { wordCounter } from "../../../../../../../utils/utils";
+import FileWithDescription from "../../../../../../../components/inputs/FileWithDescription";
 
 const SallieApplicationForm: React.FC = () => {
   const { schoolAppId, invalidate, activeLoanApplication } = useTuition();
@@ -18,16 +19,6 @@ const SallieApplicationForm: React.FC = () => {
     sallieFormFields.security.fields.forEach((field, index) => {
       formData.append(`quiz_${wordCounter(index + 1)}`, field.label);
     });
-
-    const fileDesc = formData.get("file_description");
-    const extraFile = formData.get("extra_file");
-    if (!fileDesc) {
-      formData.delete("file_description");
-      formData.delete("extra_file");
-    } else if (!extraFile) {
-      alert("Please upload a file");
-      return;
-    }
     submitApplication.mutate(formData);
   };
 
@@ -39,22 +30,33 @@ const SallieApplicationForm: React.FC = () => {
     },
   });
 
+  const convert = (fields: any) =>
+    fields.map((field: any) => ({
+      ...field,
+      value: activeLoanApplication.application_details?.[field.name],
+    }));
+
   return (
     <form onSubmit={handleSubmit} className="col gap-2">
-      {Object.entries(sallieFormFields).map(([key, field]) => {
-        const fields = convert(
-          field.fields,
-          activeLoanApplication.application_details
-        );
-        return (
-          <React.Fragment key={key}>
-            <p className="font-bold py-2">{field.label}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
-              <MapFormFields fields={fields} />
-            </div>
-          </React.Fragment>
-        );
-      })}
+      {Object.entries(sallieFormFields).map(([key, field]) => (
+        <React.Fragment key={key}>
+          <p className="font-bold py-2">{field.label}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
+            <MapFormFields fields={convert(field.fields)} />
+          </div>
+        </React.Fragment>
+      ))}
+      <div>
+        <p className="font-bold py-2">Document Uploads</p>
+        <FileWithDescription
+          document={{ inputLabel: "Attach file", name: "extra_file" }}
+          description={{
+            inputLabel: "Any other document description e.g essay",
+            name: "file_description",
+          }}
+        />
+      </div>
+
       <PrimaryBtn className="self-end px-5" type="submit">
         {submitApplication.isPending ? "Uploading..." : "Submit"}
       </PrimaryBtn>
@@ -63,9 +65,3 @@ const SallieApplicationForm: React.FC = () => {
 };
 
 export default SallieApplicationForm;
-const convert = (fields: any, values: any) => {
-  return fields.map((field: any) => ({
-    ...field,
-    value: values?.[field.name],
-  }));
-};

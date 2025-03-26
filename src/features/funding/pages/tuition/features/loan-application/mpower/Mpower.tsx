@@ -1,40 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
 import useTuition from "../../../services/useTuition";
 import MpowerLoanForm from "./MpowerLoanForm";
-import tuitionEndpoints from "../../../services/tuitionEndpoints";
-import { MpowerStatus } from "../../../../../types/fundingTypes";
-import { FullLoader } from "../../../../../../../components/loaders/Loader";
 import LoanLenderStatus from "../components/LoanLenderStatus";
 import LeadStatus from "./LeadStatus";
+import { useEffect } from "react";
 
 function Mpower() {
-  const { activeLoanApplication, querKeys } = useTuition();
-  const {
-    data: mpowerStatus,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: querKeys.mpower,
-    queryFn: () => tuitionEndpoints.mpowerStatus(activeLoanApplication?.app_id),
-    enabled: !!activeLoanApplication?.app_id,
-    select: (response) => response?.data?.data as MpowerStatus | null,
-  });
+  const { activeLoanApplication } = useTuition();
+  const loanStatus = activeLoanApplication?.application_details?.status || 0;
 
-  if (isLoading) return <FullLoader />;
-  if (isError) return <p>Something went wrong</p>;
+  useEffect(() => {
+    console.log(activeLoanApplication);
+    
+  }, [loanStatus]);
 
-  if (!mpowerStatus) return <MpowerLoanForm />;
-
-  if (mpowerStatus?.mpower_started)
-    return <LeadStatus lead={mpowerStatus?.lead} />;
-
+  if (!activeLoanApplication?.application_requested) return <MpowerLoanForm />;
+  if (loanStatus === 4) return <LeadStatus />;
   return (
     <LoanLenderStatus
-    // loanStatus={3}
-      loanStatus={mpowerStatus?.status}
+      // loanStatus={3}
+      loanStatus={loanStatus}
       loanProvider="Mpower"
       loanForm={<MpowerLoanForm />}
-      remarks={mpowerStatus?.application.remark}
+      remarks={activeLoanApplication?.application_details?.remark}
     />
   );
 }

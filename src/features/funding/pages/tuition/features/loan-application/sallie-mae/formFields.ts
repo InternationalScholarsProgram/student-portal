@@ -107,18 +107,18 @@ const security = [
   },
 ];
 
-const documents = [
-  {
-    label: "Any other document description e.g essay",
-    type: "text",
-    name: "file_description",
-  },
-  {
-    label: "",
-    type: "file",
-    name: "extra_file",
-  },
-];
+// const documents = [
+//   {
+//     label: "Any other document description e.g essay",
+//     type: "text",
+//     name: "file_description",
+//   },
+//   {
+//     label: "",
+//     type: "file",
+//     name: "extra_file",
+//   },
+// ];
 
 const sallieFormFields = {
   generalInformation: {
@@ -133,7 +133,7 @@ const sallieFormFields = {
   financial: { label: "Financial Information", fields: financial },
   residence: { label: "Residence Information", fields: residence },
   security: { label: "Security Questions", fields: security },
-  documents: { label: "Document Uploads", fields: documents },
+  // documents: { label: "Document Uploads", fields: documents },
 };
 
 export default sallieFormFields;

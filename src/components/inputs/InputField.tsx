@@ -73,3 +73,4 @@ export const InputsWithLabel = ({
 );
 
 export default InputField;
+export type { InputsWithLabelProps };

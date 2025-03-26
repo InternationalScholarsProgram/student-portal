@@ -1,6 +1,6 @@
 const programDetails = [
   {
-    name: "mpower_degreeType",
+    name: "degree_type",
     label: "Type of degree",
     type: "select",
     required: true,
@@ -18,19 +18,19 @@ const programDetails = [
     ],
   },
   {
-    name: "mpower_egd",
+    name: "grad_date",
     label: "Expected graduation date (estimate is okay) ",
     type: "date",
     required: true,
   },
   {
-    name: "mpower_startDate",
+  name: "start_date",
     label: "Expected program start date",
     type: "date",
     required: true,
   },
   {
-    name: "mpower_progType",
+    name: "prog_type",
     label: "Program type",
     type: "select",
     required: true,
@@ -41,9 +41,8 @@ const personalDetails = [
   {
     name: "citizenship",
     label: "Country of citizenship",
-    type: "select",
+    type: "country",
     required: true,
-    options: ["Kenya"],
   },
   {
     name: "salutation",
@@ -53,25 +52,25 @@ const personalDetails = [
     options: ["Mr", "Mrs", "Ms", "Other"],
   },
   {
-    name: "mpower_phone",
+    name: "phone_number",
     label: "Phone Number",
     type: "text",
     required: true,
     placeholder: "+254 714129852",
   },
-  { name: "mpower_dob", label: "Date of birth", type: "date", required: true },
+  { name: "dob", label: "Date of birth", type: "date", required: true },
 ];
 const addressDetails = [
   {
-    name: "mpower_address",
+    name: "address",
     label: "Building/Apartment/Suite/Land reference number",
     type: "text",
     required: true,
   },
-  { name: "mpower_city", label: "City/Town", type: "text", required: true },
-  { name: "mpower_country", label: "Country", type: "text", required: true },
+  { name: "city", label: "City/Town", type: "text", required: true },
+  { name: "country", label: "Country", type: "country", required: true },
   {
-    name: "mpower_region",
+    name: "state",
     label: "State/Region/County",
     type: "text",
     required: true,
@@ -79,21 +78,21 @@ const addressDetails = [
 ];
 const backgroundDetails = [
   {
-    name: "mpower_visa",
+    name: "visa_status",
     label: "Do you already have a visa?",
     type: "select",
     required: true,
     options: ["Yes", "No"],
   },
   {
-    name: "mpower_tests",
+    name: "tests",
     label: "Have you taken any tests (you can type multiple)",
     placeholder: "e.g GRE, GMAT, Duolingo, etc.",
     type: "text",
     required: true,
   },
   {
-    name: "us_school",
+    name: "studied_in_usa",
     label: "Have you studied or received a degree from another US school",
     type: "select",
     required: true,
@@ -115,7 +114,7 @@ const backgroundDetails = [
 ];
 const employmentHistory = [
   {
-    name: "mpower_employment",
+    name: "employment",
     label: "Employment history",
     type: "select",
     required: true,
@@ -126,13 +125,13 @@ const employmentHistory = [
     ],
   },
   {
-    name: "mpower_experience",
+    name: "work_years",
     label: "Years of work experience",
     type: "number",
     required: true,
   },
   {
-    name: "mpower_usExperience",
+    name: "work_years_usa",
     label: "Years of work experience in the USA",
     type: "number",
     required: true,
@@ -140,13 +139,13 @@ const employmentHistory = [
 ];
 const employmentDetails = [
   {
-    name: "mpower_recent",
+    name: "recent_job",
     label: "Recent job occupation",
     type: "text",
     required: true,
   },
   {
-    name: "mpower_employer",
+    name: "recent_employer",
     label: "Name of employer",
     type: "text",
     required: true,
@@ -158,20 +157,20 @@ const employmentDetails = [
     required: true,
   },
   {
-    name: "mpower_workPeriod",
+    name: "recent_job_duration",
     label: "Length of employment",
     type: "text",
     required: true,
   },
   {
-    name: "employment_type",
+    name: "recent_job_type",
     label: "Type of employment",
     type: "select",
     required: true,
     options: ["Full-time", "Part-time"],
   },
   {
-    name: "mpower_future",
+    name: "future_offer",
     label: "Do you have a future job offer",
     type: "select",
     required: true,
@@ -184,13 +183,13 @@ const employmentDetails = [
 ];
 const financialDetails = [
   {
-    name: "mpower_income",
+    name: "annual_income",
     label: "Annual income (USD)",
     type: "number",
     required: true,
   },
   {
-    name: "mpower_sponsorship",
+    name: "sponsorship",
     label: "Do you have any sponsorship funding? (USD)",
     type: "number",
     required: true,
@@ -198,12 +197,6 @@ const financialDetails = [
 ];
 
 const documents = [
-  {
-    name: "mpower_admletter",
-    label: "Admission Letter",
-    type: "file",
-    required: true,
-  },
   {
     name: "address_proof",
     label: "Proof of home address",

@@ -40,12 +40,16 @@ type FundingAdvisoryProps = {
 type LoanDetailsProps = {
   app_id: string;
   school: string;
-  program : string;
-  application_details: any;
+  program: string;
+  application_details: {
+    status: number | null;
+    remark: string | null;
+    [key: string]: any;
+  };
   application_requested: number;
   funding: "MPOWER" | "Sallie";
   loan_app_feedback: null | any[];
-  status: number| null;
+
   remark: string | null;
 };
 

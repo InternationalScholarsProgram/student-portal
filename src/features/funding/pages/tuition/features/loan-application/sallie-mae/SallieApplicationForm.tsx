@@ -28,6 +28,13 @@ const SallieApplicationForm: React.FC = () => {
       toast.success("Application submitted successfully");
       invalidate("tuitionStatus");
     },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data.message +
+          JSON.stringify(error?.response?.data.data) ||
+          "An unexpected error occurred."
+      );
+    },
   });
 
   const convert = (fields: any) =>

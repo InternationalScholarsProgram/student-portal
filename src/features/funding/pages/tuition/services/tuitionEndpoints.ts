@@ -2,11 +2,11 @@ import api, {
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
-import { fetchIp, testEndpoint } from "../../../../../utils/utils";
+import { fetchIp } from "../../../../../utils/utils";
 
 const url = `${baseDirectory}funding/`;
 const sallieMaeUrl = `${url}salliemae.php`;
-const mpowerUrl = `${baseDirectory}loans/m-power.php?`;
+const mpowerUrl = `${url}m-power.php`;
 const tuitionUrl = `${url}/tuition_status.php`;
 
 class TuitionEndpoints {
@@ -23,11 +23,10 @@ class TuitionEndpoints {
   };
 
   makeMpowerApplication = async (payload: FormData) => {
-    const apiUrl = `${mpowerUrl}action=application_request`;
+    const apiUrl = `${mpowerUrl}?action=application_request`;
     return await api.post(apiUrl, payload, multipart);
   };
-  trackMpowerLead = () =>
-    api.post(`${baseDirectory}loans/m-power.php?action=track_lead`);
+  trackMpowerLead = () => api.post(`${mpowerUrl}?action=track_lead`);
 
   salliemae = (id: string) => api.get(`${sallieMaeUrl}?app_id=${id}`);
 
@@ -45,6 +44,8 @@ class TuitionEndpoints {
       multipart
     );
   };
+  loanFeedback = (payload: FormData) =>
+    api.post(`${url}/loan_app_feedback.php`, payload, multipart);
 
   test = (params: any) => {
     return fetchIp();

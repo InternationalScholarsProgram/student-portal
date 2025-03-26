@@ -2,16 +2,10 @@ import useTuition from "../../../services/useTuition";
 import MpowerLoanForm from "./MpowerLoanForm";
 import LoanLenderStatus from "../components/LoanLenderStatus";
 import LeadStatus from "./LeadStatus";
-import { useEffect } from "react";
 
 function Mpower() {
   const { activeLoanApplication } = useTuition();
   const loanStatus = activeLoanApplication?.application_details?.status || 0;
-
-  useEffect(() => {
-    console.log(activeLoanApplication);
-    
-  }, [loanStatus]);
 
   if (!activeLoanApplication?.application_requested) return <MpowerLoanForm />;
   if (loanStatus === 4) return <LeadStatus />;
@@ -21,7 +15,7 @@ function Mpower() {
       loanStatus={loanStatus}
       loanProvider="Mpower"
       loanForm={<MpowerLoanForm />}
-      remarks={activeLoanApplication?.application_details?.remark}
+      remarks={activeLoanApplication?.application_details?.remark || ""}
     />
   );
 }

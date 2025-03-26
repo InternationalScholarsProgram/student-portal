@@ -27,6 +27,9 @@ const convertStatus = (_status: number) => {
   } else if (_status === 4) {
     status.label = "approved";
     status.value = 6;
+  } else if (_status === 6) {
+    status.label = "approved";
+    status.value = 6;
   }
   return status;
 };
@@ -115,6 +118,13 @@ const LoanLenderStatus: React.FC<Props> = ({
             </form>
           </ContentComponent>
         </>
+      );
+    case 6:
+      return (
+        <ContentComponent header={`${loanProvider} loan application status`}>
+          <p>Loan approved</p>
+          <ContactSupport />
+        </ContentComponent>
       );
   }
 };

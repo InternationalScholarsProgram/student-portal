@@ -7,60 +7,81 @@ import { useMutation } from "@tanstack/react-query";
 import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
 import LoanPortal from "./LoanPortal";
 import { formatCurrency } from "../../../../../../../utils/utils";
-type Props = {
-  schoolDetails: string;
-  lender: string;
-  amount: number;
-};
+import useTuition from "../../../services/useTuition";
+import dayjs from "dayjs";
+import tuitionEndpoints from "../../../services/tuitionEndpoints";
+import { toast } from "react-toastify";
+import axios from "axios";
+import ContentComponent from "../../../../../../../components/ContentComponent";
 
-const LoanDesicionFeedback: React.FC<Props> = ({
-  schoolDetails,
-  lender,
-  amount,
-}) => {
+const LoanDesicionFeedback = () => {
+  const { activeLoanApplication, schoolAppId, inValidateStatus } = useTuition();
   const [gotFeedback, setGotFeedback] = useState("no");
-  const [feedback, setFeedback] = useState<any>();
+  const [loanStatus, setLoanStatus] = useState<any>(null);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setFeedback("no");
-    setGotFeedback("no");
-  }, [open]);
 
   const toggleModal = () => setOpen(!open);
 
   const onsubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleFeedback.mutate(feedback);
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.append("app_id", schoolAppId);
+    formData.append("loan_id", activeLoanApplication?.application_details?.id);
+    formData.append("lender", activeLoanApplication?.funding);
+    formData.append("school", activeLoanApplication?.school);
+    formData.append(
+      "loan_applied",
+      activeLoanApplication?.application_details?.loan_amount
+    );
+    console.log(axios.formToJSON(formData));
+
+    handleFeedback.mutate(formData);
   };
 
   const handleFeedback = useMutation({
-    mutationFn: () => new Promise((resolve) => setTimeout(resolve, 1000)),
+    mutationFn: tuitionEndpoints.loanFeedback,
+    onSuccess: (data) => {
+      toggleModal();
+      inValidateStatus();
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data.message || "An unexpected error occurred."
+      );
+    },
   });
   return (
-    <div className="col">
-      <LoanPortal userName={"test"} password={"sdfe232@"} link={""} />
-      <p>
-        You must provide us with the final loan decision feedback before you can
-        proceed to the next step. Please provide the loan decision feedback you
-        got from the lender
-      </p>
+    <>
+      <ContentComponent header="Loan Decision Feedback" className="col">
+        <LoanPortal userName={"test"} password={"sdfe232@"} link={""} />
+        <p>
+          You must provide us with the final loan decision feedback before you
+          can proceed to the next step. Please provide the loan decision
+          feedback you got from the lender
+        </p>
 
-      <PrimaryBtn onClick={toggleModal} className="self-end">
-        Send Feedback
-      </PrimaryBtn>
+        <PrimaryBtn onClick={toggleModal} className="self-end">
+          Send Feedback
+        </PrimaryBtn>
+      </ContentComponent>
       <Modal open={open} setOpen={toggleModal} title="Loan Decision Feedback">
         <div className="modal gap-2">
           <div>
             {/* <p>Provide the loan feedback you got from the lender</p> */}
             <p>
-              <b>School</b> : {schoolDetails}
+              <b>School</b> :{" "}
+              {activeLoanApplication?.school +
+                " " +
+                activeLoanApplication?.program}
             </p>
             <p>
-              <b>Lender</b> : {lender}
+              <b>Lender</b> : {activeLoanApplication?.funding}
             </p>
             <p>
-              <b>Amount</b> : {formatCurrency(amount)}
+              <b>Amount</b> :{" "}
+              {formatCurrency(
+                activeLoanApplication?.application_details?.loan_amount
+              )}
             </p>
           </div>
           <div className="mt-3 px-2">
@@ -81,58 +102,62 @@ const LoanDesicionFeedback: React.FC<Props> = ({
                   className="ease-in-out duration-300"
                   title="What was the decision you got from the lender? "
                   options={[
-                    { label: "Yes, I was awarded the loan", value: "yes" },
-                    { label: "No, I was denied the loan", value: "no" },
+                    { label: "Yes, I was awarded the loan", value: "2" },
+                    { label: "No, I was denied the loan", value: "3" },
                   ]}
-                  name="feedback"
-                  onChange={(_e, value) => setFeedback(value)}
+                  name="loan_status"
+                  onChange={(_e, value) => setLoanStatus(value)}
                 />
-
-                {feedback &&
-                  (feedback === "yes" ? acceptedFieds : deniedFieds).map(
-                    (field, index) => (
-                      <InputsWithLabel key={index} required {...field} />
+                {loanStatus &&
+                  (loanStatus === "2" ? acceptedFieds : deniedFieds).map(
+                    (field) => (
+                      <InputsWithLabel key={field.name} required {...field} />
                     )
                   )}
               </div>
             ) : null}
             <FormFooterBtns
               onClose={toggleModal}
-              hideBtn={gotFeedback === "yes" ? false : true}
+              hideBtn={gotFeedback == "yes" ? false : true}
               btnText={handleFeedback.isPending ? "Submitting..." : "Submit"}
-              disabled={!feedback}
+              disabled={!loanStatus}
             />
           </form>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
 export default LoanDesicionFeedback;
 const acceptedFieds = [
   {
+    inputLabel: "Date of decision",
+    type: "date",
+    name: "approved_on",
+  },
+  {
     inputLabel: "Attach approval letter",
     type: "file",
-    name: "letter",
+    name: "loan_letter",
   },
   {
     inputLabel: "Amount approved (USD)",
     type: "number",
-    name: "amount",
+    name: "loan_awarded",
   },
 ];
 const deniedFieds = [
   {
     inputLabel: "Attach denial letter",
     type: "file",
-    name: "letter",
+    name: "loan_letter",
   },
   {
     inputLabel: "Reason for denial",
     type: "text",
     rows: 3,
     multiline: true,
-    name: "amount",
+    name: "remark",
   },
 ];

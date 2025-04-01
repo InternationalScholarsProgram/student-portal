@@ -8,17 +8,19 @@ import useAdmissions from "../../../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
 import { useLocation } from "react-router";
 import ConsentStatus from "../../../components/ConsentStatus";
+import useAdmissionConsents from "../../../services/useAdmissionConsents";
 
 function MakeApplication() {
   const { state } = useLocation();
   const {
     queryKeys,
     queryClient,
-    consentsWithSchool,
     notAppliedSchools,
     hasAppliedToAllSchools,
     currentIntake,
+    invalidateStatus,
   } = useAdmissions();
+  const { consentsWithSchool } = useAdmissionConsents();
 
   const [school, setSchool] = useState("");
 
@@ -45,8 +47,7 @@ function MakeApplication() {
         proposed_course_id: findSchool?.id,
         intake: currentIntake?.id,
       }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: queryKeys.statusCheck }),
+    onSuccess: invalidateStatus,
   });
   const findSchool = notAppliedSchools.find(
     (item) => item.school_name === school

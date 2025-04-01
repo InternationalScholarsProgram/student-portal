@@ -1,7 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-
-const studentId = Cookies.get("studentId");
 
 const testStudents = [
   "test@gmail.com",
@@ -11,7 +8,7 @@ const testStudents = [
   "test_four@gmail.com",
 ];
 
-const activeStudentId = testStudents[4] || studentId;
+const activeStudentId = testStudents[0];
 
 const baseDirectory = "/login/member/dashboard/APIs/";
 const BASE_URL = "https://finkapinternational.qhtestingserver.com";
@@ -21,21 +18,21 @@ const multipart = {
   },
 };
 const api = axios.create({
-  baseURL: BASE_URL,
+  // baseURL: BASE_URL,
+  baseURL: "/",
 });
 
 api.interceptors.request.use(
   (config) => {
-    // Initialize params if it doesn't exist
-    if (!config.params) {
-      config.params = {};
-    }
-    // Append the student_id to the params
+    // console.log("Before Request:", config.params);
+
+    if (!config.params) config.params = {}; // Initialize params if it doesn't exist
     config.params.student_id = activeStudentId;
+
+    // console.log("After Request:", config.params);
     return config;
   },
   (error) => {
-    // Handle request error
     return Promise.reject(error);
   }
 );

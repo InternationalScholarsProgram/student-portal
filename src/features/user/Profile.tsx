@@ -8,6 +8,7 @@ import {
 } from "./components/utils";
 import { finSap } from "../../assets/imageLinks";
 import { Avatar } from "@mui/material";
+import { FullLoader } from "../../components/loaders/Loader";
 
 function Profile() {
   const { user } = useFetchUser();
@@ -15,9 +16,9 @@ function Profile() {
     ? `${BASE_URL}/login/member/imgs/${user?.photo}`
     : finSap;
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  if (!user) return <FullLoader />;
+console.log(user);
+
   return (
     <main className="profile">
       <section className="flex sm:flex-row flex-col items-center">
@@ -40,9 +41,7 @@ function Profile() {
           <span className="opacity-50 text-center">
             Membership Number : {user?.member_no}
           </span>
-          <span className="opacity-50">
-            Program Option: {user?.package}
-          </span>
+          <span className="opacity-50">Program Option: {user?.package}</span>
 
           <div className="documents">
             <button>
@@ -62,7 +61,7 @@ function Profile() {
               </a>
             </button>
             <button>
-              <a href={user?.signed_contract} target="_blank">
+              <a href={user?.signed_contract || "#"} target="_blank">
                 Contract
               </a>
             </button>

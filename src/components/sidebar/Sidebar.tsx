@@ -1,35 +1,29 @@
-import React, { useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "../Logo";
-import { Collapse } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { linksWithDivider } from "../../router/linkItems";
 import { useStore } from "zustand";
 import sideBarStore from "./sideBarStore";
+import SubItems from "./SubItems";
+import SidebarNavLink from "./SidebarNavLink";
 
 function Sidebar() {
-  const { openSections, setOpenSections, initialize } = useStore(sideBarStore);
-const location = useLocation();
+  const { openSections, setOpenSections, initialize, toggleDrawer } =
+    useStore(sideBarStore);
+  const location = useLocation();
   useEffect(() => {
     initialize();
   }, [location.pathname]);
 
   return (
-    <main className="flex flex-1 w-full p-3 col relative">
-      <div className="h-[11vh] col-center sticky">
+    <main className="flex-1 p-3 col">
+      <div className="h-[10dvh] col-center">
         <Logo />
       </div>
 
-      <ul className="portal-sidebar-ul col py-3 overflow-y-auto  overflow-x-clip">
+      <ul className="portal-sidebar-ul flex-1 py-3 overflow-y-auto overflow-x-clip">
         {linksWithDivider.map((item: any, index) => {
           if (item?.hidden) return null;
-          if (item?.type === "hidden")
-            return (
-              <p key={index} className="my-5">
-                {item.name}sassss
-              </p>
-            );
           if (item?.type === "divider") {
             return (
               <p key={index} className="my-5">
@@ -39,67 +33,36 @@ const location = useLocation();
           }
 
           if (item.subItems) {
-            const isOpen = openSections[item.name] || false;
             return (
-              <React.Fragment key={index}>
-                <button
-                  onClick={() => setOpenSections(item.name)}
-                  className="sidebar-link"
-                >
-                  {item.icon}
-                  <p>{item.name}</p>
-                  <div className="flex-1 row justify-end">
-                    {isOpen ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
-                  </div>
-                </button>
-                <Collapse
-                  in={isOpen}
-                  timeout="auto"
-                  unmountOnExit
-                  className="pl-[10%] opacity-80"
-                >
-                  {item.subItems.map((subItem: any) => (
-                    <NavLink
-                      key={subItem.name}
-                      to={subItem.to}
-                      className={({ isActive }) =>
-                        isActive ? "active-link" : ""
-                      }
-                    >
-                      <p>{subItem.name}</p>
-                    </NavLink>
-                  ))}
-                </Collapse>
-              </React.Fragment>
+              <SubItems
+                key={index}
+                item={item}
+                openSections={openSections}
+                setOpenSections={setOpenSections}
+              />
             );
           }
 
           if (item.name === "WebMail") {
             return (
-              <button
+              <Link
                 key={index}
-                onClick={() =>
-                  window.open(
-                    "https://internationalscholarsprogram.com/webmail"
-                  )
-                }
+                to="https://internationalscholarsprogram.com/webmail"
+                target="_blank"
                 className="sidebar-link"
+                onClick={toggleDrawer}
               >
                 {item.icon}
                 <p>{item.name}</p>
-              </button>
+              </Link>
             );
           }
 
           return (
-            <NavLink
-              key={index}
-              to={item.to}
-              className={({ isActive }) => (isActive ? "active-link" : "")}
-            >
+            <SidebarNavLink key={index} to={item.to}>
               {item.icon}
               <p>{item.name}</p>
-            </NavLink>
+            </SidebarNavLink>
           );
         })}
       </ul>

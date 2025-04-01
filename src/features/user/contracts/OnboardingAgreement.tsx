@@ -42,7 +42,7 @@ const OnboardingAgreement: React.FC<OnboardingAgreementProps> = () => {
   const { user } = useFetchUser();
   const { state } = useLocation();
   
-  const name = capitalize(user?.fullnames);
+  const name = capitalize(user?.fullnames || "");
   document.title = `${name} Onboarding Agreement`;
   const { toPDF, targetRef } = usePDF({ filename: name });
   const [signed, setSigned] = useState(false);

@@ -17,6 +17,7 @@ import {
 } from "./utils/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { FullLoader } from "../../../components/loaders/Loader";
 
 function Withdraw() {
   const { user, isLoading, userQueryKey } = useFetchUser();
@@ -83,7 +84,7 @@ function Withdraw() {
     onSuccess: () => onSuccess("Withdrawal Cancelled!"),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading && !user) return <FullLoader />;
 
   return (
     <>
@@ -96,8 +97,7 @@ function Withdraw() {
           >
             <p className="">Current Withdrawal Status: </p>
             <span className="font-semibold capitalize">
-              {getStatus(user?.withdrwal_status)}
-              {/* {user?.withdrwal_status} */}
+              {getStatus(user ? user?.withdrwal_status : "")}
             </span>
           </div>
         )}

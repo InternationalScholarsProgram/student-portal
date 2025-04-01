@@ -9,7 +9,7 @@
   @apply dark:bg-test;
 }
 .sidebar {
-  @apply hidden lg:flex lg:w-[25vw] xl:w-[20vw] h-screen-dvh overflow-auto duration-300 ease-linear bg-paper;
+  @apply hidden lg:flex lg:min-w-[27vw] xl:min-w-[22vw] h-screen-dvh bg-paper;
 }
 
 .content-container {
@@ -42,7 +42,7 @@
   @apply sidebar-link;
 }
 .portal-sidebar-ul p {
-  @apply text-left text-nowrap;
+  @apply text-left truncate;
 }
 .portal-sidebar-ul a.active-link {
   @apply bg-primary-main/50 text-white hover:text-white;
@@ -81,7 +81,7 @@
 
 /* Fundings */
 .funding-details {
-  @apply flex flex-col p-3;
+  @apply flex flex-col p-1 sm:p-3;
 }
 .funding-details section {
   @apply flex flex-col w-full gap-2;
@@ -95,7 +95,7 @@
   @apply flex flex-row flex-wrap items-center gap-2 mb-4;
 }
 .ul-links * {
-  @apply p-2 rounded-md flex-1 text-base text-center;
+  @apply p-2 rounded-sm flex-1 text-base text-center;
 }
 .ul-links .selected {
   @apply text-primary-light border-b border-primary-main;
@@ -160,7 +160,7 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[40vw] col p-3;
+  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] col p-3;
 }
 .title {
   @apply text-xl sm:text-2xl font-semibold;
@@ -169,8 +169,12 @@ p {
   @apply opacity-70 sm:text-lg font-semibold;
 }
 .alert {
-  @apply border-l-4 border-primary-main p-2 drop-shadow-lg shadow-lg;
+  @apply border-l-4 border-primary-main drop-shadow-lg shadow-lg p-2;
 }
+.alert-error {
+  @apply border-l-4 border-red-500 bg-error-main/5 drop-shadow-lg shadow-lg p-4 text-error-main;
+}
+
 .transcript-details {
   @apply col gap-2;
 }
@@ -182,10 +186,10 @@ p {
 }
 
 .form-group {
-  @apply col gap-3 my-3;
+  @apply col justify-between;
 }
 .form-group label {
-  @apply text-sm mb-1;
+  @apply text-sm sm:text-base mb-1;
 }
 .row-buttons {
   @apply row gap-3 items-center justify-center;

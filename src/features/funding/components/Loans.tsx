@@ -12,14 +12,7 @@ export default function Loans({ loan }: { loan: string }) {
     case "Tuition & Living Expenses":
       return (
         <section>
-          <p>
-            The tuition and living expenses funding is needed for you to request
-            your I-20 from the school you have been admitted to. This loan is
-            sourced from our external lending partners. Once approved, the
-            funding will ultimately support your studies in North America. You
-            MUST request a funding advisory meeting to proceed with this funding
-            option by clicking the button above.
-          </p>
+    
         </section>
       );
     case "Relocation":

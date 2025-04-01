@@ -1,33 +1,30 @@
 import { MenuItem, Select } from "@mui/material";
 import SampleTranscript from "../../components/SampleTranscript";
 import { InputsWithLabel } from "../../../../components/inputs/InputField";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
-import { counties, getCountries } from "../../../../utils/constants";
+import { counties } from "../../../../utils/constants";
 import { useState } from "react";
 import useVisa from "../../services/hooks/useVisa";
 import AutoComplete from "../../../../components/inputs/AutoComplete";
 import ContentComponent from "../../../../components/ContentComponent";
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
-import { formatDate, formatDateAndTime } from "../../../../utils/utils";
+import { formatDateAndTime } from "../../../../utils/utils";
+import SelectCountry from "../../../../components/inputs/SelectCountry";
 
 function ProvideVisaFeedback() {
   const { ds160Review, visa, user, inValidateStatus } = useVisa();
   const [isKenyan, setIsKenyan] = useState<any>("");
   const [feedback, setFeedback] = useState("");
   const minLength = 200;
-  const { data: countries } = useQuery({
-    queryKey: ["countries"],
-    queryFn: getCountries,
-  });
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("school", ds160Review?.school_name);
     formData.append("course", ds160Review?.course);
-    formData.append("fullnames", user?.fullnames);
+    formData.append("fullnames", user?.fullnames || "");
     formData.append("visa_id", visa?.stu_id.toString());
 
     handleSendFeedback.mutate(formData);
@@ -48,8 +45,8 @@ function ProvideVisaFeedback() {
       <section className="col gap-3 p-1 sm:p-3">
         <p>
           According to our records, you had a visa interview on{" "}
-          {formatDateAndTime(visa?.interviewDateAndTime)}. Please provide your Visa
-          interview feedback below so as to proceed to the next steps.
+          {formatDateAndTime(visa?.interviewDateAndTime)}. Please provide your
+          Visa interview feedback below so as to proceed to the next steps.
         </p>
 
         <SampleTranscript />
@@ -93,12 +90,7 @@ function ProvideVisaFeedback() {
             {isKenyan === "no" ? (
               <div>
                 <label>Select Country</label>
-                <AutoComplete
-                  options={countries}
-                  getOptionLabel={(option) => option.label}
-                  name="country"
-                  variant="outlined"
-                />
+                <SelectCountry name="country" variant="outlined" required />
               </div>
             ) : null}
 

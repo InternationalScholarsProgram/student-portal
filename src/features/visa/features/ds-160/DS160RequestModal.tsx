@@ -22,7 +22,7 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
     )?.program_name;
 
     if (course) formData.set("course", course);
-    formData.append("fullnames", user?.fullnames);
+    formData.append("fullnames", user?.fullnames || "");
 
     ds160RequestReview.mutate(formData);
   };

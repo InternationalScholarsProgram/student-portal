@@ -1,11 +1,16 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
-  header: string; // `header` is a required string
+  header: string | ReactNode;
   childrenClassName?: string;
 };
 
-const ContentComponent: React.FC<Props> = ({ header,childrenClassName, children, ...props }) => (
+const ContentComponent: React.FC<Props> = ({
+  header,
+  childrenClassName,
+  children,
+  ...props
+}) => (
   <div {...props}>
     <h3 className="title-sm">{header}</h3>
     <div className={`col card sm:p-3 p-1 ${childrenClassName}`}>{children}</div>

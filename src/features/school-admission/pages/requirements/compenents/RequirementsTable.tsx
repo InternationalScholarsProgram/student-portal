@@ -5,15 +5,11 @@ import { columns } from "./TableData";
 import useAdmissions from "../../../services/useAdmissions";
 import Loader from "../../../../../components/loaders/Loader";
 import GridTable from "../../../../../components/tables/GridTable";
+import useAdmissionConsents from "../../../services/useAdmissionConsents";
 
 function RequirementsTable() {
-  const {
-    appDocs,
-    uploadedDocs,
-    proposedSchools,
-    consentsWithSchool,
-    gpaReport,
-  } = useAdmissions();
+  const { appDocs, uploadedDocs, proposedSchools, gpaReport } = useAdmissions();
+  const { consentsWithSchool } = useAdmissionConsents();
 
   const filterUploadedDocs = (docType: string) =>
     uploadedDocs?.filter((doc) => doc.doc_id?.toString() === docType);

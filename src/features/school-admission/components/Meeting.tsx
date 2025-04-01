@@ -6,8 +6,8 @@ import PrimaryBorderBtn from "../../../components/buttons/PrimaryBorderBtn";
 import dayjs from "dayjs";
 import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
 import { RequirementsAccordion } from "../pages/requirements/compenents/RequirementsTable";
-import { Link } from "react-router-dom";
 import useAdmissions from "../services/useAdmissions";
+import ContactSupport from "../../../components/ContactSupport";
 
 const Meeting = () => {
   const { status } = useAdmissions();
@@ -86,16 +86,7 @@ const Meeting = () => {
               viewing. This process will be completed within the next 24 hours.
             </p>
             <p className="">Thank you for your patience.</p>
-            <p className="">
-              For any inquiries, please <strong>create a ticket</strong> to
-              contact support.
-            </p>
-            <Link
-              to="/create-ticket"
-              className="primary-border-btn my-2 self-end"
-            >
-              Create Ticket
-            </Link>
+            <ContactSupport />
           </div>
         </section>
       )}

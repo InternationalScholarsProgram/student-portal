@@ -15,6 +15,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
   const comment = school?.application_details?.comment;
   const feedbackCode =
     school?.application_details?.feedback?.feedback?.toString();
+    
   if (status === "1")
     return (
       <>

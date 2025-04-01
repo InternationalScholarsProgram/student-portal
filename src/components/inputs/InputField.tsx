@@ -1,25 +1,27 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { inputStyles } from "../../styles/styles";
-import {
-  DatePicker,
-  DateTimePicker,
-  TimePicker,
-} from "@mui/x-date-pickers";
+import { DatePicker, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 function InputField(props: TextFieldProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onChange, type, ...rest } = props;
 
-  if (props.type === "date")
+  if (props.type === "date") {
+    delete rest.value;
     return (
       <DatePicker
         onChange={(e: any) => onChange?.(e)}
+        defaultValue={dayjs(
+          typeof props.value === "string" ? props.value : new Date()
+        )}
         slotProps={{
           textField: { ...rest, size: "medium" },
         }}
         format="YYYY-MM-DD"
       />
     );
+  }
   if (props.type === "datetime-local")
     return (
       <DateTimePicker
@@ -71,3 +73,4 @@ export const InputsWithLabel = ({
 );
 
 export default InputField;
+export type { InputsWithLabelProps };

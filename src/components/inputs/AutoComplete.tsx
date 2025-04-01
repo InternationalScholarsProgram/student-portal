@@ -1,11 +1,11 @@
 import React from "react";
 import { ComponentProps } from "react";
-import { Autocomplete, TextField } from "@mui/material";
-import { inputStyles } from "../../styles/styles";
+import { Autocomplete as MuiAutocomplete, TextField } from "@mui/material";
 
 interface Props extends ComponentProps<typeof TextField> {
   options: any[];
   isLoading?: boolean;
+  defaultValue?: any;
   handleSelect?: (_: any, value: any) => void;
   getOptionLabel?: (option: any) => string;
 }
@@ -14,16 +14,19 @@ const AutoComplete: React.FC<Props> = ({
   options = [],
   handleSelect,
   getOptionLabel,
+  defaultValue,
   ...props
 }) => {
   return (
-    <Autocomplete
+    <MuiAutocomplete
+      {...(defaultValue && { defaultValue })}
       getOptionLabel={getOptionLabel}
       options={options}
       onChange={handleSelect}
-      renderInput={(params) => (
-        <TextField {...params} {...props} sx={inputStyles} />
-      )}
+      size="medium"
+      renderInput={(params) => {
+        return <TextField {...params} {...props} size="medium" />;
+      }}
     />
   );
 };

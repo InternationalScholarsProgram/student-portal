@@ -9,7 +9,27 @@ type School = {
   SOP: string;
   SOP_status: string;
   application_status: string;
-  application_details?: any;
+  application_details?: {
+    app_status: string;
+    assigned_to: string | null;
+    comment: string | null;
+    feedback: {
+      credit_remark: string | null;
+      feedback: string;
+      id_doc: string;
+      letter: string;
+      loan_status: string;
+      remark: null;
+      status: string;
+    } | null;
+    id: string;
+    intake: string;
+    intake_name: string;
+    password: string | null;
+    school_link: string | null;
+    status: string;
+    username: string;
+  } | null;
 };
 
 type Consent = {

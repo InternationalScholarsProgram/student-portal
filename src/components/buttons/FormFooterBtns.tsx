@@ -21,9 +21,11 @@ const FormFooterBtns: React.FC<Props> = ({
       data-html2canvas-ignore // ignore html2canvas when generating pdf
       className="row justify-end gap-2 py-1 "
     >
-      <button type="button" onClick={onClose} className="text-btn">
-        {closeText || "Close"}
-      </button>
+      {onClose && (
+        <button type="button" onClick={onClose} className="text-btn">
+          {closeText || "Close"}
+        </button>
+      )}
       {!hideBtn && (
         <button
           {...props}

@@ -19,7 +19,7 @@ function useVisa() {
 
   const queryKeys = {
     statusCheck: [user?.email, "visa", "status-check"],
-    mockQuestions : [user?.email, "visa", "mock-questions"],
+    mockQuestions: [user?.email, "visa", "mock-questions"],
   };
 
   const inValidate = (queryKey: any) =>
@@ -46,7 +46,8 @@ function useVisa() {
         date.setHours(mockTimes?.[0], mockTimes?.[1]);
         return date;
       };
-      const returnData = {
+
+      return {
         ...data,
         value: {
           ...data?.value,
@@ -59,8 +60,6 @@ function useVisa() {
           },
         },
       };
-
-      return returnData;
     },
   });
   const visa: VisaObject = status?.value?.visa;

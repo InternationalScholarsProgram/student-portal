@@ -46,10 +46,20 @@ type LoanDetailsProps = {
     remark: string | null;
     [key: string]: any;
   };
+  loan_app_feedback: {
+    id: number;
+    loan_id: string;
+    lender: string;
+    school: string;
+    loan_applied: number;
+    loan_awarded: number;
+    loan_letter: string;
+    approved_on: string;
+    loan_status: number;
+    status: number;
+  };
   application_requested: number;
   funding: "MPOWER" | "Sallie";
-  loan_app_feedback: null | any[];
-
   remark: string | null;
 };
 

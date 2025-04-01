@@ -30,6 +30,9 @@ const convertStatus = (_status: number) => {
   } else if (_status === 6) {
     status.label = "approved";
     status.value = 6;
+  } else if (_status === 7) {
+    status.label = "loan already disbursed";
+    status.value = 6;
   }
   return status;
 };

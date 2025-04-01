@@ -25,6 +25,7 @@ const linkItems = [
     icon: <PersonOutlineOutlinedIcon />,
     name: "Profile",
     to: "profile",
+    hidden: true,
   },
   {
     icon: <EmailOutlinedIcon />,
@@ -123,7 +124,7 @@ const modules = [
     icon: <CreditCardOutlinedIcon />,
   },
   {
-    name: "Travel and Logistics",
+    name: "Travel & Logistics",
     to: "logistics",
     icon: <FlightTakeoffOutlinedIcon />,
     subItems: [

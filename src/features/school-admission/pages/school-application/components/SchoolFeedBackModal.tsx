@@ -20,13 +20,16 @@ function SchoolFeedBackModal({ open, toggleModal, school }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("applicationid", school?.application_details.id);
+    formData.append("applicationid", school?.id);
     handleUpdate.mutate(formData);
   };
 
   const handleUpdate = useMutation({
     mutationFn: admissionAPIs.sendSchoolFeedback,
-    onSuccess: invalidateStatus,
+    onSuccess: () => {
+      toggleModal();
+      invalidateStatus();
+    },
   });
   return (
     <Modal

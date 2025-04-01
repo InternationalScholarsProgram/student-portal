@@ -97,13 +97,20 @@ const formatDate = (date: string | Date | null, format?: string) => {
   const _date = new Date(date);
   return dayjs(_date).format(format || "dddd, MMMM D, YYYY");
 };
-const formatDateAndTime = (date: string | Date | null) =>
+const formatDateAndTime = (date: any) =>
   formatDate(date, "MMM D, YYYY, h:mm A");
 
 const splitDate = (_date: string) => {
   const date = _date?.split("-").map(Number);
   return new Date(date?.[0], date?.[1] - 1, date?.[2]);
 };
+const convertToDateAndTime = (_date: string, time: any) => {
+  const splitDates = _date?.split("-").map(Number);
+  const date = new Date(splitDates?.[0], splitDates?.[1] - 1, splitDates?.[2]);
+  date.setHours(time?.split(":")?.[0], time?.split(":")?.[1]);
+  return date;
+};
+
 function capitalizeFirstCharacter(str: string) {
   if (!str) return ""; // Handle empty or undefined strings
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -251,6 +258,7 @@ export {
   isValidURL,
   splitDate,
   formatDateAndTime,
+  convertToDateAndTime,
   testEndpoint,
 };
 

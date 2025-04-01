@@ -2,7 +2,7 @@ import api, {
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
-import { fetchIp } from "../../../../../utils/utils";
+import { fetchIp, testEndpoint } from "../../../../../utils/utils";
 
 const url = `${baseDirectory}funding/`;
 const sallieMaeUrl = `${url}salliemae.php`;
@@ -26,6 +26,16 @@ class TuitionEndpoints {
     const apiUrl = `${mpowerUrl}?action=application_request`;
     return await api.post(apiUrl, payload, multipart);
   };
+
+  bookSubsequentMeeting = (reason: string) =>
+    api.get(
+      `${url}/functions.php?action=request_subsequent_meeting&meeting_reason=${reason}`
+    );
+
+  getSubsequentMeeting = async () => {
+    return await api.get(`${url}/functions.php?action=meeting_status`);
+  };
+
   trackMpowerLead = () => api.post(`${mpowerUrl}?action=track_lead`);
 
   salliemae = (id: string) => api.get(`${sallieMaeUrl}?app_id=${id}`);

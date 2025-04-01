@@ -9,7 +9,7 @@
   @apply dark:bg-test;
 }
 .sidebar {
-  @apply hidden lg:flex lg:min-w-[25vw] xl:min-w-[20vw] h-screen-dvh bg-paper;
+  @apply hidden lg:flex lg:min-w-[27vw] xl:min-w-[22vw] h-screen-dvh bg-paper;
 }
 
 .content-container {

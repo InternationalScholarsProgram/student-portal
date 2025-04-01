@@ -5,9 +5,11 @@ import { linksWithDivider } from "../../router/linkItems";
 import { useStore } from "zustand";
 import sideBarStore from "./sideBarStore";
 import SubItems from "./SubItems";
+import SidebarNavLink from "./SidebarNavLink";
 
 function Sidebar() {
-  const { openSections, setOpenSections, initialize } = useStore(sideBarStore);
+  const { openSections, setOpenSections, initialize, toggleDrawer } =
+    useStore(sideBarStore);
   const location = useLocation();
   useEffect(() => {
     initialize();
@@ -48,6 +50,7 @@ function Sidebar() {
                 to="https://internationalscholarsprogram.com/webmail"
                 target="_blank"
                 className="sidebar-link"
+                onClick={toggleDrawer}
               >
                 {item.icon}
                 <p>{item.name}</p>
@@ -56,14 +59,10 @@ function Sidebar() {
           }
 
           return (
-            <NavLink
-              key={index}
-              to={item.to}
-              className={({ isActive }) => (isActive ? "active-link" : "")}
-            >
+            <SidebarNavLink key={index} to={item.to}>
               {item.icon}
               <p>{item.name}</p>
-            </NavLink>
+            </SidebarNavLink>
           );
         })}
       </ul>

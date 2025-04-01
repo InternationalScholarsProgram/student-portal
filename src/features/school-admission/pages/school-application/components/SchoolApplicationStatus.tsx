@@ -12,7 +12,7 @@ function SchoolApplicationStatus({ appliedSchools }: any) {
         Please be patient as our team processes the request. You will receive
         all status updates here
       </p>
-      <div className="m-[5%] p-4 gap-5 col">
+      <div className="sm:m-[5%] p-4 gap-5 col">
         {appliedSchools?.map((item: any, index: number) => (
           <Paper
             onClick={() => console.log(item)}

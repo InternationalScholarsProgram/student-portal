@@ -4,6 +4,7 @@ import CreditReview from "./features/credit-review/CreditReview";
 import LoanApplication from "./features/loan-application/LoanApplication";
 import FundingAdvisory from "./features/funding-advisory/FundingAdvisory";
 import OtherFundingSources from "./components/OtherFundingSources";
+import ProvideSchoolFeedback from "./features/credit-review/ProvideSchoolFeedback";
 
 function Tuition() {
   const { tuitionStatus, isLoading, isError, error } = useTuition();
@@ -19,6 +20,7 @@ function Tuition() {
 
   switch (tuitionStatus) {
     case 0:
+      return <ProvideSchoolFeedback />;
     case 1:
     case 3:
       return <CreditReview />;

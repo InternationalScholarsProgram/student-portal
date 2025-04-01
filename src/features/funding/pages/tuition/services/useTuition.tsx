@@ -6,7 +6,11 @@ import {
   FundingAdvisoryProps,
   LoanDetailsProps,
 } from "../../../types/fundingTypes";
-type KeyProps = "tuitionStatus" | "mpower" | "sallieMaeCosigner" | "sallieMaeApplication";
+type KeyProps =
+  | "tuitionStatus"
+  | "mpower"
+  | "sallieMaeCosigner"
+  | "sallieMaeApplication";
 
 function useTuition() {
   const { user } = useFetchUser();
@@ -46,11 +50,11 @@ function useTuition() {
 
   const loanDetails: LoanDetailsProps[] = tuitionData?.loan_app_details;
   const activeLoanApplication =
-    loanDetails?.find((loan) => loan.app_id) || loanDetails?.[0];
+    loanDetails?.find((loan) => !loan.application_details?.loan_app_feedback) ||
+    loanDetails?.[0];
 
   const invalidate = (key: KeyProps) =>
     queryClient.invalidateQueries({ queryKey: querKeys[key] });
-
   const inValidateStatus = () => invalidate("tuitionStatus");
 
   return {
@@ -61,8 +65,9 @@ function useTuition() {
       ...fundingAdvisory,
       dateAndTime: fundingDateAndTime(),
     },
-    loanDetails,
     activeLoanApplication,
+    loanDetails,
+    loanFeedback: activeLoanApplication?.loan_app_feedback,
     schoolAppId: activeLoanApplication?.app_id,
     isLoading,
     isError,

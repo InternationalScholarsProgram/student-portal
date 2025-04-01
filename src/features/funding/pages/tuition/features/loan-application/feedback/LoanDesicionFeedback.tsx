@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "../../../../../../../components/Modal";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
 import RadioBtns from "../../../../../../../components/inputs/RadioBtns";
 import FormFooterBtns from "../../../../../../../components/buttons/FormFooterBtns";
 import { useMutation } from "@tanstack/react-query";
 import { InputsWithLabel } from "../../../../../../../components/inputs/InputField";
-import LoanPortal from "./LoanPortal";
+import LoanPortal from "../components/LoanPortal";
 import { formatCurrency } from "../../../../../../../utils/utils";
 import useTuition from "../../../services/useTuition";
-import dayjs from "dayjs";
 import tuitionEndpoints from "../../../services/tuitionEndpoints";
 import { toast } from "react-toastify";
-import axios from "axios";
 import ContentComponent from "../../../../../../../components/ContentComponent";
 
 const LoanDesicionFeedback = () => {
@@ -33,14 +31,12 @@ const LoanDesicionFeedback = () => {
       "loan_applied",
       activeLoanApplication?.application_details?.loan_amount
     );
-    console.log(axios.formToJSON(formData));
-
     handleFeedback.mutate(formData);
   };
 
   const handleFeedback = useMutation({
     mutationFn: tuitionEndpoints.loanFeedback,
-    onSuccess: (data) => {
+    onSuccess: () => {
       toggleModal();
       inValidateStatus();
     },

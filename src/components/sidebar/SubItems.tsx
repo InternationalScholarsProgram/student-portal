@@ -3,6 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SidebarNavLink from "./SidebarNavLink";
 
 type Props = {
   item: any;
@@ -29,13 +30,9 @@ const SubItems: React.FC<Props> = ({ item, openSections, setOpenSections }) => {
         className="pl-[10%] opacity-80"
       >
         {item.subItems.map((subItem: any) => (
-          <NavLink
-            key={subItem.name}
-            to={subItem.to}
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
+          <SidebarNavLink key={subItem.name} to={subItem.to}>
             <p className="first-letter:uppercase">{subItem.name}</p>
-          </NavLink>
+          </SidebarNavLink>
         ))}
       </Collapse>
     </React.Fragment>

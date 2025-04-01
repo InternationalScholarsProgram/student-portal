@@ -5,6 +5,8 @@ interface SidebarStore {
   openSections: Record<string, boolean>;
   setOpenSections: (sectionName: string) => void;
   initialize: () => void;
+  drawer: boolean;
+  toggleDrawer: () => void;
 }
 
 const sideBarStore = createStore<SidebarStore>((set, get) => ({
@@ -30,6 +32,8 @@ const sideBarStore = createStore<SidebarStore>((set, get) => ({
 
     set({ openSections: newState });
   },
+  drawer: false,
+  toggleDrawer: () => set({ drawer: !get().drawer }),
 }));
 
 export default sideBarStore;

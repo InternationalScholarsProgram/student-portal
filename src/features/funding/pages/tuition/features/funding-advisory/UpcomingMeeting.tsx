@@ -5,10 +5,9 @@ import RescheduleMeeting from "./RescheduleMeeting";
 import { Link } from "react-router-dom";
 import ContentComponent from "../../../../../../components/ContentComponent";
 import { FundingAdvisoryProps } from "../../../../types/fundingTypes";
+type Props = { fundingAdvisory: FundingAdvisoryProps };
 
-const UpcomingMeeting: React.FC<{ fundingAdvisory: FundingAdvisoryProps }> = ({
-  fundingAdvisory,
-}) => {
+const UpcomingMeeting: React.FC<Props> = ({ fundingAdvisory }) => {
   return (
     <ContentComponent
       header={

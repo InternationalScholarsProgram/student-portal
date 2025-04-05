@@ -9,12 +9,15 @@ function InputField(props: TextFieldProps) {
 
   if (props.type === "date") {
     delete rest.value;
+    delete rest.defaultValue;
+    console.log(rest, "rest");
+    const isValue = typeof props.defaultValue === "string" && props.defaultValue !== "";
+    const date = props.defaultValue as Date;
+
     return (
       <DatePicker
         onChange={(e: any) => onChange?.(e)}
-        defaultValue={dayjs(
-          typeof props.value === "string" ? props.value : new Date()
-        )}
+        defaultValue={isValue ? dayjs(date) : null}
         slotProps={{
           textField: { ...rest, size: "medium" },
         }}

@@ -25,7 +25,9 @@ const AutoComplete: React.FC<Props> = ({
       onChange={handleSelect}
       size="medium"
       renderInput={(params) => {
-        return <TextField {...params} {...props} size="medium" />;
+        return (
+          <TextField {...params} autoComplete="off" {...props} size="medium" />
+        );
       }}
     />
   );

@@ -4,7 +4,7 @@ import { UserProfile } from "../../types";
 
 const useFetchUser = () => {
   const { data, isLoading, error } = useQuery<UserProfile>({
-    queryKey: ["user", activeStudentId],
+    queryKey: [activeStudentId, "user"],
     queryFn: async () => {
       try {
         const response = await api.get(
@@ -27,7 +27,7 @@ const useFetchUser = () => {
     user: data,
     isLoading,
     error,
-    userQueryKey: ["user", activeStudentId],
+    userQueryKey: [activeStudentId, "user"],
   };
 };
 

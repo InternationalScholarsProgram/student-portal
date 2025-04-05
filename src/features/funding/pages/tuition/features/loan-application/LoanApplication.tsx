@@ -1,30 +1,23 @@
 import ContentComponent from "../../../../../../components/ContentComponent";
 import SchoolHeader from "../../components/SchoolHeader";
-import { useSubsequentMeeting } from "../subsequent-meeting/useSubsequentMeeting";
 import useTuition from "../../services/useTuition";
 import SubsequentMeeting from "../subsequent-meeting/SubsequentMeeting";
 import FeedbackStatus from "./feedback/FeedbackStatus";
 import LoanDesicionFeedback from "./feedback/LoanDesicionFeedback";
 import Mpower from "./mpower/Mpower";
 import SallieMae from "./sallie-mae/SallieMae";
-import BookSubsequent from "../subsequent-meeting/BookSubsequent";
 
 function LoanApplication() {
   const { activeLoanApplication } = useTuition();
-  const { subsequentMeeting } = useSubsequentMeeting();
 
   if (!activeLoanApplication)
-    return !subsequentMeeting?.status ? (
-      <SubsequentMeeting />
-    ) : (
-      <ContentComponent header="Loan Application Status">
-        <p>
-          You have not been matched with a lender yet. Please schedule a funding
-          advisory meeting to explore available loan options and take the next
-          step in your application process.
-        </p>
-        <BookSubsequent rejected />
-      </ContentComponent>
+    return (
+      <div className="col gap-3">
+        <ContentComponent header="Loan Application Status">
+          <p>You have not been matched with a lender yet.</p>
+          <SubsequentMeeting />
+        </ContentComponent>
+      </div>
     );
 
   function getRightComponent() {
@@ -38,23 +31,22 @@ function LoanApplication() {
   }
 
   return (
-    <LoanWrapper school={activeLoanApplication}>
+    <div className="col gap-2">
+      <SchoolHeader
+        loan={activeLoanApplication?.funding}
+        schoolName={activeLoanApplication?.school}
+        program={activeLoanApplication?.program}
+      />
+      <SubsequentMeeting />
+      <div className="h-2" />
       {getRightComponent()}
-    </LoanWrapper>
+    </div>
   );
 }
 
 export default LoanApplication;
 
-const LoanWrapper = ({ children, school }: any) => (
-  <div className="col gap-2">
-    <SchoolHeader schoolName={school?.school} program={school?.program} />
-    <SubsequentMeeting />
-    <div className="h-2" />
-    {children}
-  </div>
-);
-const renderFundingComponent = (funding: string) => {
+const renderFundingComponent = (funding?: string) => {
   switch (funding) {
     case "MPOWER":
       return <Mpower />;

@@ -58,6 +58,7 @@ type LoanDetailsProps = {
     loan_status: number;
     status: number;
   };
+  loan_application_status: "complete" | "active";
   application_requested: number;
   funding: "MPOWER" | "Sallie";
   remark: string | null;

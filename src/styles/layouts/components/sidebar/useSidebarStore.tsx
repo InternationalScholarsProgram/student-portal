@@ -1,7 +1,7 @@
-import { createStore } from "zustand";
-import { linksWithDivider } from "../../router/linkItems";
+import { create } from "zustand";
+import { linksWithDivider } from "../../../../router/linkItems";
 
-interface SidebarStore {
+interface useSidebarStore {
   openSections: Record<string, boolean>;
   setOpenSections: (sectionName: string) => void;
   initialize: () => void;
@@ -9,7 +9,7 @@ interface SidebarStore {
   toggleDrawer: () => void;
 }
 
-const sideBarStore = createStore<SidebarStore>((set, get) => ({
+const useSidebarStore = create<useSidebarStore>((set, get) => ({
   openSections: {},
   initialize: () => {
     const updatedSections: Record<string, boolean> = {};
@@ -33,7 +33,9 @@ const sideBarStore = createStore<SidebarStore>((set, get) => ({
     set({ openSections: newState });
   },
   drawer: false,
-  toggleDrawer: () => set({ drawer: !get().drawer }),
+  toggleDrawer: () => {
+    if (window.innerWidth < 1024) set({ drawer: !get().drawer });
+  },
 }));
 
-export default sideBarStore;
+export default useSidebarStore;

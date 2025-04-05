@@ -7,17 +7,18 @@ type Props = {
 
 const FileWithDescription: React.FC<Props> = ({ document, description }) => {
   const [fileDescription, setFileDescription] = React.useState("");
-  const [file, setFile] = React.useState<File>();
+  const [file, setFile] = React.useState("");
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
       <InputsWithLabel
         {...description}
         type="text"
         onChange={(e) => setFileDescription(e.target.value)}
-        required={file?.name && fileDescription.length === 0 ? true : false}
-        error={file?.name && fileDescription.length === 0 ? true : false}
+        required={file && fileDescription.length === 0 ? true : false}
+        error={file && fileDescription.length === 0 ? true : false}
         helperText={
-          file?.name && fileDescription.length === 0
+          file && fileDescription.length === 0
             ? "Please provide a short description for the uploaded file"
             : ""
         }
@@ -25,9 +26,9 @@ const FileWithDescription: React.FC<Props> = ({ document, description }) => {
       <InputsWithLabel
         {...document}
         type="file"
-        onChange={(e: any) => setFile(e.target.files?.[0])}
-        required={!file?.name && fileDescription.length > 0 ? true : false}
-        error={!file?.name && fileDescription.length > 0 ? true : false}
+        onChange={(e: any) => setFile(e.target.files?.[0]?.name)}
+        required={!file && fileDescription.length > 0 ? true : false}
+        error={!file && fileDescription.length > 0 ? true : false}
         helperText={
           fileDescription.length > 0
             ? "If you’ve written a description, don’t forget to upload the related file"

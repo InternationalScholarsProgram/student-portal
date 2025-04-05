@@ -8,6 +8,7 @@ import MapFormFields from "../../../../../../../components/inputs/MapFormFields"
 import sallieFormFields from "./formFields";
 import { wordCounter } from "../../../../../../../utils/utils";
 import FileWithDescription from "../../../../../../../components/inputs/FileWithDescription";
+import axios from "axios";
 
 const SallieApplicationForm: React.FC = () => {
   const { schoolAppId, invalidate, activeLoanApplication } = useTuition();
@@ -19,6 +20,8 @@ const SallieApplicationForm: React.FC = () => {
     sallieFormFields.security.fields.forEach((field, index) => {
       formData.append(`quiz_${wordCounter(index + 1)}`, field.label);
     });
+    if(!formData.get("file_description")) formData.delete("extra_file");
+    console.log(axios.formToJSON(formData));
     submitApplication.mutate(formData);
   };
 
@@ -49,7 +52,13 @@ const SallieApplicationForm: React.FC = () => {
         <React.Fragment key={key}>
           <p className="font-bold py-2">{field.label}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
-            <MapFormFields fields={convert(field.fields)} />
+            <MapFormFields
+              fields={
+                activeLoanApplication.application_details
+                  ? convert(field.fields)
+                  : field.fields
+              }
+            />
           </div>
         </React.Fragment>
       ))}

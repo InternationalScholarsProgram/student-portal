@@ -1,13 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import sideBarStore from "./sideBarStore";
+import useSidebarStore from "./useSidebarStore";
 import { useStore } from "zustand";
 
 const SidebarNavLink: React.FC<{ to: string; children: React.ReactNode }> = ({
   to,
   children,
 }) => {
-  const { toggleDrawer } = useStore(sideBarStore);
+  const { toggleDrawer } = useStore(useSidebarStore);
   return (
     <NavLink
       to={to}

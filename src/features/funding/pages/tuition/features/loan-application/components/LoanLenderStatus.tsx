@@ -44,30 +44,22 @@ const LoanLenderStatus: React.FC<Props> = ({
   loanProvider,
 }) => {
   const status = convertStatus(loanStatus);
-  switch (status.value) {
+
+  switch (loanStatus) {
     case 1:
+    case 2:
     case 5:
       return (
         <ContentComponent header={`${loanProvider} loan application status`}>
           <p>
-            Your loan application has been received and is currently awaiting
-            review by our team. You will be notified once it moves to the next
-            stage.
+            Your loan application request has been received and is currently
+            awaiting review by our team. You will be notified once it moves to
+            the next stage.
           </p>
           <ContactSupport />
         </ContentComponent>
       );
-    case 2:
-      return (
-        <ContentComponent header={`${loanProvider} loan application status`}>
-          <p>
-            Your documents have been successfully verified, and your loan
-            application is currently being processed. Please check back here for
-            updates or further instructions.
-          </p>
-          <ContactSupport />
-        </ContentComponent>
-      );
+
     case 3: //total rejection
       return (
         <>
@@ -83,44 +75,15 @@ const LoanLenderStatus: React.FC<Props> = ({
           {loanForm}
         </>
       );
-    case 4: //rejected only proof of address
+    case 4:
       return (
-        <>
+        <ContentComponent header={`${loanProvider} loan application status`}>
           <p>
-            Your application was <b>rejected</b> due to an issue with your proof
-            of address. Please review the comment below and provide a valid
-            physical address and supporting document to continue.
+            Your request has been approved. You will be notified once the
+            application has been made.
           </p>
-          <p>
-            <strong>Remarks:</strong>
-            <em>{remarks}</em>
-          </p>
-          <p className="title-sm my-3">Resubmit your proof of address</p>
-          <ContentComponent className="px-4" header="">
-            <form className="col gap-2 px-4">
-              <div className="alert my-3">
-                <p className="">
-                  <strong>Note:</strong> Ensure you provide your permanent
-                  physical address. PO Box addresses are not accepted.
-                </p>
-              </div>
-              <InputsWithLabel
-                label="Proof of address"
-                inputLabel="Building/Apartment/Suite/Land refrence number*"
-                name="address"
-              />
-
-              <InputsWithLabel
-                inputLabel="Proof of address"
-                type="file"
-                name="file"
-              />
-              <PrimaryBtn type="submit" className="self-end">
-                Upload
-              </PrimaryBtn>
-            </form>
-          </ContentComponent>
-        </>
+          <ContactSupport />
+        </ContentComponent>
       );
     case 6:
       return (

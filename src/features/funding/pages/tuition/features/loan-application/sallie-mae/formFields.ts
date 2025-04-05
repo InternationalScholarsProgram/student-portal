@@ -3,8 +3,9 @@ const generalInformation = [
     type: "text",
     label: "Phone Number",
     name: "phone_number",
+    required: true,
   },
-  { type: "date", label: "Date of Birth", name: "dob" },
+  { type: "date", label: "Date of Birth", name: "dob", required: true },
   {
     name: "citizenship",
     type: "select",
@@ -15,31 +16,36 @@ const generalInformation = [
       { value: "2", label: "US Permanent Resident" },
       { value: "3", label: "Non-US Citizen" },
     ],
+    required: true,
   },
   {
     name: "grad_date",
     type: "date",
+    required: true,
     label: "Expected graduation date (estimate is okay)  ",
   },
 ];
 const addressDetails = [
   {
     type: "text",
+    required: true,
     label: "Street Address",
     name: "address",
   },
   {
     type: "text",
+    required: true,
     label: "Apartment, Unit or Suite",
     name: "apartment",
   },
-  { type: "text", label: "City, Province", name: "city" },
-  { type: "text", label: "Zip Code", name: "zip_code" },
+  { type: "text", label: "City, Province", name: "city", required: true },
+  { type: "text", label: "Zip Code", name: "zip_code", required: true },
 ];
 const employmentInformation = [
   {
     name: "employment",
     label: "Employment status",
+    required: true,
     type: "select",
     options: [
       { value: "", label: "Select" },
@@ -49,20 +55,18 @@ const employmentInformation = [
       { value: "4", label: "Unemployed" },
     ],
   },
-  {
-    label: "Occupation",
-    type: "text",
-    name: "occupation",
-  },
+  { required: true, label: "Occupation", type: "text", name: "occupation" },
 ];
 
 const financial = [
   {
+    required: true,
     label: "Gross annual income (USD)",
     type: "number",
     name: "annual_income",
   },
   {
+    required: true,
     label: "Additional income (USD)",
     type: "number",
     name: "additional_income",
@@ -70,6 +74,7 @@ const financial = [
 ];
 const residence = [
   {
+    required: true,
     name: "housing_status",
     type: "select",
     label: "Residence type",
@@ -82,6 +87,7 @@ const residence = [
     ],
   },
   {
+    required: true,
     label: "Housing rent/mortgage, if renting (USD)",
     type: "number",
     name: "house_rent",
@@ -89,6 +95,7 @@ const residence = [
 ];
 const security = [
   {
+    required: true,
     label: "Name of the city you were born in",
     type: "text",
     name: "answer_one",
@@ -97,10 +104,12 @@ const security = [
   {
     label: "First Company you have worked for",
     type: "text",
+    required: true,
     name: "answer_two",
   },
 
   {
+    required: true,
     label: "Name of the last school attended",
     type: "text",
     name: "answer_three",

@@ -6,8 +6,9 @@ import { formatDateAndTime } from "../../../../../../utils/utils";
 const BookFundingAdvisoryMeeting: React.FC<{ dateAndTime?: any }> = ({
   dateAndTime,
 }) => {
+  
   const today = dayjs(new Date());
-  const isMoreThan24Hours = today.diff(dateAndTime, "hour") > 24;
+  const isMoreThan24Hours = today.diff(dateAndTime, "hour") < 24;
 
   return (
     <ContentComponent

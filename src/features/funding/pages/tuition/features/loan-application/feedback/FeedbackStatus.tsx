@@ -7,14 +7,14 @@ const FeedbackStatus = () => {
   const { loanFeedback, fundingAdvisory } = useTuition();
   return (
     <div>
-      {loanFeedback?.loan_status === 2 ? (
+      {loanFeedback?.loan_status === 3 ? (
         <ContentComponent header="Loan Awarded">
-          <p>Your loan application has been approved by the lender.</p>
+          <p>🎉 Congratulations on your loan approval.</p>
           <p>The next step is to begin processing your I-20 form.</p>
           <ContactSupport />
         </ContentComponent>
       ) : (
-        loanFeedback?.loan_status === 3 && (
+        loanFeedback?.loan_status === 2 && (
           <ContentComponent header="Loan denied">
             <div className="col gap-2">
               <p className="mb-2">

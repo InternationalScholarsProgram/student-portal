@@ -6,6 +6,7 @@ import {
   FundingAdvisoryProps,
   LoanDetailsProps,
 } from "../../../types/fundingTypes";
+import { splitDate } from "../../../../../utils/utils";
 type KeyProps =
   | "tuitionStatus"
   | "mpower"
@@ -49,9 +50,7 @@ function useTuition() {
   };
 
   const loanDetails: LoanDetailsProps[] = tuitionData?.loan_app_details;
-  const activeLoanApplication =
-    loanDetails?.find((loan) => !loan.application_details?.loan_app_feedback) ||
-    loanDetails?.[0];
+  const activeLoanApplication = checkActiveLoan(loanDetails);
 
   const invalidate = (key: KeyProps) =>
     queryClient.invalidateQueries({ queryKey: querKeys[key] });
@@ -83,3 +82,31 @@ function useTuition() {
 }
 
 export default useTuition;
+
+const checkActiveLoan = (data: LoanDetailsProps[]) => {
+  if (!data?.length) return undefined;
+
+  // 1. Check for exactly one active loan
+  const activeLoan = data.find(
+    (loan) => loan.loan_application_status === "active"
+  );
+  if (activeLoan) return activeLoan;
+
+  // 2. Filter awarded loans (status === 2)
+  const awardedLoans = data.filter(
+    (loan) => loan.loan_app_feedback?.loan_status === 2
+  );
+
+  if (awardedLoans.length === 1) return awardedLoans[0];
+
+  // 3. Sort awarded loans by approved_on date (descending)
+  const latestLoan = awardedLoans
+    .filter((loan) => loan.loan_app_feedback?.approved_on)
+    .sort(
+      (a, b) =>
+        splitDate(b.loan_app_feedback.approved_on).getTime() -
+        splitDate(a.loan_app_feedback.approved_on).getTime()
+    );
+
+  return latestLoan[0];
+};

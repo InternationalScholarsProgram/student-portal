@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const counties = [
   { value: 1, label: "Mombasa" },
   { value: 2, label: "Kwale" },
@@ -49,8 +51,8 @@ const counties = [
 ];
 const getCountries = async () => {
   try {
-    const response = await fetch("https://restcountries.com/v3.1/all");
-    const data = await response.json();
+    const response = await axios.get("https://restcountries.com/v3.1/all");
+    const data = await response.data;
     const countries = data.map((country: any) => ({
       label: country.name.common,
       value: country.name.common,

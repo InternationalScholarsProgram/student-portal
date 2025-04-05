@@ -15,6 +15,8 @@ const LeadStatus: React.FC = () => {
     queryFn: tuitionEndpoints.trackMpowerLead,
     select: (response) => response?.data?.data as MpowerStatus["lead"] | null,
   });
+  console.log(leadStatus, "leadStatus");
+  
   return (
     <ContentComponent header="Mpower Loan Status">
       <p>
@@ -24,7 +26,7 @@ const LeadStatus: React.FC = () => {
       {isLoading && !isError ? (
         <InlineLoader />
       ) : (
-        leadStatus?.opportunities.map((school, index) => (
+        leadStatus?.opportunities?.map((school, index) => (
           <div key={index} className="col p-3">
             <p>School : {school?.schoolName}</p>
             <p>Loan Eligibility Status : {school?.eligibilityStatus}</p>

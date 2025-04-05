@@ -4,8 +4,8 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Avatar } from "@mui/material";
-import DropDown from "../DropDown";
-import useFetchUser from "../../services/hooks/useFetchUser";
+import DropDown from "../../../../components/DropDown";
+import useFetchUser from "../../../../services/hooks/useFetchUser";
 
 function User() {
   const { user } = useFetchUser();

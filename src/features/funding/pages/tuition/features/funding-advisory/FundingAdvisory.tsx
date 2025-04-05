@@ -4,7 +4,9 @@ import UpcomingMeeting from "./UpcomingMeeting";
 
 function FundingAdvisory() {
   const { fundingAdvisory, tuitionStatus } = useTuition();
-  if (!fundingAdvisory) return <BookFundingAdvisoryMeeting />; //book meeting
+
+  if (!fundingAdvisory?.status) return <BookFundingAdvisoryMeeting />; //book meeting
+
   if (tuitionStatus === 5)
     //missed meeting
     return (
@@ -12,8 +14,7 @@ function FundingAdvisory() {
     );
 
   if (fundingAdvisory?.status === 1) {
-    //upcoming/pending
-    return <UpcomingMeeting fundingAdvisory={fundingAdvisory} />;
+    return <UpcomingMeeting fundingAdvisory={fundingAdvisory} />; //upcoming/pending
   }
 }
 

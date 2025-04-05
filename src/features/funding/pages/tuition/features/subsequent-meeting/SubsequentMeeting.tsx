@@ -4,23 +4,29 @@ import {
   formatDateAndTime,
 } from "../../../../../../utils/utils";
 import dayjs from "dayjs";
-import { CalendlyFundingAdvisory } from "../../../../../../components/Calendly";
 import { useSubsequentMeeting } from "./useSubsequentMeeting";
-import BookFundingAdvisoryMeeting from "../funding-advisory/BookFundingAdvisoryMeeting";
 import UpcomingMeeting from "../funding-advisory/UpcomingMeeting";
 import BookSubsequent from "./BookSubsequent";
+import { CalendlyFundingAdvisory } from "../../../../../../components/Calendly";
+import ContactSupport from "../../../../../../components/ContactSupport";
+import { InlineLoader } from "../../../../../../components/loaders/Loader";
+import AxiosError from "../../../../../../components/errors/AxiosError";
 
 const SubsequentMeeting = () => {
-  const { subsequentMeeting } = useSubsequentMeeting();
+  const { subsequentMeeting, isLoading, error } = useSubsequentMeeting();
 
   const meeting = subsequentMeeting?.booked_meeting;
   const meetingRequest = subsequentMeeting?.subsequent_meeting_request;
   const dateAndTime = convertToDateAndTime(meeting?.date, meeting?.time);
+
   const isMoreThan24Hours = dayjs(new Date()).diff(dateAndTime, "hour") > 24;
+
+  if (isLoading) return <InlineLoader />;
+  if (error) return <AxiosError error={error} />;
 
   switch (subsequentMeeting?.status) {
     case 1:
-      return <UpcomingMeeting fundingAdvisory={meeting} />;
+      return <UpcomingMeeting fundingAdvisory={{ ...meeting, dateAndTime }} />;
     case 0:
     case 6:
       return (
@@ -50,7 +56,7 @@ const SubsequentMeeting = () => {
               a time that works best for you.
             </p>
             {isMoreThan24Hours ? (
-              <div>
+              <div className="col">
                 <p>
                   🕒 To continue with your loan application, please reschedule
                   your meeting.
@@ -69,10 +75,13 @@ const SubsequentMeeting = () => {
       );
     case 4:
       return (
-        // <ContentComponent header="Subsequent Funding Advisory Meeting">
-        <p>Subsequent meeting requested and is pending approval</p>
-        // </ContentComponent>
+        <div className="alert">
+          <p>
+            Your subsequent meeting has been requested and is pending approval.
+          </p>
+        </div>
       );
+
     case 5:
       return (
         <ContentComponent header="Subsequent Funding Advisory Meeting">
@@ -86,13 +95,20 @@ const SubsequentMeeting = () => {
           <BookSubsequent rejected />
         </ContentComponent>
       );
-    default: //2,0,
+    case 2:
       return (
         <p>
           Need additional guidance from our funding advisor?
           <BookSubsequent />
           to schedule a follow-up meeting.
         </p>
+      );
+    default:
+      return (
+        <div>
+          <p>An error occurred, status not found</p>
+          <ContactSupport />
+        </div>
       );
   }
 };
@@ -113,7 +129,6 @@ export default SubsequentMeeting;
   → The student requested another meeting after the first, and it’s still awaiting approval.
 5 Rejected subsequent meeting request.
   → A follow-up meeting was requested but it was rejected.
-
 6 Subsequent meeting request approved.
   → A follow-up meeting was requested and approved.
 

@@ -7,7 +7,7 @@ const RescheduleMeeting: React.FC<{ url: string }> = ({ url }) => {
   const toggleModal = () => setOpen(!open);
   return (
     <>
-      <button onClick={toggleModal} className="text-btn self-end">
+      <button onClick={toggleModal} className="text-btn border">
         Reschedule
       </button>
       <Modal open={open} setOpen={toggleModal} title="Reschedule Meeting">

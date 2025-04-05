@@ -4,14 +4,23 @@ import { Link } from "react-router-dom";
 function ProvideSchoolFeedback() {
   return (
     <ContentComponent header="Provide School Feedback">
+      <p>Before proceeding with this module, you must:</p>
+      <ul className="list-disc px-2 list-inside">
+        <li>Ensure you have received an admission letter from the school.</li>
+        <li>
+          Upload the admission letter under the{" "}
+          <strong>School Admission</strong> module.
+        </li>
+        <li>
+          Wait for admin approval of your admission letter before moving
+          forward.
+        </li>
+      </ul>
       <p>
-        Before proceeding with this module, you must first provide school
-        feedback. Your school should have issued you an admission letter, which
-        must be uploaded under the School Admission module. Once completed, you
-        can proceed with requesting a loan to cover your tuition and living
+        Once approved, you can request a loan to cover your tuition and living
         expenses.
       </p>
-      <p>Please ensure that all required details are provided.</p>
+      <p>Please ensure that all required details are accurate and complete.</p>
       <p>
         If you have any questions or concerns, please contact our support team.
       </p>

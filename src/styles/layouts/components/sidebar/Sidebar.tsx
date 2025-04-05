@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import Logo from "../Logo";
-import { linksWithDivider } from "../../router/linkItems";
-import { useStore } from "zustand";
-import sideBarStore from "./sideBarStore";
+import Logo from "../../../../components/Logo";
+import { linksWithDivider } from "../../../../router/linkItems";
 import SubItems from "./SubItems";
 import SidebarNavLink from "./SidebarNavLink";
+import useSidebarStore from "./useSidebarStore";
 
 function Sidebar() {
-  const { openSections, setOpenSections, initialize, toggleDrawer } =
-    useStore(sideBarStore);
   const location = useLocation();
+  const { openSections, setOpenSections, initialize, toggleDrawer } =
+    useSidebarStore();
+
   useEffect(() => {
     initialize();
   }, [location.pathname]);

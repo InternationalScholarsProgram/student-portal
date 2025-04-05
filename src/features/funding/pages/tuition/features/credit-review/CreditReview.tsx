@@ -7,6 +7,7 @@ import tuitionEndpoints from "../../services/tuitionEndpoints";
 import ContentComponent from "../../../../../../components/ContentComponent";
 import ContactSupport from "../../../../../../components/ContactSupport";
 import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
+import ProvideSchoolFeedback from "./ProvideSchoolFeedback";
 
 function CreditReview() {
   const { creditReview, inValidateStatus } = useTuition();
@@ -38,7 +39,9 @@ function CreditReview() {
 
       case 2:
         // is approved, hence will render funding advisory
-        break;
+        return (
+          <p>Credit Approved</p>
+        );
       case 3:
         return (
           <>
@@ -87,7 +90,7 @@ function CreditReview() {
     }
   }, [creditReview?.status, resubmit.isPending]);
 
-  // if (!creditReview) return <ProvideSchoolFeedback />;
+  if (!creditReview) return <ProvideSchoolFeedback />;
   return (
     <ContentComponent className="col" header="Credit Review">
       {statusMessages()}

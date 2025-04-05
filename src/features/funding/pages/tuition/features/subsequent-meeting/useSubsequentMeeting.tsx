@@ -7,8 +7,13 @@ import useTuition from "../../services/useTuition";
 export const useSubsequentMeeting = () => {
   const { user, queryClient } = useTuition();
   const queryKey = ["subsequent-meeting", user?.email];
-  
-  const { data: subsequentMeeting } = useQuery<any>({
+
+  const {
+    data: subsequentMeeting,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<any>({
     queryKey: queryKey,
     queryFn: tuitionEndpoints.getSubsequentMeeting,
     enabled: !!user?.email,
@@ -28,6 +33,8 @@ export const useSubsequentMeeting = () => {
 
   return {
     bookSubsequentMeeting,
+    isLoading,
+    error,
     subsequentMeeting,
     isMoreThan24Hours,
   };

@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
 import useAdmissions from "./services/useAdmissions";
+import { FullLoader } from "../../components/loaders/Loader";
 
 const tabs = [
   { to: "/school-admission-requirements", label: "Requirements" },
@@ -8,7 +9,9 @@ const tabs = [
 ];
 
 function AdmisionLayout() {
-  const { status } = useAdmissions();
+  const { status, isLoading } = useAdmissions();
+
+  if (isLoading) return <FullLoader />;
   return (
     <main>
       {status?.code === 5 && (

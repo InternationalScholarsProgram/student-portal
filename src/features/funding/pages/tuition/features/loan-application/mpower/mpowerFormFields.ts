@@ -24,7 +24,7 @@ const programDetails = [
     required: true,
   },
   {
-  name: "start_date",
+    name: "start_date",
     label: "Expected program start date",
     type: "date",
     required: true,
@@ -41,7 +41,8 @@ const personalDetails = [
   {
     name: "citizenship",
     label: "Country of citizenship",
-    type: "country",
+    type: "text",
+    isCountry: true,
     required: true,
   },
   {
@@ -68,7 +69,13 @@ const addressDetails = [
     required: true,
   },
   { name: "city", label: "City/Town", type: "text", required: true },
-  { name: "country", label: "Country", type: "country", required: true },
+  {
+    name: "country",
+    label: "Country",
+    type: "country",
+
+    required: true,
+  },
   {
     name: "state",
     label: "State/Region/County",

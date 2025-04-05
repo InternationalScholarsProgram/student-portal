@@ -5,19 +5,17 @@ import User from "./User";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import useThemeStore from "../../styles/theme.store";
-import InputField from "../inputs/InputField";
+import useThemeStore from "../../../theme.store";
+import InputField from "../../../../components/inputs/InputField";
+import useSidebarStore from "../sidebar/useSidebarStore";
 
-interface NavbarProps {
-  toogleSideBar: () => void;
-}
-
-const Navbar = ({ toogleSideBar }: NavbarProps) => {
+const Navbar = () => {
   const { themeMode, toggleTheme } = useThemeStore();
+  const { toggleDrawer } = useSidebarStore();
 
   return (
     <nav className="row justify-between flex-1 px-3 h-[9vh]">
-      <button className="lg:hidden" onClick={toogleSideBar}>
+      <button className="lg:hidden" onClick={toggleDrawer}>
         <MenuIcon className="text-primary" fontSize="large" />
       </button>
       <div className="row items-center justify-end space-x-3 flex-1">

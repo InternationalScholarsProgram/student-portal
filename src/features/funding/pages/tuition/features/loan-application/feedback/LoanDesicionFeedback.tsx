@@ -23,10 +23,10 @@ const LoanDesicionFeedback = () => {
   const onsubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("app_id", schoolAppId);
+    formData.append("app_id", schoolAppId || "");
     formData.append("loan_id", activeLoanApplication?.application_details?.id);
-    formData.append("lender", activeLoanApplication?.funding);
-    formData.append("school", activeLoanApplication?.school);
+    formData.append("lender", activeLoanApplication?.funding || "");
+    formData.append("school", activeLoanApplication?.school || "");
     formData.append(
       "loan_applied",
       activeLoanApplication?.application_details?.loan_amount
@@ -49,11 +49,12 @@ const LoanDesicionFeedback = () => {
   return (
     <>
       <ContentComponent header="Loan Decision Feedback" className="col">
+        <p>Your loan application is complete</p>
         <LoanPortal userName={"test"} password={"sdfe232@"} link={""} />
         <p>
-          You must provide us with the final loan decision feedback before you
-          can proceed to the next step. Please provide the loan decision
-          feedback you got from the lender
+          Before moving forward, we need your final loan decision feedback.
+          <br />
+          Please submit your response below.
         </p>
 
         <PrimaryBtn onClick={toggleModal} className="self-end">
@@ -67,17 +68,8 @@ const LoanDesicionFeedback = () => {
             <p>
               <b>School</b> :{" "}
               {activeLoanApplication?.school +
-                " " +
+                " - " +
                 activeLoanApplication?.program}
-            </p>
-            <p>
-              <b>Lender</b> : {activeLoanApplication?.funding}
-            </p>
-            <p>
-              <b>Amount</b> :{" "}
-              {formatCurrency(
-                activeLoanApplication?.application_details?.loan_amount
-              )}
             </p>
           </div>
           <div className="mt-3 px-2">
@@ -106,9 +98,7 @@ const LoanDesicionFeedback = () => {
                 />
                 {loanStatus &&
                   (loanStatus === "2" ? acceptedFieds : deniedFieds).map(
-                    (field) => (
-                      <InputsWithLabel key={field.name} required {...field} />
-                    )
+                    (field) => <InputsWithLabel key={field.name} {...field} />
                   )}
               </div>
             ) : null}
@@ -131,16 +121,19 @@ const acceptedFieds = [
     inputLabel: "Date of decision",
     type: "date",
     name: "approved_on",
+    required: true,
   },
   {
     inputLabel: "Attach approval letter",
     type: "file",
     name: "loan_letter",
+    required: true,
   },
   {
     inputLabel: "Amount approved (USD)",
     type: "number",
     name: "loan_awarded",
+    required: true,
   },
 ];
 const deniedFieds = [
@@ -148,6 +141,7 @@ const deniedFieds = [
     inputLabel: "Attach denial letter",
     type: "file",
     name: "loan_letter",
+    required: true,
   },
   {
     inputLabel: "Reason for denial",
@@ -155,5 +149,6 @@ const deniedFieds = [
     rows: 3,
     multiline: true,
     name: "remark",
+    required: true,
   },
 ];

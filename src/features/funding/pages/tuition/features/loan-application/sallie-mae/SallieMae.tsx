@@ -25,10 +25,7 @@ function SallieMae() {
   return (
     <div>
       {cosigner?.status !== 4 ? (
-        <CosignerStatus
-          status={cosigner?.status}
-          remarks={cosigner?.remarks || "Co-signer details not found"}
-        />
+        <CosignerStatus cosigner={cosigner} />
       ) : (
         <LoanStatus />
       )}

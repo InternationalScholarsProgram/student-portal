@@ -25,10 +25,13 @@ const MpowerLoanForm = () => {
     onSuccess: () => {
       toast.success("Application submitted successfully");
       invalidate("mpower");
+      invalidate("tuitionStatus");
     },
-    onError: (error : any) => {
-      toast.error(error.response.data.message || "An unexpected error occurred.");
-    }
+    onError: (error: any) => {
+      toast.error(
+        error.response.data.message || "An unexpected error occurred."
+      );
+    },
   });
 
   const convert = (fields: any) =>
@@ -44,7 +47,13 @@ const MpowerLoanForm = () => {
           <React.Fragment key={key}>
             <p className="font-bold py-2">{field.label}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10">
-              <MapFormFields fields={convert(field.fields)} />
+              <MapFormFields
+                fields={
+                  activeLoanApplication.application_details
+                    ? convert(field.fields)
+                    : field.fields
+                }
+              />
             </div>
           </React.Fragment>
         ))}

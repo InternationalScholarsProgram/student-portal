@@ -76,28 +76,23 @@ interface DocRequirements {
 interface TranscriptsProps {
   school_count: number;
   requirements: TranscriptsRequirementProps[];
-  requests: TranscriptsRequestProps[];
+  request: TranscriptsRequestProps | null;
 }
 type TranscriptsRequirementProps = {
   app_id: string;
   proposed_course: string;
-  id: string;
   school_name: string;
+  ver_status: string;
   verification: string;
+  verification_email: string;
   ver_id: string | null;
   transcript: string;
-  ver_status: string;
-  verification_email: string;
 };
+
 type TranscriptsRequestProps = {
-  app_id: string | null;
-  city: string | null;
-  code: string | null;
-  email: string;
-  id: string;
-  request_letter: string;
   status: string;
-  transcript: string | null;
+  transcript: string;
+  transcript_ver_letter: string | null;
 };
 
 type GPAReport = {

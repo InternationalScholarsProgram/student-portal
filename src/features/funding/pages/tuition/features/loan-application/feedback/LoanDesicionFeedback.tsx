@@ -58,7 +58,7 @@ const LoanDesicionFeedback = () => {
         </p>
 
         <PrimaryBtn onClick={toggleModal} className="self-end">
-          Send Feedback
+          Submit Feedback
         </PrimaryBtn>
       </ContentComponent>
       <Modal open={open} setOpen={toggleModal} title="Loan Decision Feedback">

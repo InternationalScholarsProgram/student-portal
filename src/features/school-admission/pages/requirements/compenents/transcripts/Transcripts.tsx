@@ -3,35 +3,32 @@ import { Button } from "@mui/material";
 
 import useAdmissions from "../../../../services/useAdmissions";
 import TranscriptsModal from "./TranscriptsModal";
-import { FullLoader } from "../../../../../../components/loaders/Loader";
+import { InlineLoader } from "../../../../../../components/loaders/Loader";
 import ToProgram from "./ToProgram";
 
 function Transcripts() {
   const { transcripts } = useAdmissions();
   const [open, setOpen] = useState(false);
+  const toggleModal = () => setOpen(!open);
 
-  const toggleModal = useCallback(() => setOpen((prev) => !prev), []);
+  if (!transcripts?.requirements) return <InlineLoader />;
 
-  // Ensure requirements exist before rendering content
-  if (!transcripts?.requirements) return <FullLoader />;
-
-  // Checks
-  const hasApprovedTranscript = transcripts.requests?.some(
-    (item) => item.status === "2"
-  );
+  // Checks, verified by schools
   const allVerified = transcripts?.requirements?.length
     ? transcripts.requirements.every((item) => item.ver_status === "2")
     : false;
 
+  // Verified by program check
   const noSchoolRecords = transcripts?.school_count === 0;
+  const hasApprovedTranscript = transcripts.request?.status === "2";
+  const programVerified = noSchoolRecords && hasApprovedTranscript;
 
   // Exit early if all conditions are met
-  if ((noSchoolRecords && hasApprovedTranscript) || allVerified) return null;
+  if (programVerified || allVerified) return null;
 
   const canRequestLetter = transcripts?.requirements?.some(
     (item) => !item.ver_id || item.ver_status === "3"
   );
-  const hasRequested = transcripts?.requirements?.some((item) => item.ver_id);
 
   return (
     <div>

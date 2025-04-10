@@ -5,6 +5,7 @@ function CheckBox(props: CheckboxProps) {
   return (
     <FormControlLabel
       label={title}
+      // sx={{ alignItems: "flex-start" }}
       control={
         <Checkbox
           {...others}

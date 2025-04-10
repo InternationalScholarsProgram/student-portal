@@ -4,7 +4,7 @@ import Select from "./Select";
 import InputField from "./InputField";
 import React, { useEffect, useState } from "react";
 
-type Props = { fields: any[]; handleChange?: any; values?: any };
+type Props = { fields: any[]; handleChange?: any };
 
 const MapFormFields: React.FC<Props> = ({ fields, handleChange }) => {
   const [formData, setFormData] = useState(convert(fields));

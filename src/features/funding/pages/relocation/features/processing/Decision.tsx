@@ -43,21 +43,26 @@ const Decision = () => {
           <Select
             placeholder="Please read the offer letter carefully before giving a response"
             onChange={(e) => setResponse(e.target.value)}
+            name="decision"
           >
-            {["Accept", "Reject"].map((item) => (
-              <MenuItem key={item} value={item}>
-                {item}
+            {options.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
               </MenuItem>
             ))}
           </Select>
-          {response === "Reject" && (
+          {response === "reject" && (
             <InputsWithLabel
               inputLabel="You are choosing to reject our loan offer. We would like to understand this decision, please provide a reason for the rejection below."
-              name="reason_for_rejection"
+              name="reject_reason"
               placeholder="Reason for rejection"
             />
           )}
-          {response !== "" && <FormFooterBtns btnText={"Submit"} />}
+          {response !== "" && (
+            <FormFooterBtns
+              btnText={decision.isPending ? "Submitting..." : "Submit"}
+            />
+          )}
         </form>
       </ContentComponent>
     </>
@@ -65,3 +70,7 @@ const Decision = () => {
 };
 
 export default Decision;
+const options = [
+  { value: "accept", label: "Accept Loan" },
+  { value: "reject", label: "Reject Loan" },
+];

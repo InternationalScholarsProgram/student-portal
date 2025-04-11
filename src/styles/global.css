@@ -160,7 +160,7 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] col p-3;
+  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] max-h-[80vh] overflow-y-auto col p-3;
 }
 .title {
   @apply text-xl sm:text-2xl font-semibold;
@@ -203,4 +203,12 @@ p {
 .form-grid > div {
   @apply col justify-between;
 }
-
+.data-table {
+  @apply w-fit;
+}
+.data-table div {
+  @apply grid grid-cols-2 hover:bg-slate-400;
+}
+.data-table p {
+  @apply border-30 p-2 ;
+}

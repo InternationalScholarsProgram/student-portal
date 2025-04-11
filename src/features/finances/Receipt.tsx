@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Navigate } from "react-router";
 import { useFinancesStore } from "./layout/FinancesLayout";
 import { ispLogo } from "../../assets/imageLinks";
-import { contacts, printPDF } from "../../utils/utils";
+import { contacts, generatePdf } from "../../utils/utils";
 
 const Receipt = () => {
   const { selectedTransaction } = useFinancesStore((state) => state);
@@ -13,7 +13,7 @@ const Receipt = () => {
       console.error("Section ref is not assigned.");
       return;
     }
-    printPDF(payment_intent_id, sectionRef.current);
+    generatePdf(payment_intent_id, sectionRef.current);
     console.log(payment_intent_id);
     return;
   };

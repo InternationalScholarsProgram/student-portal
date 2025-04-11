@@ -2,7 +2,7 @@ import AxiosError from "../../../../components/errors/AxiosError";
 import { FullLoader } from "../../../../components/loaders/Loader";
 import ApplicationStatus from "./features/application/ApplicationStatus";
 import useRelocation from "./services/useRelocation";
-import Decision from "./features/processing/Decision";
+import LoanProcessing from "./features/processing/LoanProcessing";
 
 function Relocation() {
   const { relocationStatus, isLoading, error } = useRelocation();
@@ -18,7 +18,7 @@ function Relocation() {
         />
       );
     case 1:
-      return <Decision />;
+      return <LoanProcessing />;
   }
 }
 

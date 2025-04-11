@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LetterHead from "../../../../../../components/letters/LetterHead";
-import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
 import Modal from "../../../../../../components/Modal";
 import Address from "../../../../../../components/letters/Address";
-import bobSig from "../../../../../../assets/BobMwitiSign.png";
 import useFetchUser from "../../../../../../services/hooks/useFetchUser";
 import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
-import { generatePdf } from "../../../../../user/contracts/utils/utils";
+import BobSignatory from "../../../../../../components/letters/BobSignatory";
+import { generatePdf } from "../../../../../../utils/utils";
 
 const OfferLetter = ({ loan = 0 }) => {
   const { user } = useFetchUser();
@@ -14,15 +13,21 @@ const OfferLetter = ({ loan = 0 }) => {
   const toggleModal = () => setOpen(!open);
   const targetRef = React.useRef(null);
 
-  const download = () => {
-    if (targetRef?.current) generatePdf("OfferLetter", targetRef.current);
+  const download = async () => {
+    if (targetRef?.current) {
+      const pdf = await generatePdf("OfferLetter", targetRef.current, false);
+      pdf.instance.save();
+    }
   };
 
   return (
     <>
-      <PrimaryBtn onClick={toggleModal} className="self-end">
+      <span
+        onClick={toggleModal}
+        className="cursor-pointer title-sm text-primary-light underline"
+      >
         Offer Letter
-      </PrimaryBtn>
+      </span>
       <Modal open={open} setOpen={toggleModal} title="Offer Letter">
         <div className="modal">
           <div ref={targetRef} className="col w-full">
@@ -51,23 +56,7 @@ const OfferLetter = ({ loan = 0 }) => {
                 contact our team or submit a ticket through your student portal.
               </p>
             </article>
-            <div className="">
-              <b>Sincerely,</b>
-              <div className="col py-2">
-                <img
-                  src={bobSig}
-                  alt="logo"
-                  className="bg-white"
-                  height="120px"
-                  width="110px"
-                />
-
-                <b>Bob Mwiti</b>
-                <b>Managing Director & CEO</b>
-                <b>The International Scholars Program</b>
-                <b>{"  "}</b>
-              </div>
-            </div>
+            <BobSignatory />
           </div>
           <FormFooterBtns
             onClose={toggleModal}

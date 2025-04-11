@@ -1,6 +1,6 @@
 import { ispLogo } from "../../assets/imageLinks";
 
-const LetterHead = ({ title }: { title?: string }) => {
+const LetterHead = () => {
   return (
     <header className="col w-fit">
       <img
@@ -9,9 +9,6 @@ const LetterHead = ({ title }: { title?: string }) => {
         className="rounded mx-auto"
         width="140px"
       />
-      {/* <h4 className="font-bold">
-        {title || "The International Scholars Program"}
-      </h4> */}
     </header>
   );
 };

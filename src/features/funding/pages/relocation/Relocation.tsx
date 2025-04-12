@@ -8,7 +8,12 @@ function Relocation() {
   const { relocationStatus, isLoading, error } = useRelocation();
   if (isLoading) return <FullLoader />;
   if (error) return <AxiosError error={error} />;
-
+return (
+        <ApplicationStatus
+          status={12}
+          remarks={relocationStatus?.application?.remark}
+        />
+      );
   switch (relocationStatus?.status) {
     case 0:
       return (

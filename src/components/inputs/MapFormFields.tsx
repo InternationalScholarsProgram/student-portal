@@ -13,6 +13,8 @@ const MapFormFields: React.FC<Props> = ({ fields, handleChange }) => {
     setFormData(convert(fields));
   }, [fields]);
 
+  if (!fields?.length) return null;
+
   const onChange = (e: any) => {
     if (!e?.target?.name || !e?.target?.value) return;
     const { name, value } = e.target;

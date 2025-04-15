@@ -21,7 +21,7 @@ const CustomToolBar = (props: any) => {
     )
   );
   return (
-    <div className="row justify-between p-4">
+    <div data-html2canvas-ignore className="row justify-between p-4">
       <TableHeader fileName={props.name} data={props.headerData || data} />
       <GridToolbarQuickFilter
         variant="outlined"

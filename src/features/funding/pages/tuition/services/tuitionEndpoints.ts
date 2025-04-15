@@ -4,7 +4,7 @@ import api, {
 } from "../../../../../services/api/base";
 import { fetchIp, testEndpoint } from "../../../../../utils/utils";
 
-const url = `${baseDirectory}funding/`;
+const url = `${baseDirectory}funding/tuition`;
 const sallieMaeUrl = `${url}salliemae.php`;
 const mpowerUrl = `${url}m-power.php`;
 const tuitionUrl = `${url}/tuition_status.php`;

@@ -1,11 +1,11 @@
 import { Checkbox, CheckboxProps, FormControlLabel } from "@mui/material";
 
 function CheckBox(props: CheckboxProps) {
-  const { title, ...others } = props;
+  const { title, sx, ...others } = props;
   return (
     <FormControlLabel
       label={title}
-      // sx={{ alignItems: "flex-start" }}
+      sx={sx}
       control={
         <Checkbox
           {...others}

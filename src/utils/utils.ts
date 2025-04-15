@@ -167,21 +167,24 @@ export async function generatePdf(
     element.style.backgroundColor = "white";
     element.style.color = "black";
   }
-  const options  = {
+  const options = {
     ...pdfOptions,
     margin: 1,
     filename: filename,
   };
-  const instance = html2pdf().set(options ).from(element);
+  const instance = html2pdf().set(options).from(element);
   const pdf = await instance.toPdf().get("pdf");
-
   if (download) await instance.save();
-
+  
   element.style.backgroundColor = original.backgroundColor;
   element.style.color = original.text;
-
+  
+  const blob = pdf.output("blob");
   return {
-    blob: pdf.output("blob"),
+    blob: blob,
+    doc: new File([blob], filename, {
+      type: "application/pdf",
+    }),
     instance,
     name: filename,
   };

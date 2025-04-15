@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import ContentComponent from "../../../../../../components/ContentComponent";
 import { formatCurrency } from "../../../../../../utils/utils";
 
-const YourRejectedLoan = ({ toPay }: { toPay: number }) => {
+const YourRejectedLoan = ({ toPay = 0 }) => {
   return (
     <ContentComponent header="Relocation Loan Rejected">
       <p>

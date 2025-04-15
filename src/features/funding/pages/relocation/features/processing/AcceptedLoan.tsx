@@ -3,7 +3,7 @@ import RelocationContract from "./RelocationContract";
 
 const AcceptedLoan = () => {
   return (
-    <ContentComponent header="Accept Relocation Loan Contract">
+    <ContentComponent header="Relocation Loan Contract">
       <p>
         Thank you for accepting the loan offer. To proceed, the next step is to
         review and sign the official loan contract. This contract outlines the

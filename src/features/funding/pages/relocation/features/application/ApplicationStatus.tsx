@@ -1,10 +1,12 @@
 import ContactSupport from "../../../../../../components/ContactSupport";
 import ContentComponent from "../../../../../../components/ContentComponent";
+import useRelocation from "../../services/useRelocation";
 import LoanForm from "./LoanForm";
 
-type Props = { status: number; remarks?: string };
-const ApplicationStatus: React.FC<Props> = ({ status, remarks }) => {
-  switch (status) {
+const ApplicationStatus: React.FC = () => {
+  const { application } = useRelocation();
+
+  switch (application?.status) {
     case 2:
     case 5:
       return (
@@ -29,7 +31,9 @@ const ApplicationStatus: React.FC<Props> = ({ status, remarks }) => {
             </p>
             <p className="px-3">
               <b>Reason:</b>{" "}
-              <em>{remarks || "No specific reason was provided."}</em>
+              <em>
+                {application?.remarks || "No specific reason was provided."}
+              </em>
             </p>
             <p>
               Please review the feedback above and resubmit the form after

@@ -3,27 +3,22 @@ import { FullLoader } from "../../../../components/loaders/Loader";
 import ApplicationStatus from "./features/application/ApplicationStatus";
 import useRelocation from "./services/useRelocation";
 import LoanProcessing from "./features/processing/LoanProcessing";
+import Repayment from "./features/repayment/Repayment";
 
 function Relocation() {
   const { relocationStatus, isLoading, error } = useRelocation();
   if (isLoading) return <FullLoader />;
   if (error) return <AxiosError error={error} />;
-return (
-        <ApplicationStatus
-          status={12}
-          remarks={relocationStatus?.application?.remark}
-        />
-      );
+
+  // return <LoanProcessing />;
+
   switch (relocationStatus?.status) {
     case 0:
-      return (
-        <ApplicationStatus
-          status={relocationStatus?.application?.status}
-          remarks={relocationStatus?.application?.remark}
-        />
-      );
+      return <ApplicationStatus />;
     case 1:
       return <LoanProcessing />;
+    case 2:
+      return <Repayment />;
   }
 }
 

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Checkbox } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+
 import MapFormFields from "../../../../../../components/inputs/MapFormFields";
 import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
 import { InputsWithLabel } from "../../../../../../components/inputs/InputField";
-import { useMutation } from "@tanstack/react-query";
 import relocationApis from "../../services/relocationApis";
 import useRelocation from "../../services/useRelocation";
-import { toast } from "react-toastify";
 import { InlineLoader } from "../../../../../../components/loaders/Loader";
 import { formFields, splitAddress, termsAndConditions } from "./utils";
+import { Status } from "../../types/relocationTypes";
 
 const LoanForm = () => {
   const { invalidate, relocationStatus, isLoading } = useRelocation();
@@ -16,9 +18,9 @@ const LoanForm = () => {
   const [formData, setFormData] = useState<any>({});
   const [fields, setFields] = useState<any>(null);
 
-  const applicationData = {
+  const applicationData: Status["application"] | any = {
     ...relocationStatus?.application,
-    ...splitAddress(relocationStatus?.application?.usa_address),
+    ...splitAddress(relocationStatus?.application?.usa_address || ""),
   };
 
   const convert = (fields: any) =>
@@ -39,6 +41,7 @@ const LoanForm = () => {
       nextOfKin: convert(formFields?.nextOfKin),
     };
     setFields(values);
+    setFormData(applicationData);
   };
 
   const handleChange = (name: string, value: any) =>
@@ -94,18 +97,21 @@ const LoanForm = () => {
             fields={fields?.addressDetails}
             handleChange={handleChange}
           />
-          {formData?.residential_status == "2" && (
-            <InputsWithLabel
-              name="mortgage"
-              inputLabel="Monthly mortgage amount(in USD)"
-              required
-            />
-          )}
-          {formData?.residential_status == 3 && (
-            <InputsWithLabel
-              inputLabel="Monthly rent amount(in USD)"
-              name="monthly_rent"
-              required
+
+          {(formData?.residential_status == 3 ||
+            formData?.residential_status == 2) && (
+            <MapFormFields
+              fields={[
+                {
+                  name: "rent",
+                  label: `Monthly ${
+                    formData?.residential_status == 2 ? "mortgage" : "rent"
+                  } amount(in USD)`,
+                  required: true,
+                  value: formData?.rent,
+                },
+              ]}
+              handleChange={handleChange}
             />
           )}
         </div>

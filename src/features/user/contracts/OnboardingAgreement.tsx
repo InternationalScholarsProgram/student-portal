@@ -40,16 +40,15 @@ const saveContract = async (data: any) => {
 const version = "V 3.0";
 const OnboardingAgreement: React.FC<OnboardingAgreementProps> = () => {
   const { user } = useFetchUser();
-  const { state } = useLocation();
-  
-  const name = capitalize(user?.fullnames || "");
-  document.title = `${name} Onboarding Agreement`;
-  const { toPDF, targetRef } = usePDF({ filename: name });
   const [signed, setSigned] = useState(false);
+  const { state } = useLocation();
   const { data: ipData } = useQuery({
     queryKey: ["ip"],
     queryFn: fetchIp,
   });
+  
+  const name = capitalize(user?.fullnames || "");
+  const { toPDF, targetRef } = usePDF({ filename: name });
 
   const handleSignContract = async (e: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -88,6 +87,7 @@ const OnboardingAgreement: React.FC<OnboardingAgreementProps> = () => {
   });
 
   if (!user?.fullnames) return <FullLoader />;
+  document.title = `${name} Onboarding Agreement`;
   return (
     <div className="bg-white text-black">
       <button

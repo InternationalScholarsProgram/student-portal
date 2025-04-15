@@ -1,4 +1,4 @@
-import {  lazy } from "react";
+import { lazy } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
@@ -150,7 +150,7 @@ function Router() {
                 />
               </Route>
 
-              <Route path="*" element={<div />} />
+              <Route path="*" element={<p>Page not found</p>} />
             </Route>
           </Routes>
         </Suspense>

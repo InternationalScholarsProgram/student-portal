@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
 import useVisa from "../../services/hooks/useVisa";
+import { errorMsg } from "../../../../components/errors/errorMsg";
 
 const minLength = 100;
 
@@ -16,6 +17,7 @@ function Administrative() {
   const { visa, inValidateStatus } = useVisa();
   const [processed, setProcessed] = useState(false);
   const [comment, setComment] = useState("");
+  const [outcome, setOutcome] = useState<any>();
 
   const handleSubmit = useMutation({
     mutationFn: visaEndpoints.postFeedbackComments,
@@ -24,6 +26,7 @@ function Administrative() {
       toast.success(response.data.message);
       inValidateStatus();
     },
+    onError: (error: any) => toast.error(errorMsg(error)),
   });
 
   return (
@@ -57,11 +60,25 @@ function Administrative() {
             <label htmlFor="outcome">
               What was the result of your visa application?
             </label>
-            <Select name="outcome" variant="outlined" required>
+            <Select
+              name="outcome"
+              variant="outlined"
+              onChange={(e) => setOutcome(e.target.value)}
+              required
+            >
               <MenuItem value={1}>Approved (Got Visa)</MenuItem>
               <MenuItem value={2}>Denied (Visa Rejected)</MenuItem>
             </Select>
           </div>
+
+          {outcome === 1 && (
+            <InputsWithLabel
+              inputLabel="Upload your visa"
+              type="file"
+              name="visa_doc"
+            />
+          )}
+
           <InputsWithLabel
             inputLabel="Enter any comments or reasons provided by the embassy regarding your visa decision."
             name="comments"

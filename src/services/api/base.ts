@@ -8,7 +8,7 @@ const testStudents = [
   "test_four@gmail.com",
 ];
 
-const activeStudentId = testStudents[1];
+const activeStudentId = testStudents[0];
 
 const baseDirectory = "/login/member/dashboard/APIs/";
 const BASE_URL = "https://finkapinternational.qhtestingserver.com";
@@ -24,12 +24,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // console.log("Before Request:", config.params);
-
     if (!config.params) config.params = {}; // Initialize params if it doesn't exist
     config.params.student_id = activeStudentId;
-
-    // console.log("After Request:", config.params);
     return config;
   },
   (error) => {

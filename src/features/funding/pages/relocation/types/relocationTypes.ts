@@ -77,5 +77,27 @@ type Status = {
     total_payable: number;
     to_pay: number | undefined;
   };
+  extra_loan: {
+    amount: number;
+    customer_id: string;
+    due_date: string;
+    email: string;
+    id: number;
+    invoice_id: null;
+    payment_intent_id: null;
+    remark: null | string;
+    status: number;
+    invoice_url: string | null;
+  };
 };
-export type { Status };
+type RepaymentSchedule = {
+  id: number;
+  interest_rate: number;
+  maturity_date: string;
+  new_balance: number;
+  principal_payment: number;
+  scheduled_payment: number;
+  starting_balance: number;
+  status: "Pending" | "Paid" | "Not Paid";
+};
+export type { Status, RepaymentSchedule };

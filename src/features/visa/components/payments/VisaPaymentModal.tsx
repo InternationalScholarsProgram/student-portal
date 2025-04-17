@@ -16,7 +16,7 @@ function VisaPaymentModal({ open, toggleModal }: ModalProps) {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("country", user?.country);
+    formData.append("country", user?.country || "");
     formData.append("type", "visa");
     handlePayment.mutate(formData);
   };

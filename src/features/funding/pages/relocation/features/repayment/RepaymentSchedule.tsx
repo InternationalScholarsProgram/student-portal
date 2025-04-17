@@ -2,21 +2,16 @@ import { GridColDef } from "@mui/x-data-grid";
 import GridTable from "../../../../../../components/tables/GridTable";
 import useRelocation from "../../services/useRelocation";
 import { formatDate } from "../../../../../../utils/utils";
-import StatusChip, {
-  handleType,
-} from "../../../../../../components/StatusChip";
+import StatusChip from "../../../../../../components/StatusChip";
 
 const RepaymentSchedule = () => {
   const { schedulePayments } = useRelocation();
   return (
-    <div>
-      <p className="title-sm">Your repayment schedule</p>
-      <GridTable
-        name="Repayment Schedule"
-        rows={schedulePayments || []}
-        columns={columns}
-      />
-    </div>
+    <GridTable
+      name="Repayment Schedule"
+      rows={schedulePayments || []}
+      columns={columns}
+    />
   );
 };
 
@@ -24,12 +19,9 @@ export default RepaymentSchedule;
 const columns: GridColDef[] = [
   {
     field: "id",
-    headerName: "ID",
+    headerName: "No",
     width: 50,
-    colSpan: (value, row) => {
-      if (row.id === "transcripts") return 99;
-      return undefined;
-    },
+    valueGetter: (params) => params - 1,
   },
   {
     field: "maturity_date",
@@ -67,7 +59,12 @@ const columns: GridColDef[] = [
     field: "status",
     headerName: "Status",
     valueGetter: () => "not paid",
-    // cellClassName: (params) => handleType(params.row.status),
-    renderCell: (params) => <StatusChip type={params?.value} />,
+    renderCell: (params) => (
+      <div className="row-center flex-1 h-full w-full">
+        <p className="w-fit">
+          <StatusChip type={params?.value} />
+        </p>
+      </div>
+    ),
   },
 ];

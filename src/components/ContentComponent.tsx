@@ -12,7 +12,7 @@ const ContentComponent: React.FC<Props> = ({
   ...props
 }) => (
   <div {...props}>
-    <h3 className="title-sm">{header}</h3>
+    <h3 className="title-sm text-primary-main">{header}</h3>
     <div className={`col card sm:p-3 p-1 ${childrenClassName}`}>{children}</div>
   </div>
 );

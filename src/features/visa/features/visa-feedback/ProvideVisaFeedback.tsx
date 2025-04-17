@@ -12,12 +12,14 @@ import ContentComponent from "../../../../components/ContentComponent";
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
 import { formatDateAndTime } from "../../../../utils/utils";
 import SelectCountry from "../../../../components/inputs/SelectCountry";
+import { errorMsg } from "../../../../components/errors/errorMsg";
+const minLength = 200;
 
 function ProvideVisaFeedback() {
   const { ds160Review, visa, user, inValidateStatus } = useVisa();
   const [isKenyan, setIsKenyan] = useState<any>("");
   const [feedback, setFeedback] = useState("");
-  const minLength = 200;
+  const [outcome, setOutcome] = useState<any>();
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +39,7 @@ function ProvideVisaFeedback() {
       toast.success("Feedback sent successfully.");
       inValidateStatus();
     },
+    onError: (error: any) => toast.error(errorMsg(error)),
   });
 
   return (
@@ -55,13 +58,25 @@ function ProvideVisaFeedback() {
           <form onSubmit={onSubmit} className="col gap-3">
             <div className="col">
               <label htmlFor="outcome">What was your VISA outcome</label>
-              <Select name="outcome" variant="outlined" required>
+              <Select
+                name="outcome"
+                variant="outlined"
+                required
+                onChange={(e) => setOutcome(e.target.value)}
+              >
                 <MenuItem selected>Select Visa Outcome</MenuItem>
                 <MenuItem value={1}>Got VISA</MenuItem>
                 <MenuItem value={2}>Denied VISA</MenuItem>
                 <MenuItem value={3}>Under Administrative Processing</MenuItem>
               </Select>
             </div>
+            {outcome === 1 && (
+              <InputsWithLabel
+                inputLabel="Upload your visa"
+                type="file"
+                name="visa_doc"
+              />
+            )}
 
             <div className="col">
               <label htmlFor="isKenyan">Are you from kenya</label>

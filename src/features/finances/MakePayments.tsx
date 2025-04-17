@@ -11,6 +11,7 @@ import { MenuItem } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import InputField from "../../components/inputs/InputField.tsx";
+import ContentComponent from "../../components/ContentComponent.tsx";
 
 const paymentMethods = [
   { label: "M-Pesa", value: "mpesa" },
@@ -72,12 +73,12 @@ function MakePayments() {
 
   return (
     <main className="">
-      <p>Proceed to make payment</p>
-      <section className="min-w-fit p-3 sm:px-[5%] my-[2vh] self-center col-center">
+      <ContentComponent header="Select a payment purpose and proceed to complete your payment." childrenClassName="col-">
+        {/* <p>Please select a payment purpose and proceed to complete your payment.</p> */}
         <form
           onSubmit={onSubmit}
-          className="card col w-full p-3 px-8 md:w-3/4 lg:1/2"
-        >
+          className="col w-full p-3"
+          >
           <div className="col my-3 w-full">
             <label>Select reason for payment</label>
             <Select value={purpose} onChange={handleChange}>
@@ -143,7 +144,7 @@ function MakePayments() {
             {handlePayments.isPending ? "Processing..." : "Make Payment"}
           </button>
         </form>
-      </section>
+      </ContentComponent>
     </main>
   );
 }

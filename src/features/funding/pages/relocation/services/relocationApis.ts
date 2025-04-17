@@ -52,6 +52,8 @@ class RelocationApis {
       loan_type: "relocation",
     });
   };
+  addExtraLoan = async (payload: FormData) =>
+    api.post(`${url}extra_loan.php`, payload, multipart);
 }
 const relocationApis = new RelocationApis();
 export default relocationApis;

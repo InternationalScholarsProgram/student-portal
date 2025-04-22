@@ -6,12 +6,12 @@ import axios from "axios";
 
 type TableData = (string | number)[][];
 
-function formatCurrency(amount: number | bigint | any) {
+function formatCurrency(amount: number | bigint | any, currency = "USD") {
   if (typeof amount === "string") amount = parseFloat(amount);
   if (typeof amount === "object") return "";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: currency,
   }).format(amount?.toFixed(2));
 }
 

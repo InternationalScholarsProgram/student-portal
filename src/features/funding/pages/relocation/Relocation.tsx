@@ -9,7 +9,6 @@ function Relocation() {
   const { relocationStatus, isLoading, error } = useRelocation();
   if (isLoading) return <FullLoader />;
   if (error) return <AxiosError error={error} />;
-
   // return <LoanProcessing />;
 
   switch (relocationStatus?.status) {

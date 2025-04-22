@@ -1,16 +1,32 @@
+import { useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import fundingEndpoints from "./fundingEndpoints";
 import useSchools from "../../school-admission/services/useSchools";
-import { fetchIp } from "../../../utils/utils";
+import useFetchUser from "../../../services/hooks/useFetchUser";
+
+type Keys = "app";
+
+const _queryKeys = (email: any) => ({
+  app: [email, "funding", "application-details"],
+});
 
 function useFunding() {
+  const { user } = useFetchUser();
   const { schoolsWithFeedback, schoolAppId } = useSchools(true);
   const queryClient = useQueryClient();
 
-  const { data: status } = useQuery({
-    queryKey: ["funding"],
-    queryFn: fetchIp,
+  const queryKeys = useMemo(() => _queryKeys(user?.email), [user?.email]);
+
+  const { data: applicationDetails, isLoading } = useQuery({
+    queryKey: queryKeys?.app,
+    queryFn: fundingEndpoints.getApplicationDetails,
+    select: (response) => response?.data?.data,
   });
+
+  const invalidate = (key: Keys) =>
+    queryClient.invalidateQueries({
+      queryKey: queryKeys[key],
+    });
 
   const schoolsEligibleForFunding = schoolsWithFeedback?.map((item) => ({
     ...item,
@@ -19,12 +35,13 @@ function useFunding() {
   }));
 
   return {
-    status,
-    stage: status ? 1 : 2,
+    applicationDetails,
     schools: schoolsEligibleForFunding,
     selectedSchool: schoolsEligibleForFunding?.[0],
     schoolAppId,
     queryClient,
+    isLoading,
+    invalidate,
   };
 }
 

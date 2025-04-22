@@ -1,25 +1,22 @@
 <?php
-require_once "../../includes.php"; // Ensure $conn, validate_inputs(), sendResponse() are defined here
-global $conn;
+require "includes.php"; // contains sendResponse, fetch_row,conn,executeSelectQuery
 
-validate_inputs($_GET, ['student_id']);
-$email = mysqli_real_escape_string($conn, $_GET['student_id']);
-$amount = floatval($_POST['amount']);
-$date = mysqli_real_escape_string($conn, $_POST['date']);
-$customer_id = mysqli_real_escape_string($conn, $_POST['customer-id']);
+$fee = isset($_GET['fee']) ? $_GET['fee'] : "";
 
-$qur = fetch_row("SELECT * FROM extra_loan WHERE email = ? AND due_date >= CURDATE()", ["s", $email]);
-if ($qur) {
-    sendResponse(400, "error", "You have a pending extra loan repayment!!");
+if ($fee) {
+    // Use prepared statements to avoid SQL injection
+    $query = "SELECT `description`, `amount` FROM `deductions` WHERE `description` LIKE ?";
+    return fetch_row($query, ["s", "%$fee%"]) ? sendResponse(200, 'success', "", $data) : sendResponse(200, 'success', "", $data);
 }
 
 
-$query = "INSERT INTO `extra_loan`(`email`, `amount`, `due_date`, `customer_id`) VALUES (?, ?, ?, ?)";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("sdss", $email, $amount, $date, $customer_id);
-if ($stmt->execute()) {
-    sendResponse(200, "success", "Extra amount requested successfully!");
+$stmt = $conn->prepare();
+$stmt->execute();
+
+$data = executeSelectQuery("SELECT `description`, `amount` FROM `deductions`");
+
+if (!empty($data)) {
+    sendResponse(404, 'error', 'No deductions found matching the search term.');
 } else {
-    sendResponse(500, "error", "Failed to insert data.");
+    sendResponse(200, 'success', $data);
 }
-$stmt->close();

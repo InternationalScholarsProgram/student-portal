@@ -6,7 +6,7 @@ import { RepaymentSchedule, Status } from "../types/relocationTypes";
 import { splitDate } from "../../../../../utils/utils";
 
 const _queryKeys = (email: any) => ({
-  status: [email, "relocation"] as const,
+  status: [email, "relocation-loans"] as const,
 });
 
 const useRelocation = () => {

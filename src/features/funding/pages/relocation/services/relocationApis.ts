@@ -3,7 +3,6 @@ import api, {
   baseDirectory,
   multipart,
 } from "../../../../../services/api/base";
-import { Status } from "../types/relocationTypes";
 import getStripe from "../../../../../services/stripe";
 
 const url = `${baseDirectory}funding/relocation/`;

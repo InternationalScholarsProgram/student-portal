@@ -1,10 +1,21 @@
+import { useMemo } from "react";
 import ContactSupport from "../../../../../../components/ContactSupport";
 import ContentComponent from "../../../../../../components/ContentComponent";
+import ApplicationForm from "../../../../components/ApplicationForm";
 import useRelocation from "../../services/useRelocation";
-import LoanForm from "./LoanForm";
 
 const ApplicationStatus: React.FC = () => {
   const { application } = useRelocation();
+
+  const form = 
+  useMemo(
+    () => (
+      <ContentComponent header="Loan Application Form" className="my-3">
+        <ApplicationForm loanDetails={loanDetails} loanType={1} />
+      </ContentComponent>
+    ),
+    []
+  );
 
   switch (application?.status) {
     case 2:
@@ -32,7 +43,7 @@ const ApplicationStatus: React.FC = () => {
             <p className="px-3">
               <b>Reason:</b>{" "}
               <em>
-                {application?.remarks || "No specific reason was provided."}
+                {application?.remark || "No specific reason was provided."}
               </em>
             </p>
             <p>
@@ -41,9 +52,7 @@ const ApplicationStatus: React.FC = () => {
             </p>
           </div>
 
-          <ContentComponent header="Loan Application Form" className="my-3">
-            <LoanForm />
-          </ContentComponent>
+          {form}
         </>
       );
     case 3:
@@ -55,15 +64,21 @@ const ApplicationStatus: React.FC = () => {
             Please submit your relocation loan application by filling the form
             below
           </p>
-          <ContentComponent header="Loan Application Form" className="my-3">
-            <LoanForm />
-          </ContentComponent>
+          {form}
         </>
       );
   }
 };
 
 export default ApplicationStatus;
+
+const loanDetails = [
+  {
+    label: "Loan Amount",
+    type: "number",
+    name: "amount",
+  },
+];
 /*
 
 2 or 5 - viewing loan

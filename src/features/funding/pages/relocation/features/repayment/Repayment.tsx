@@ -18,7 +18,7 @@ const Repayment = () => {
   const onSubmit = (e: any) => {
     e.preventDefault();
     const formAction = e.currentTarget?.action.value;
-    if (formAction === "make_payment") navigate("/make-payment");
+    if (formAction === "make_payment") navigate("/make-payments", { state: "Test two" });
     if (formAction === "view_loan_contract")
       window.open(`${BASE_URL + loan?.loan_contract}`, "_blank");
     if (formAction === "extra_loan") setAction(formAction);

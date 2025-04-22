@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import InputField from "../../components/inputs/InputField.tsx";
 import ContentComponent from "../../components/ContentComponent.tsx";
+import { formatCurrency } from "../../utils/utils.ts";
 
 const paymentMethods = [
   { label: "M-Pesa", value: "mpesa" },
@@ -20,18 +21,19 @@ const paymentMethods = [
 ];
 function MakePayments() {
   const { state } = useLocation();
+  const { user } = useFetchUser();
   const [amount, setAmount] = useState<number>();
+  const { programFees, programFee, rates } = useProgramFees(state);
   const [purpose, setPurpose] = useState<string>("");
   const [number, setNumber] = useState<number>();
   const [paymentMethod, setPaymentMethod] = useState();
-  const { programFees, programFee } = useProgramFees(state);
-  const { user } = useFetchUser();
 
   useEffect(() => {
     if (programFee) {
-      setAmount(programFee[0]?.amount);
-      setPurpose(programFee[0]?.description);
+      setAmount(programFee?.amount);
+      setPurpose(programFee?.description);
     }
+    console.log(state, "state");
   }, [programFee]);
 
   const onSubmit = async (e: any) => {
@@ -69,20 +71,20 @@ function MakePayments() {
     setAmount(selectedOption.amount);
   };
 
-  if (!user || !programFees) return <Loader />;
+  if (!user || !programFees?.length) return <Loader />;
 
   return (
     <main className="">
-      <ContentComponent header="Select a payment purpose and proceed to complete your payment." childrenClassName="col-">
+      <ContentComponent
+        header="Select a payment purpose and proceed to complete your payment."
+        childrenClassName="col-"
+      >
         {/* <p>Please select a payment purpose and proceed to complete your payment.</p> */}
-        <form
-          onSubmit={onSubmit}
-          className="col w-full p-3"
-          >
+        <form onSubmit={onSubmit} className="col w-full p-3">
           <div className="col my-3 w-full">
             <label>Select reason for payment</label>
             <Select value={purpose} onChange={handleChange}>
-              {programFees.map(({ description }: any) => (
+              {programFees?.map(({ description }: any) => (
                 <MenuItem key={description} value={description}>
                   {description}
                 </MenuItem>
@@ -96,19 +98,15 @@ function MakePayments() {
               placeholder="Amount"
               type="number"
               value={amount}
-              onChange={(e: any) => setAmount(e.target.value)}
+              onChange={(e: any) => setAmount(Number(e.target.value))}
+              helperText={
+                !amount
+                  ? ""
+                  : rates
+                  ? "Amount in " + formatCurrency(rates * (amount || 0), "KES")
+                  : "Converting..."
+              }
             />
-            {/* <p className="text-sm px-3 font-light opacity-80">
-              Amount (KES) :{" "}
-              <span className="text-secondary-light">
-                {Intl.NumberFormat("en-KE", {
-                  style: "currency",
-                  currency: "KES",
-                  minimumFractionDigits: 0, // No decimal places
-                  maximumFractionDigits: 0, // No decimal places
-                }).format(rates * amount)}
-              </span>
-            </p> */}
           </div>
           <div className="col my-3 w-full">
             <label>Choose means of payment</label>
@@ -150,54 +148,3 @@ function MakePayments() {
 }
 
 export default MakePayments;
-
-// const proceedToPay = async () => {
-//   const email = formData.email; // Get from state
-//   const country = formData.country; // Get from state
-
-//   setIsRedirecting(true);
-
-//   try {
-//     if (country === "Kenya") {
-//       // Redirect to the Kenyapay.tsx route
-//       navigate("/makepayment", {
-//         state: {
-//           email,
-//           country,
-//           purpose: "Application fee",
-//           amount: 10,
-//           payment_method: "card",
-//         },
-//       });
-//     } else {
-//       // Call the API for external payment
-//       const response = await axios.post(
-//         "https://internationalscholars.qhtestingserver.com/payments/make_payments.php",
-//         {
-//           email,
-//           country,
-//           purpose: "Application fee",
-//           amount: 20,
-//           payment_method: "card",
-//         },
-//         { headers: { "Content-Type": "application/json" } }
-//       );
-
-//       if (response.status === 200 && response.data?.checkoutURL) {
-//         // Redirect user to the Stripe checkout session
-//         window.open(response.data.checkoutURL, "_blank");
-//       } else if (response.status === 200 && !response.data?.checkoutURL) {
-//         throw new Error("No checkout URL returned from the server.");
-//       } else {
-//         throw new Error("Failed to initiate payment.");
-//       }
-//     }
-//   } catch (error) {
-//     // console.error("Error proceeding to pay:", error);
-//     setSnackbarMessage("An error occurred. Please try again.");
-//     setSnackbarSeverity("error");
-//     setOpenSnackbar(true);
-//   } finally {
-//     setIsRedirecting(false); // Reset to false after completion
-//   }
-// };

@@ -1,4 +1,4 @@
-import ContentComponent from "../../../../../../components/ContentComponent";
+import ContentComponent from "../../../components/ContentComponent";
 import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
 import UpdateBankDetailsModal from "./UpdateBankDetailsModal";
 

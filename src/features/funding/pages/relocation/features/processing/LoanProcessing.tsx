@@ -1,8 +1,9 @@
 import useRelocation from "../../services/useRelocation";
 import Decision from "./Decision";
-import AcceptedLoan from "./AcceptedLoan";
-import YourRejectedLoan from "./YourRejectedLoan";
-import BankDetails from "./BankDetails";
+import YourRejectedLoan from "../../../../components/YourRejectedLoan";
+import BankDetails from "../../../../components/BankDetails";
+import AcceptedLoan from "../../../../components/AcceptedLoan";
+import RelocationContract from "./RelocationContract";
 
 const LoanProcessing = () => {
   const { loan } = useRelocation();
@@ -11,7 +12,11 @@ const LoanProcessing = () => {
     case 1:
       return <Decision />;
     case 2:
-      return <AcceptedLoan />;
+      return (
+        <AcceptedLoan>
+          <RelocationContract />
+        </AcceptedLoan>
+      );
     case 3:
       return <YourRejectedLoan toPay={loan?.to_pay} />;
     case 4:

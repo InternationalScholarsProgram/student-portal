@@ -1,9 +1,9 @@
-import ContentComponent from "../../../../../../components/ContentComponent";
-import RelocationContract from "./RelocationContract";
+import { ReactNode } from "react";
+import ContentComponent from "../../../components/ContentComponent";
 
-const AcceptedLoan = () => {
+const AcceptedLoan: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <ContentComponent header="Relocation Loan Contract">
+    <ContentComponent header="Loan Contract">
       <p>
         Thank you for accepting the loan offer. To proceed, the next step is to
         review and sign the official loan contract. This contract outlines the
@@ -11,7 +11,7 @@ const AcceptedLoan = () => {
         details and disbursement timeline. Please make sure you read it
         thoroughly before signing.
       </p>
-      <RelocationContract />
+      {children}
     </ContentComponent>
   );
 };

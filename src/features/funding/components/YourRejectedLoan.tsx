@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import ContentComponent from "../../../../../../components/ContentComponent";
-import { formatCurrency } from "../../../../../../utils/utils";
+import ContentComponent from "../../../components/ContentComponent";
+import { formatCurrency } from "../../../utils/utils";
 
 const YourRejectedLoan = ({ toPay = 0 }) => {
   return (
-    <ContentComponent header="Relocation Loan Rejected">
+    <ContentComponent header="Loan Offer Rejected">
       <p>
         You have rejected the loan offer presented to you. Please note that this
         means you will be covering the relocation expenses yourself and you have

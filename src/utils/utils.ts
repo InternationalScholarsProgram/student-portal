@@ -92,7 +92,7 @@ function json2formData(json: any) {
   return formData;
 }
 
-const formatDate = (date: string | Date | null, format?: string) => {
+const formatDate = (date: any, format?: string) => {
   if (!date) return "";
   const _date = new Date(date);
   return dayjs(_date).format(format || "dddd, MMMM D, YYYY");

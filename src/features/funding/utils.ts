@@ -4,6 +4,13 @@ const loans = [
   // { label: "Alternative Study", to: "alternative", name: "alternative" },
   { label: "Personal", to: "personal", name: "personal" },
 ];
+
+const loanType = [
+  { type: 1, label: "Tuition & Living Expenses", name: "relocation" },
+  { type: 2, label: "Tuition & Living Expenses", name: "personal" },
+];
+const getLoanType = (type: number) =>
+  loanType.find((loan) => loan.type === type)?.name;
 const termsAndConditions =
   "I hereby apply for the loan or credit described in this application. I certify that I made no misrepresentations in this loan application or in any related documents, that all information is true and complete, and that I did not omit any important information. I agree that the lender is authorized to verify with other parties and to make any investigation of my credit, either directly or through any agency employed by the lender for that purpose. The lender may disclose to any other interested parties information as to lender's experiences or transactions with my account. I understand that the lender will retain this application and any other credit information lender receives, even if no credit is granted. These representations and authorizations extend not only to the lender, but also to any insurer of the credit and to any investor to whom the lender may sell all or any part of the credit. I further authorize the lender to provide to any such insurer or investor any information and documentation that they may request with respect to my application for credit";
 const personalDetails = [
@@ -30,14 +37,14 @@ const personalDetails = [
   {
     required: true,
     type: "date",
-    name: "date_of_birth", // changed from "dob"
+    name: "dob", // changed from "dob"
     label: "Date of Birth",
     max: "calculated from PHP date",
   },
   {
     required: true,
     type: "text",
-    name: "place_of_birth", // changed from "pob"
+    name: "pob", // changed from "pob"
     label: "Place of birth (city/town, village)",
     placeholder: "Place of birth",
   },
@@ -63,7 +70,7 @@ const personalDetails = [
   {
     required: true,
     type: "text",
-    name: "kenyan_address", // changed from "permanent_kenyan_address"
+    name: "permanent_kenyan_address", // changed from "permanent_kenyan_address"
     label: "Physical Address (Do not put P.O. Box)",
     placeholder: "Permanent Address",
   },
@@ -118,7 +125,7 @@ const addressDetails = [
   {
     required: true,
     type: "text",
-    name: "phone_no", // changed from "phone_number"
+    name: "phone_number",
     label: "Personal Phone Number",
     placeholder: "country-code 700000000",
   },
@@ -141,9 +148,23 @@ const nextOfKin = [
   {
     required: true,
     type: "text",
-    name: "next_of_kin_fullname",
-    label: "Full Names",
-    placeholder: "Full Names",
+    name: "next_of_kin_fname",
+    label: "First Name",
+    placeholder: "John",
+  },
+  {
+    required: false,
+    type: "text",
+    name: "next_of_kin_mname",
+    label: "Middle Name (optional)",
+    placeholder: "Middle Name",
+  },
+  {
+    required: true,
+    type: "text",
+    name: "next_of_kin_lname",
+    label: "Last Name",
+    placeholder: "Doe",
   },
   {
     required: true,
@@ -155,7 +176,7 @@ const nextOfKin = [
   {
     required: true,
     type: "text",
-    name: "next_of_kin_address",
+    name: "next_of_kin_permanent_address",
     label: "Next of Kin Permanent Address",
     placeholder: "Next of Kin Permanent Address",
   },
@@ -164,7 +185,13 @@ const nextOfKin = [
     type: "select",
     name: "next_of_kin_relationship",
     label: "Relationship",
-    options: ["Select", "Parent", "Sibling", "Spouse", "Guardian", "Other"],
+    options: [
+      { value: "parent", label: "Parent" },
+      { value: "sibling", label: "Sibling" },
+      { value: "spouse", label: "Spouse" },
+      { value: "guardian", label: "Guardian" },
+      { value: "other", label: "Other" },
+    ],
   },
 ];
 
@@ -172,7 +199,7 @@ const employmentDetails = [
   {
     required: true,
     type: "number",
-    name: "income", // changed from "gross_income"
+    name: "gross_income",
     label: "Gross Monthly Income(in USD)",
     placeholder: "Monthly income",
   },
@@ -192,45 +219,39 @@ const employedFields = [
   {
     required: true,
     type: "text",
-    name: "job_title", // changed from "current_job_title"
+    name: "current_job_title", // changed from "current_job_title"
     label: "Current Job Title",
     placeholder: "Current Job Title",
   },
   {
     required: true,
     type: "text",
-    name: "current_employee", // changed from "current_employer_name"
+    name: "current_employer_name", // changed from "current_employer_name"
     label: "Current Employer Name",
     placeholder: "Current Employer Name",
   },
   {
     required: true,
     type: "text",
-    name: "current_employee_address", // changed from "current_employer_address"
+    name: "current_employer_address", // changed from "current_employer_address"
     label: "Current Employer Address",
     placeholder: "Current Employer Address",
   },
 ];
 
-const loanDetails = [
-  {
-    required: true,
-    type: "number",
-    name: "amount",
-    label: "Loan Amount you need (in USD, maximum 5000)",
-    placeholder: "Loan Amount (maximum 5000)",
-    max: 5000,
-  },
-];
 const formFields = {
   personalDetails: personalDetails,
   addressDetails: addressDetails,
   employmentDetails: employmentDetails,
   employedFields: employedFields,
   nextOfKin: nextOfKin,
-  // loanDetails: loanDetails,
 };
 
-export { formFields, termsAndConditions, splitAddress };
-
-export { loans };
+export {
+  loans,
+  formFields,
+  termsAndConditions,
+  splitAddress,
+  loanType,
+  getLoanType,
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Checkbox, TextFieldProps } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 
 import { formFields, splitAddress, termsAndConditions } from "../utils";
@@ -14,16 +14,12 @@ import { Application } from "../types/fundingTypes";
 import { errorMsg } from "../../../components/errors/errorMsg";
 
 type Props = {
-  loanDetails?: TextFieldProps[];
+  max: number;
   loanType?: number;
   onSuccess?: () => void;
 };
 
-const ApplicationForm: React.FC<Props> = ({
-  loanDetails = [],
-  loanType,
-  onSuccess,
-}) => {
+const ApplicationForm: React.FC<Props> = ({ max, loanType, onSuccess }) => {
   const { applicationDetails, isLoading, invalidate } = useFunding();
 
   const [tac, setTac] = useState(false);
@@ -32,7 +28,7 @@ const ApplicationForm: React.FC<Props> = ({
 
   const applicationData: Application | any = {
     ...applicationDetails,
-    ...splitAddress(applicationDetails?.usa_address || ""),
+    ...splitAddress(applicationDetails?.permanent_us_address || ""),
   };
 
   const convert = (fields: any) =>
@@ -42,13 +38,12 @@ const ApplicationForm: React.FC<Props> = ({
     }));
 
   const presetValues = () => {
-    if (!applicationData) return setFields(formFields);
+    if (!applicationData) return setFields([formFields]);
 
     const values = {
       personalDetails: convert(formFields?.personalDetails),
       addressDetails: convert(formFields?.addressDetails),
       employmentDetails: convert(formFields?.employmentDetails),
-      loanDetails: convert(loanDetails),
       employedFields: convert(formFields?.employedFields),
       nextOfKin: convert(formFields?.nextOfKin),
     };
@@ -68,8 +63,8 @@ const ApplicationForm: React.FC<Props> = ({
 
   const uploadLoan = useMutation({
     mutationFn: fundingEndpoints.loanApplication,
-    onSuccess: () => {
-      toast.success("Application submitted successfully.");
+    onSuccess: (response) => {
+      toast.success(response?.data?.message);
       invalidate("app");
       if (onSuccess) onSuccess();
     },
@@ -85,6 +80,13 @@ const ApplicationForm: React.FC<Props> = ({
 
   if (isLoading || !fields) return <InlineLoader />;
 
+  const showOthers =
+    !formFields.nextOfKin
+      .find((item) => item.name === "next_of_kin_relationship")
+      ?.options?.some(
+        (option) => option.value === formData?.next_of_kin_relationship
+      ) || formData?.next_of_kin_relationship === "other";
+
   return (
     <form onSubmit={handleSubmit} className="col gap-2">
       <React.Fragment>
@@ -99,7 +101,8 @@ const ApplicationForm: React.FC<Props> = ({
             inputLabel={`Social Security Number ${
               loanType === 1 ? "(optional)" : ""
             }`}
-            name="social_security_number"
+            name="ssn_number"
+            defaultValue={applicationData?.ssn_number}
             className="p-2 border rounded-md"
             required={loanType !== 1}
           />
@@ -140,10 +143,15 @@ const ApplicationForm: React.FC<Props> = ({
             fields={fields?.nextOfKin}
             handleChange={handleChange}
           />
-          {formData?.next_of_kin_relationship === "Other" && (
+          {showOthers && (
             <InputsWithLabel
               inputLabel="Please specify other relationship details"
               name="other_relationship"
+              defaultValue={
+                formData?.next_of_kin_relationship !== "other"
+                  ? formData?.other_relationship
+                  : ""
+              }
               required
             />
           )}
@@ -166,7 +174,18 @@ const ApplicationForm: React.FC<Props> = ({
       <React.Fragment>
         <p className="font-bold py-2">Loan Details</p>
         <div className="form-grid">
-          <MapFormFields fields={fields?.loanDetails} />
+          <InputsWithLabel
+            inputLabel={`Loan Amount you need (in USD, maximum ${max})`}
+            type="number"
+            name="amount"
+            onChange={(e: any) =>
+              handleChange("amount", Number(e.target.value))
+            }
+            error={formData?.amount > max}
+            helperText={formData?.amount > max && `Max amount is ${max}`}
+            defaultValue={formData?.amount}
+            required
+          />
         </div>
       </React.Fragment>
 
@@ -182,7 +201,7 @@ const ApplicationForm: React.FC<Props> = ({
       </div>
       <FormFooterBtns
         btnText={uploadLoan.isPending ? "Submiting..." : "Apply Now"}
-        disabled={!tac}
+        disabled={!tac || uploadLoan.isPending || formData?.amount > max}
       />
     </form>
   );

@@ -21,7 +21,7 @@ const FeedbackStatus = () => {
                 We are sorry your loan application was not approved by the
                 lender.
                 <br />
-                We recommend booking a career advisory meeting to discuss your
+                We recommend booking a funding advisory meeting to discuss your
                 options and next steps.
               </p>
             </div>

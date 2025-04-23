@@ -2,25 +2,24 @@ import { useMemo } from "react";
 import ContactSupport from "../../../../../../components/ContactSupport";
 import ContentComponent from "../../../../../../components/ContentComponent";
 import ApplicationForm from "../../../../components/ApplicationForm";
-import useRelocation from "../../services/useRelocation";
+import usePersonal from "../../services/usePersonal";
 
 const ApplicationStatus: React.FC = () => {
-  const { application } = useRelocation();
+  const { user_details, invalidate } = usePersonal();
 
   const form = useMemo(
     () => (
       <ContentComponent header="Loan Application Form" className="my-3">
-        <ApplicationForm max={3000} loanType={1} />
+        <ApplicationForm max={5000} onSuccess={() => invalidate("status")} />
       </ContentComponent>
     ),
     []
   );
 
-  switch (application?.status) {
-    case 2:
-    case 5:
+  switch (user_details?.status) {
+    case 1:
       return (
-        <ContentComponent header="Relocation Loan Application Under Review">
+        <ContentComponent header="Personal Loan Application Under Review">
           <p>
             Your loan request has been received and is{" "}
             <span className="text-dark-warning-main">being processed.</span>
@@ -42,7 +41,7 @@ const ApplicationStatus: React.FC = () => {
             <p className="px-3">
               <b>Reason:</b>{" "}
               <em>
-                {application?.remark || "No specific reason was provided."}
+                {user_details?.remark || "No specific reason was provided."}
               </em>
             </p>
             <p>

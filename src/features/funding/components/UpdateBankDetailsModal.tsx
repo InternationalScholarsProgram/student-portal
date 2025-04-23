@@ -1,13 +1,13 @@
 import { useState } from "react";
-import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
-import CheckBox from "../../../../../../components/inputs/CheckBox";
-import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
-import useRelocation from "../../services/useRelocation";
+import FormFooterBtns from "../../../components/buttons/FormFooterBtns";
+import CheckBox from "../../../components/inputs/CheckBox";
+import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
+import useRelocation from "../pages/relocation/services/useRelocation";
 import { useMutation } from "@tanstack/react-query";
-import relocationApis from "../../services/relocationApis";
 import { toast } from "react-toastify";
-import MapFormFields from "../../../../../../components/inputs/MapFormFields";
-import Modal from "../../../../../../components/Modal";
+import MapFormFields from "../../../components/inputs/MapFormFields";
+import Modal from "../../../components/Modal";
+import fundingEndpoints from "../services/fundingEndpoints";
 
 const UpdateBankDetailsModal = () => {
   const { invalidate, loan } = useRelocation();
@@ -15,7 +15,7 @@ const UpdateBankDetailsModal = () => {
   const toggleModal = () => setOpen(!open);
 
   const updateBank = useMutation({
-    mutationFn: relocationApis.updateBankDetails,
+    mutationFn: fundingEndpoints.updateBankDetails,
     onSuccess: () => {
       toast.success("Bank details updated successfully.");
       invalidate("status");
@@ -35,6 +35,7 @@ const UpdateBankDetailsModal = () => {
     formData.append("fullnames", loan.fullnames || "");
     formData.append("phone", loan.phone || "");
     formData.append("loan_id", loan.loan_id || "");
+    formData.append("loanType", "relocation");
     updateBank.mutate(formData);
   };
   return (

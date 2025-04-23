@@ -1,42 +1,58 @@
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+} from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 import React, { useState } from "react";
-import Modal from "../../../../../../components/Modal";
-import LetterHead from "../../../../../../components/letters/LetterHead";
-import Address from "../../../../../../components/letters/Address";
-import useFetchUser from "../../../../../../services/hooks/useFetchUser";
-import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
-import BobSignatory from "../../../../../../components/letters/BobSignatory";
-import PrimaryBtn from "../../../../../../components/buttons/PrimaryBtn";
-import useRelocation from "../../services/useRelocation";
+import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
+import useFetchUser from "../../../services/hooks/useFetchUser";
 import {
   fetchIp,
   formatCurrency,
   formatDate,
   generatePdf,
-} from "../../../../../../utils/utils";
+} from "../../../utils/utils";
+import Modal from "../../../components/Modal";
+import FormFooterBtns from "../../../components/buttons/FormFooterBtns";
+import SignContract from "../../../components/letters/SignContract";
+import LetterHead from "../../../components/letters/LetterHead";
+import Address from "../../../components/letters/Address";
 import dayjs from "dayjs";
-import SignContract from "../../../../../../components/letters/SignContract";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import relocationApis from "../../services/relocationApis";
-import { InlineLoader } from "../../../../../../components/loaders/Loader";
-import AxiosError from "../../../../../../components/errors/AxiosError";
+import SimpleTable from "../../../components/tables/SimpleTable";
+import BobSignatory from "../../../components/letters/BobSignatory";
 import { GridColDef } from "@mui/x-data-grid";
-import SimpleTable from "../../../../../../components/tables/SimpleTable";
-import fundingEndpoints from "../../../../services/fundingEndpoints";
+import { getLoanType } from "../utils";
+import fundingEndpoints from "../services/fundingEndpoints";
+import { InlineLoader } from "../../../components/loaders/Loader";
+import AxiosError from "../../../components/errors/AxiosError";
 
-const RelocationContract = () => {
+type Props = {
+  signContract: UseMutationResult<AxiosResponse<any, any>, Error, any, unknown>;
+  loan: any;
+  application: any;
+  loanType: number;
+};
+
+const LoanContract: React.FC<Props> = ({
+  signContract,
+  loan,
+  application,
+  loanType,
+}) => {
   const { user } = useFetchUser();
-  const { relocationStatus, loan, invalidate } = useRelocation();
+  const loanName = getLoanType(loanType);
 
   const {
-    data: schedulePayments,
+    data: repaymentSchedule,
     isLoading,
     error,
   } = useQuery({
-    queryKey: [user?.email, "repayment-schedule"],
+    queryKey: [user?.email, "repayment-schedule", loan?.loan_id],
     queryFn: () => fundingEndpoints.repaymentSchedule(loan),
     select: (response) => response?.data?.data,
   });
+
   const { data: ipData } = useQuery({
     queryKey: ["ip"],
     queryFn: fetchIp,
@@ -46,7 +62,6 @@ const RelocationContract = () => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
   const targetRef = React.useRef<HTMLDivElement>(null);
-  const application = relocationStatus?.application;
 
   const pdf = async () => {
     if (!targetRef?.current) return;
@@ -54,31 +69,28 @@ const RelocationContract = () => {
     return doc.doc;
   };
 
-  const signContract = useMutation({
-    mutationFn: async () => {
-      setIsSigned(true);
-      const doc = await pdf();
-      return relocationApis.signContract({
-        ip: ipData?.ip,
-        city: ipData?.city,
-        country_name: ipData?.country_name,
-        loan_id: loan?.loan_id,
-        stu_name: loan?.fullnames,
-        file: doc,
-      });
-    },
-    onSuccess: () => {
-      toast.success("Contract signed successfully.");
-      invalidate("status");
-    },
-  });
+  const onSubmit = async () => {
+    setIsSigned(true);
+    const doc = await pdf();
+    const payload = {
+      ip: ipData?.ip,
+      city: ipData?.city,
+      country_name: ipData?.country_name,
+      loan_id: loan?.loan_id,
+      stu_name: loan?.fullnames,
+      file: doc,
+    };
+    const response = await signContract.mutateAsync(payload);
+    if (response?.status === 200) toggleModal();
+  };
 
   if (isLoading) return <InlineLoader />;
-  if (error || !schedulePayments?.length) return <AxiosError error={error} />;
+  if (error) return <AxiosError error={error} />;
+
   return (
     <>
       <PrimaryBtn onClick={toggleModal} className="self-end">
-        Sign Contract
+        View Contract
       </PrimaryBtn>
       <Modal title="Loan Contract" open={open} setOpen={toggleModal}>
         <div className="w-[95vw] md:w-[80vw] xl:w-[70vw] h-[80vh] p-2 overflow-y-auto">
@@ -87,12 +99,11 @@ const RelocationContract = () => {
             <Address email=" " />
             <article className="py-3 col gap-2">
               <b className="underline uppercase">
-                RE: Relocation Loan Contract
+                RE: {loanName} Loan Contract
               </b>
               <section className="col gap-3">
                 <b>
-                  This relocation loan agreement (this "agreement") dated{" "}
-                  {formatDate(new Date())}.
+                  This {loanName} loan agreement dated {formatDate(new Date())}.
                 </b>
                 <span>BETWEEN</span>
                 <p>
@@ -127,15 +138,15 @@ const RelocationContract = () => {
                     <b> {formatDate(loan?.maturity_date)}.</b> and continuing by
                     the 5th day of each following month until{" "}
                     <b>
-                      {dayjs(loan?.maturity_date)
-                        .add(5, "month")
-                        .format("MMM DD, YYYY")}
+                      {formatDate(dayjs(loan?.maturity_date).add(5, "month"))}
                     </b>{" "}
                     with the balance then owing on this agreement being paid at
-                    that time. 3. At any time not in default under this
-                    agreement, the borrower may make lumpsum payments or pay the
-                    outstanding balance then owing under this agreement to the
-                    lender without further bonus or penalty.
+                    that time.
+                    <br />
+                    3. At any time not in default under this agreement, the
+                    borrower may make lumpsum payments or pay the outstanding
+                    balance then owing under this agreement to the lender
+                    without further bonus or penalty.
                   </p>
                   <h5>DEFAULT</h5>
                   <p>
@@ -224,7 +235,7 @@ const RelocationContract = () => {
                       </div>
                       <div>
                         <p>Social Security Number</p>
-                        <p>{application?.social_security_number || "N/A"}</p>
+                        <p>{application?.ss_number || "N/A"}</p>
                       </div>
                       <div>
                         <p>Passport Number</p>
@@ -232,7 +243,7 @@ const RelocationContract = () => {
                       </div>
                       <div>
                         <p>Date of birth</p>
-                        <p>{formatDate(application?.date_of_birth || "")}</p>
+                        <p>{formatDate(application?.dob)}</p>
                       </div>
                       <div>
                         <p>University Attending</p>
@@ -240,7 +251,7 @@ const RelocationContract = () => {
                       </div>
                       <div>
                         <p>Current US Address</p>
-                        <p>{application?.usa_address}</p>
+                        <p>{application?.permanent_us_address}</p>
                       </div>
                     </table>
                   </div>
@@ -249,7 +260,13 @@ const RelocationContract = () => {
                     <table className="data-table">
                       <div>
                         <p>Full Name</p>
-                        <p>{application?.next_of_kin_fullname}</p>
+                        <p>
+                          {application?.next_of_kin_lname +
+                            " " +
+                            application?.next_of_kin_fname +
+                            " " +
+                            application?.next_of_kin_mname}
+                        </p>
                       </div>
                       <div>
                         <p>Phone Number</p>
@@ -257,7 +274,7 @@ const RelocationContract = () => {
                       </div>
                       <div>
                         <p>Address</p>
-                        <p>{application?.next_of_kin_address}</p>
+                        <p>{application?.next_of_kin_permanent_address}</p>
                       </div>
                     </table>
                   </div>
@@ -317,7 +334,7 @@ const RelocationContract = () => {
 
                 <div>
                   <p className="title-sm py-2">Repayment Schedule</p>
-                  <SimpleTable columns={columns} rows={schedulePayments} />
+                  <SimpleTable columns={columns} rows={repaymentSchedule} />
                 </div>
               </section>
               <section className="col gap-3">
@@ -346,7 +363,7 @@ const RelocationContract = () => {
                             show={false}
                             name={loan?.fullnames || ""}
                             isSigned={isSigned}
-                            onSubmit={signContract.mutate}
+                            onSubmit={onSubmit}
                           />
                         </div>
                       ) : (
@@ -354,7 +371,7 @@ const RelocationContract = () => {
                       )}
                       <p className="col">
                         <b>{loan?.fullnames}</b>
-                        <b>{relocationStatus?.application.usa_address}</b>
+                        <b>{application.usa_address}</b>
                       </p>
                     </div>
                   </div>
@@ -367,7 +384,7 @@ const RelocationContract = () => {
           </div>
           <FormFooterBtns
             onClose={toggleModal}
-            onSubmit={signContract.mutate}
+            onSubmit={onSubmit}
             btnText={signContract?.isPending ? "Signing..." : "Sign Contract"}
           />
         </div>
@@ -376,7 +393,7 @@ const RelocationContract = () => {
   );
 };
 
-export default RelocationContract;
+export default LoanContract;
 const columns: GridColDef[] = [
   {
     field: "id",

@@ -18,10 +18,26 @@ const usePersonal = () => {
     enabled: !!user?.email,
     select: (response) => response?.data?.data,
   });
-  return { status, isLoading, error };
+
+  const invalidate = (key: "status") =>
+    queryClient.invalidateQueries({ queryKey: queryKeys[key] });
+
+  const user_details = status?.user_details;
+  const personalLoan = status?.personal_loan;
+
+  return {
+    status,
+    isLoading,
+    error,
+    invalidate,
+    user_details,
+    personalLoan,
+    user,
+  };
 };
 
 export default usePersonal;
+
 const _queryKeys = (email: any) => ({
   status: [email, "personal-loans"] as const,
 });

@@ -20,14 +20,14 @@ type Props = {
 };
 
 const ApplicationForm: React.FC<Props> = ({ max, loanType, onSuccess }) => {
-  const { applicationDetails, isLoading, invalidate } = useFunding();
+  const { applicationDetails, isLoading, invalidate } = useFunding({});
 
   const [tac, setTac] = useState(false);
   const [formData, setFormData] = useState<any>({});
   const [fields, setFields] = useState<any>(null);
 
   const applicationData: Application | any = {
-    ...applicationDetails,
+    ...(applicationDetails || {}),
     ...splitAddress(applicationDetails?.permanent_us_address || ""),
   };
 

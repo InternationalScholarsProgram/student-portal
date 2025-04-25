@@ -1,8 +1,18 @@
 import ContentComponent from "../../../components/ContentComponent";
 import AssuredWorkloadIcon from "@mui/icons-material/AssuredWorkload";
 import UpdateBankDetailsModal from "./UpdateBankDetailsModal";
+type Props = {
+  loan: {
+    member_no: string;
+    fullnames: string;
+    phone: string;
+    loan_id: string;
+    loanType: number;
+  };
+  onSuccess: () => void;
+};
 
-const BankDetails = () => {
+const BankDetails: React.FC<Props> = ({ loan, onSuccess }) => {
   return (
     <ContentComponent
       header={
@@ -21,7 +31,7 @@ const BankDetails = () => {
         Scholars Program via Automated Clearing House (ACH). In case of any
         questions, please do not hesitate to reach out to our team.
       </p>
-      <UpdateBankDetailsModal />
+      <UpdateBankDetailsModal loan={loan} onSuccess={onSuccess} />
     </ContentComponent>
   );
 };

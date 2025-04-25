@@ -8,9 +8,12 @@ const loans = [
 const loanType = [
   { type: 1, label: "Tuition & Living Expenses", name: "relocation" },
   { type: 2, label: "Tuition & Living Expenses", name: "personal" },
+  { type: 3, label: "Tuition & Living Expenses", name: "study" },
 ];
-const getLoanType = (type: number) =>
-  loanType.find((loan) => loan.type === type)?.name;
+
+const getLoanType = (type: number | string) =>
+  loanType.find((loan) => loan.type === Number(type))?.name;
+
 const termsAndConditions =
   "I hereby apply for the loan or credit described in this application. I certify that I made no misrepresentations in this loan application or in any related documents, that all information is true and complete, and that I did not omit any important information. I agree that the lender is authorized to verify with other parties and to make any investigation of my credit, either directly or through any agency employed by the lender for that purpose. The lender may disclose to any other interested parties information as to lender's experiences or transactions with my account. I understand that the lender will retain this application and any other credit information lender receives, even if no credit is granted. These representations and authorizations extend not only to the lender, but also to any insurer of the credit and to any investor to whom the lender may sell all or any part of the credit. I further authorize the lender to provide to any such insurer or investor any information and documentation that they may request with respect to my application for credit";
 const personalDetails = [

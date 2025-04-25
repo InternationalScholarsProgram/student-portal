@@ -19,6 +19,7 @@ const Decision = () => {
       decision={decision}
       awarded={relocationStatus?.loan?.principal || 0}
       loanType={1}
+      loanId={relocationStatus?.loan?.loan_id || ""}
     >
       <p>
         I am confirming that the approved loan amount is{" "}

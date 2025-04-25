@@ -251,4 +251,9 @@ const fundingOptions = [
   { value: "loan", label: "Student Loan" },
   { value: "scholarship", label: "Scholarship or GA" },
 ];
-export { counties, countries, fundingOptions };
+const acceptReject = [
+  { value: "accept", label: "Accept" },
+  { value: "reject", label: "Reject" },
+];
+
+export { counties, countries, fundingOptions, acceptReject };

@@ -90,14 +90,5 @@ type Status = {
     invoice_url: string | null;
   };
 };
-type RepaymentSchedule = {
-  id: number;
-  interest_rate: number;
-  maturity_date: string;
-  new_balance: number;
-  principal_payment: number;
-  scheduled_payment: number;
-  starting_balance: number;
-  status: "Pending" | "Paid" | "Not Paid";
-};
-export type { Status, RepaymentSchedule };
+
+export type { Status };

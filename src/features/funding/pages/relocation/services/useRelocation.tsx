@@ -2,8 +2,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import relocationApis from "./relocationApis";
 import useFetchUser from "../../../../../services/hooks/useFetchUser";
 import { useMemo } from "react";
-import { RepaymentSchedule, Status } from "../types/relocationTypes";
+import { Status } from "../types/relocationTypes";
 import { splitDate } from "../../../../../utils/utils";
+import fundingEndpoints from "../../../services/fundingEndpoints";
+import { RepaymentSchedule } from "../../../types/fundingTypes";
 
 const _queryKeys = (email: any) => ({
   status: [email, "relocation-loans"] as const,
@@ -36,10 +38,10 @@ const useRelocation = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys[key] || key });
 
   const { data: schedulePayments } = useQuery({
-    queryKey: [user?.email, "repayment-schedule"],
-    queryFn: () => relocationApis.repaymentSchedule(loan),
+    queryKey: [user?.email, "repayment-schedule", loan?.loan_id],
+    queryFn: () => fundingEndpoints.repaymentSchedule(loan),
     select: (response) => response?.data?.data.slice(1) as RepaymentSchedule[],
-    enabled: relocationStatus?.status === 2,
+    enabled: relocationStatus?.status === 2 && !!loan?.loan_id,
   });
 
   return {

@@ -26,16 +26,18 @@ import { getLoanType } from "../utils";
 import fundingEndpoints from "../services/fundingEndpoints";
 import { InlineLoader } from "../../../components/loaders/Loader";
 import AxiosError from "../../../components/errors/AxiosError";
+import { toast } from "react-toastify";
+import { errorMsg } from "../../../components/errors/errorMsg";
 
 type Props = {
-  signContract: UseMutationResult<AxiosResponse<any, any>, Error, any, unknown>;
+  onSuccess: () => void;
   loan: any;
   application: any;
   loanType: number;
 };
 
 const LoanContract: React.FC<Props> = ({
-  signContract,
+  onSuccess,
   loan,
   application,
   loanType,
@@ -50,7 +52,15 @@ const LoanContract: React.FC<Props> = ({
   } = useQuery({
     queryKey: [user?.email, "repayment-schedule", loan?.loan_id],
     queryFn: () => fundingEndpoints.repaymentSchedule(loan),
-    select: (response) => response?.data?.data,
+    select: (response) => {
+      const data = response?.data?.data;
+      return data
+        ?.map((row: any) => ({
+          ...row,
+          no: row.id - 1,
+        }))
+        .slice(1);
+    },
   });
 
   const { data: ipData } = useQuery({
@@ -69,24 +79,37 @@ const LoanContract: React.FC<Props> = ({
     return doc.doc;
   };
 
-  const onSubmit = async () => {
-    setIsSigned(true);
-    const doc = await pdf();
-    const payload = {
-      ip: ipData?.ip,
-      city: ipData?.city,
-      country_name: ipData?.country_name,
-      loan_id: loan?.loan_id,
-      stu_name: loan?.fullnames,
-      file: doc,
-    };
-    const response = await signContract.mutateAsync(payload);
-    if (response?.status === 200) toggleModal();
-  };
+  const signContract = useMutation({
+    mutationFn: async () => {
+      if (!ipData) throw new Error("Failed to fetch IP data.");
+      setIsSigned(true);
+      const doc = await pdf();
+      if (!doc) throw new Error("Failed to generate PDF.");
+      const payload = {
+        ip: ipData.ip,
+        city: ipData?.city,
+        country_name: ipData?.country_name,
+        loan_id: loan?.loan_id,
+        stu_name: loan?.fullnames,
+        contract: doc,
+        loan_type: loanType,
+      };
+      return fundingEndpoints.signContract(payload);
+    },
+    onSuccess: () => {
+      toast.success("Contract signed successfully.");
+      onSuccess();
+      toggleModal();
+    },
+    onError: (error) => {
+      toast.error(errorMsg(error));
+    },
+  });
+
+  const onSubmit = async () => signContract.mutate();
 
   if (isLoading) return <InlineLoader />;
   if (error) return <AxiosError error={error} />;
-
   return (
     <>
       <PrimaryBtn onClick={toggleModal} className="self-end">
@@ -285,15 +308,15 @@ const LoanContract: React.FC<Props> = ({
                         <>
                           <div>
                             <p>Current Employer Name</p>
-                            <p>{application?.employment_status}</p>
+                            <p>{application?.current_employer_name}</p>
                           </div>
                           <div>
                             <p>Current Job Title</p>
-                            <p>{application?.next_of_kin_phone_number}</p>
+                            <p>{application?.current_job_title}</p>
                           </div>
                           <div>
                             <p>Current Employer Address</p>
-                            <p>{application?.next_of_kin_address}</p>
+                            <p>{application?.current_employer_address}</p>
                           </div>
                         </>
                       ) : (
@@ -396,13 +419,10 @@ const LoanContract: React.FC<Props> = ({
 export default LoanContract;
 const columns: GridColDef[] = [
   {
-    field: "id",
-    headerName: "ID",
+    field: "no",
+    headerName: "No",
     width: 50,
-    colSpan: (value, row) => {
-      if (row.id === "transcripts") return 99;
-      return undefined;
-    },
+    valueGetter: (params) => params - 1,
   },
   {
     field: "maturity_date",
@@ -410,12 +430,6 @@ const columns: GridColDef[] = [
     flex: 1,
     valueGetter: (params) => formatDate(new Date(params), "MMM D, YYYY"),
   },
-  // {
-  //   field: "starting_balance",
-  //   flex: 1,
-  //   headerName: "Starting Balance",
-  //   headerClassName: "p-0 m-0",
-  // },
   {
     field: "scheduled_payment",
     flex: 1,
@@ -426,11 +440,6 @@ const columns: GridColDef[] = [
     flex: 1,
     headerName: "Interest",
   },
-  // {
-  //   field: "principal_payment",
-  //   flex: 1,
-  //   headerName: "Principal",
-  // },
   {
     field: "new_balance",
     flex: 1,

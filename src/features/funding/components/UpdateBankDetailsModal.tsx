@@ -2,15 +2,26 @@ import { useState } from "react";
 import FormFooterBtns from "../../../components/buttons/FormFooterBtns";
 import CheckBox from "../../../components/inputs/CheckBox";
 import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
-import useRelocation from "../pages/relocation/services/useRelocation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import MapFormFields from "../../../components/inputs/MapFormFields";
 import Modal from "../../../components/Modal";
 import fundingEndpoints from "../services/fundingEndpoints";
+import axios from "axios";
+import { errorMsg } from "../../../components/errors/errorMsg";
 
-const UpdateBankDetailsModal = () => {
-  const { invalidate, loan } = useRelocation();
+type Props = {
+  loan: {
+    member_no: string;
+    fullnames: string;
+    phone: string;
+    loan_id: string;
+    loanType: number;
+  };
+  onSuccess: () => void;
+};
+
+const UpdateBankDetailsModal: React.FC<Props> = ({ loan, onSuccess }) => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
 
@@ -18,25 +29,22 @@ const UpdateBankDetailsModal = () => {
     mutationFn: fundingEndpoints.updateBankDetails,
     onSuccess: () => {
       toast.success("Bank details updated successfully.");
-      invalidate("status");
+      onSuccess();
       toggleModal();
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response.data.message || "An unexpected error occurred."
-      );
-    },
+    onError: (error) => toast.error(errorMsg(error)),
   });
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("member_no", loan?.member_no || "");
-    formData.append("fullnames", loan.fullnames || "");
-    formData.append("phone", loan.phone || "");
-    formData.append("loan_id", loan.loan_id || "");
-    formData.append("loanType", "relocation");
+    formData.append("member_no", loan?.member_no);
+    formData.append("fullnames", loan.fullnames);
+    formData.append("phone", loan.phone);
+    formData.append("loan_id", loan.loan_id);
+    formData.append("loanType", loan.loanType.toString());
     updateBank.mutate(formData);
+    // console.log(axios.formToJSON(formData));
   };
   return (
     <>

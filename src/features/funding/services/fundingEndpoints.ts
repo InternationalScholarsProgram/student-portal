@@ -1,6 +1,8 @@
 import axios from "axios";
 import api, { baseDirectory, multipart } from "../../../services/api/base";
 import getStripe from "../../../services/stripe";
+import { getLabels } from "../../../router/utils";
+import { getLoanType } from "../utils";
 
 const url = `${baseDirectory}funding/`;
 
@@ -36,7 +38,7 @@ class FundingEndpoints {
       member_no: payload?.member_no,
       fullnames: payload?.fullnames,
       loan_id: payload?.loan_id,
-      loan_type: payload?.loanType,
+      loan_type: getLoanType(payload?.loanType),
     });
   };
 
@@ -50,10 +52,19 @@ class FundingEndpoints {
       loan_id: data?.loan_id,
     });
 
-    signContract = (payload: any) => {
-      const data = axios.toFormData(payload);
-      return api.post(`${url}contract.php`, data, multipart);
-    };
+  signContract = (payload: ContractPayload) => {
+    const data = axios.toFormData(payload);
+    return api.post(`${url}contract.php`, data, multipart);
+  };
 }
 const fundingEndpoints = new FundingEndpoints();
 export default fundingEndpoints;
+type ContractPayload = {
+  ip: string;
+  city: string;
+  country_name: string;
+  loan_id: string;
+  stu_name: string;
+  loan_type: number;
+  contract: File;
+};

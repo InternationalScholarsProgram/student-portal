@@ -6,12 +6,18 @@ import axios from "axios";
 
 type TableData = (string | number)[][];
 
-function formatCurrency(amount: number | bigint | any, currency = "USD") {
+function formatCurrency(
+  amount: number | bigint | any,
+  currency = "USD",
+  decimals = 0
+) {
   if (typeof amount === "string") amount = parseFloat(amount);
   if (typeof amount === "object") return "";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(amount?.toFixed(2));
 }
 
@@ -175,10 +181,10 @@ export async function generatePdf(
   const instance = html2pdf().set(options).from(element);
   const pdf = await instance.toPdf().get("pdf");
   if (download) await instance.save();
-  
+
   element.style.backgroundColor = original.backgroundColor;
   element.style.color = original.text;
-  
+
   const blob = pdf.output("blob");
   return {
     blob: blob,

@@ -12,7 +12,7 @@ type Props = {
   rows: any[];
 };
 
-const SimpleTable: React.FC<Props> = ({ columns, rows }) => {
+const SimpleTable: React.FC<Props> = ({ columns, rows = [] }) => {
   return (
     <Table>
       <TableHead>

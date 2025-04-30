@@ -21,16 +21,19 @@ const UpcomingMeeting: React.FC<Props> = ({ fundingAdvisory }) => {
     >
       <div className="">
         <p>
-          We're excited to help you navigate funding opportunities! Your
+          We’re excited to guide you through your funding journey! Your
           personalized advisory session is scheduled for: 📅
           <b>{formatDateAndTime(fundingAdvisory?.dateAndTime)}</b>
         </p>
-        <p className="mt-2">This is your chance to:</p>
+        <p className="mt-2">
+          During this session, you’ll have the opportunity to:
+        </p>
         <ul className="list-disc pl-6 mt-1">
-          <li>Get expert funding strategy advice</li>
-          <li>Review your best options</li>
-          <li>Ask questions in real-time</li>
+          <li>Receive expert advice on funding strategies</li>
+          <li>Explore the best options tailored to your needs</li>
+          <li>Ask questions and get real-time answers</li>
         </ul>
+        <p>We look forward to connecting with you!</p>
       </div>
       <div className="row justify-end gap-3">
         <div className="col justify-center flex-1">

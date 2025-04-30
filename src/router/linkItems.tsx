@@ -101,17 +101,23 @@ const modules = [
       },
     ],
   },
-  {
-    to: "school-admission-requirements",
-    name: "School Admission",
-    icon: <SchoolOutlinedIcon />,
-  },
+
   {
     name: "School Admission",
-    to: "school-admission-application",
+    to: "school-admission/requirements",
     icon: <SchoolOutlinedIcon />,
-    hidden: true,
+    subItems: [
+      {
+        name: "Requirements",
+        to: "school-admission/requirements",
+      },
+      {
+        name: "Application",
+        to: "school-admission/application",
+      },
+    ],
   },
+
   {
     name: "Funding",
     to: "funding",

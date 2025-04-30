@@ -18,7 +18,7 @@ function formatCurrency(
     currency: currency,
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
-  }).format(amount?.toFixed(2));
+  }).format(Math.abs(amount) || amount?.toFixed(2));
 }
 
 const contacts = (country: string) =>
@@ -164,6 +164,7 @@ export async function generatePdf(
   element: HTMLElement,
   download = true
 ) {
+  if (!element) return new Error("Section ref is not assigned.");
   const original = {
     backgroundColor: element?.style.backgroundColor,
     text: element?.style.color,

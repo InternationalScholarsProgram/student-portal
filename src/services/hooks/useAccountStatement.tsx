@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import api from "../api/base";
+import api, { baseDirectory } from "../api/base";
 import useFetchUser from "./useFetchUser";
 
 function useAccountStatement() {
-  const { user, isLoading : userLoading } = useFetchUser();
+  const { user, isLoading: userLoading } = useFetchUser();
+
   const {
     data: accountStatements,
     isLoading,
@@ -12,12 +13,9 @@ function useAccountStatement() {
     queryKey: ["account-statement", user?.email],
     queryFn: async () => {
       try {
-        const response = await api.post(
-          "/login/member/dashboard/APIs/fetch_statement.php",
-          {
-            email: user?.email,
-          }
-        );
+        const response = await api.post(baseDirectory + "fetch_statement.php", {
+          email: user?.email,
+        });
         return response.data;
       } catch (error: any) {
         console.error("Error fetching user:", error.response.data);
@@ -25,13 +23,15 @@ function useAccountStatement() {
       }
     },
     enabled: !!user?.email,
+    select: (data) => ({
+      ...data,
+      balance: data?.total_payment - data?.total_expenditure,
+    }),
   });
-  const balance =
-    accountStatements?.total_payment - accountStatements?.total_expenditure;
 
   return {
     user,
-    accountStatements: { ...accountStatements, balance },
+    accountStatements,
     isLoading,
     userLoading,
     error,

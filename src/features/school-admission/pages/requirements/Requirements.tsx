@@ -10,7 +10,7 @@ import ProposedSchools from "../../components/ProposedSchools";
 import UploadDocuments from "./compenents/UploadDocuments";
 import IntakeStatus from "../../components/IntakeStatus";
 
-function SchoolAdmission() {
+function Requirements() {
   const { eligibility, status, isLoading, currentIntake, transcripts } =
     useAdmissions();
 
@@ -38,4 +38,4 @@ function SchoolAdmission() {
     );
 }
 
-export default SchoolAdmission;
+export default Requirements;

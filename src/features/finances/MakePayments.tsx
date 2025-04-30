@@ -75,11 +75,11 @@ function MakePayments() {
 
   return (
     <main className="">
+      <p className="my-3">Please select a payment purpose and proceed to complete your payment.</p>
       <ContentComponent
-        header="Select a payment purpose and proceed to complete your payment."
+        header="Payment details."
         childrenClassName="col-"
       >
-        {/* <p>Please select a payment purpose and proceed to complete your payment.</p> */}
         <form onSubmit={onSubmit} className="col w-full p-3">
           <div className="col my-3 w-full">
             <label>Select reason for payment</label>

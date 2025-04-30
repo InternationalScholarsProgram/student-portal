@@ -255,5 +255,9 @@ const acceptReject = [
   { value: "accept", label: "Accept" },
   { value: "reject", label: "Reject" },
 ];
+const yesNoOptions = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
+];
 
-export { counties, countries, fundingOptions, acceptReject };
+export { counties, countries, fundingOptions, acceptReject, yesNoOptions };

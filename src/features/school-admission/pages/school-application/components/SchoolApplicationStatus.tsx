@@ -4,7 +4,7 @@ import GetApplicationStatus from "./GetApplicationStatus";
 function SchoolApplicationStatus({ appliedSchools }: any) {
   return (
     <section className="card p-2">
-      <h3 className="border-b-30 p-2 opacity-70 font-semibold text-lg">
+      <h3 className="border-b-30 p-2 text-lg title-sm text-primary-main">
         School Application Status
       </h3>
       <p>

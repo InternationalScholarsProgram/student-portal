@@ -6,7 +6,6 @@ import { formatDateAndTime } from "../../../../../../utils/utils";
 const BookFundingAdvisoryMeeting: React.FC<{ dateAndTime?: any }> = ({
   dateAndTime,
 }) => {
-  
   const today = dayjs(new Date());
   const isMoreThan24Hours = today.diff(dateAndTime, "hour") < 24;
 
@@ -26,22 +25,22 @@ const BookFundingAdvisoryMeeting: React.FC<{ dateAndTime?: any }> = ({
       {dateAndTime ? (
         <div className="col gap-2">
           <p>
-            It looks like you missed your funding advisory meeting scheduled at{" "}
-            <b>{formatDateAndTime(dateAndTime)}</b>. You can reschedule at a
-            time that works best for you.
+            It appears you missed your scheduled funding advisory meeting on{" "}
+            <b>{formatDateAndTime(dateAndTime)}</b>. You are welcome to
+            reschedule at a time that is convenient for you.
           </p>
           {isMoreThan24Hours ? (
             <>
               <p>
-                🕒 To continue with your loan application, please reschedule
-                your meeting.
+                To proceed with your loan application, please ensure you
+                reschedule your meeting.
               </p>
               <CalendlyFundingAdvisory classes="primary-btn self-end" />
             </>
           ) : (
             <p>
-              ⏳ Since you missed your meeting, a 24-hour rescheduling
-              restriction applies. You’ll be able to book a new meeting after{" "}
+              Please note: A 24-hour rescheduling restriction applies. You will
+              be able to book a new meeting after{" "}
               <b>
                 {dayjs(dateAndTime)
                   .add(24, "hour")
@@ -54,15 +53,16 @@ const BookFundingAdvisoryMeeting: React.FC<{ dateAndTime?: any }> = ({
       ) : (
         <div className="col gap-2">
           <p className="mb-2">
-            Now that your credit review is approved, it's time to book your{" "}
-            <strong>Funding Advisory Meeting</strong>. In this session, we'll:
+            Now that your credit review is complete, it's time to schedule your{" "}
+            <strong>Funding Advisory Meeting</strong>. During this session, we
+            will:
           </p>
           <ul className="list-disc pl-6">
             <li>Guide you through your school options</li>
             <li>Connect you with the best loan providers</li>
             <li>Help you secure funding tailored to your needs</li>
           </ul>
-          <p>Schedule a funding a session with us!</p>
+          <p>👉 Schedule your funding advisory session today!</p>
           <CalendlyFundingAdvisory classes="primary-btn self-end" />
         </div>
       )}

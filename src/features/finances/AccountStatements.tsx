@@ -1,86 +1,30 @@
 import { ispLogo } from "../../assets/imageLinks";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import PrimaryBorderBtn from "../../components/buttons/PrimaryBorderBtn";
 import useAccountStatement from "../../services/hooks/useAccountStatement";
 import { formatCurrency } from "../../utils/utils";
-import { useNavigate } from "react-router";
-import { useFinancesStore } from "./layout/FinancesLayout";
+import useFinancesStore from "./components/useFinancesStore";
 import GridTable from "../../components/tables/GridTable";
-import Loader from "../../components/loaders/Loader";
-
-const expendituresColumns: GridColDef[] = [
-  { field: "reference_id", headerName: "ID", minWidth: 90 },
-  { field: "purporse", headerName: "Expense", flex: 1, minWidth: 200 },
-  {
-    field: "date",
-    headerName: "Date",
-    valueFormatter: (params) => new Date(params).toDateString(),
-    type: "date",
-    minWidth: 150,
-  },
-  {
-    field: "amount",
-    headerName: "Amount(USD)",
-    type: "number",
-    minWidth: 150,
-  },
-];
-
-const contributionsCols: GridColDef[] = [
-  { field: "payment_intent_id", headerName: "ID", minWidth: 150 },
-  { field: "purpose", headerName: "Purpose", flex: 1, minWidth: 150 },
-  {
-    field: "payment_method",
-    headerName: "Payment Method",
-    flex: 1,
-    minWidth: 150,
-  },
-  {
-    field: "date_completed",
-    headerName: "Date",
-    minWidth: 150,
-    flex: 1,
-    valueFormatter: (params) => new Date(params).toDateString(),
-    type: "date",
-  },
-  {
-    field: "amount",
-    headerName: "Amount(USD)",
-    type: "number",
-    minWidth: 150,
-  },
-];
+import Loader, { InlineLoader } from "../../components/loaders/Loader";
+import ReceiptModal from "./components/ReceiptModal";
 
 function AccountStatements({ hideBalance }: any) {
-  const { setSelectedTransaction } = useFinancesStore((state) => state);
   const { accountStatements, isLoading, user } = useAccountStatement();
-  const navigate = useNavigate();
-  if (isLoading || !accountStatements) return <Loader />;
+  const { setSelectedTransaction, toggleModal } = useFinancesStore(
+    (state) => state
+  );
+  const onActionClick = (params: any) => {
+    toggleModal();
+    setSelectedTransaction({
+      ...params.row,
+      email: user?.email,
+      country: user?.country?.toLowerCase(),
+      names: user?.fullnames,
+    });
+  };
+  const cols = contributionsCols(onActionClick);
 
-  const contributionsColumns: GridColDef[] = [
-    ...contributionsCols,
-    {
-      field: "",
-      headerName: "Action",
-      renderCell: (params) => (
-        <div className="col-center w-full h-full py-1 leading-none">
-          <PrimaryBorderBtn
-            onClick={() => {
-              navigate("/finances/receipt");
-              setSelectedTransaction({
-                ...params.row,
-                email: user?.email,
-                country: user?.country?.toLowerCase(),
-                names: user?.fullnames,
-              });
-            }}
-          >
-            Receipt
-          </PrimaryBorderBtn>
-        </div>
-      ),
-    },
-  ];
+  if (isLoading || !accountStatements) return <InlineLoader />;
 
   return (
     <main className="">
@@ -114,7 +58,7 @@ function AccountStatements({ hideBalance }: any) {
           <p className="font-semibold text-xl">Contribution to the Program</p>
           <GridTable
             rows={accountStatements?.payments || []}
-            columns={contributionsColumns}
+            columns={cols}
             name="contributions"
           />
           <p className="self-end">
@@ -146,9 +90,65 @@ function AccountStatements({ hideBalance }: any) {
           </div>
         )}
       </section>
-      {/* <Receipt /> */}
+      <ReceiptModal />
     </main>
   );
 }
 
 export default AccountStatements;
+const expendituresColumns: GridColDef[] = [
+  { field: "reference_id", headerName: "ID", minWidth: 90 },
+  { field: "purporse", headerName: "Expense", flex: 1, minWidth: 200 },
+  {
+    field: "date",
+    headerName: "Date",
+    valueFormatter: (params) => new Date(params).toDateString(),
+    type: "date",
+    minWidth: 150,
+  },
+  {
+    field: "amount",
+    headerName: "Amount(USD)",
+    type: "number",
+    minWidth: 150,
+  },
+];
+type ContributionsColsProps = (
+  onActionClick: (params: GridRenderCellParams) => void
+) => GridColDef[];
+
+const contributionsCols: ContributionsColsProps = (onActionClick) => [
+  { field: "payment_intent_id", headerName: "ID", minWidth: 150 },
+  { field: "purpose", headerName: "Purpose", flex: 1, minWidth: 150 },
+  {
+    field: "payment_method",
+    headerName: "Payment Method",
+    flex: 1,
+    minWidth: 100,
+  },
+  {
+    field: "date_completed",
+    headerName: "Date",
+    minWidth: 150,
+    flex: 1,
+    valueFormatter: (params) => new Date(params).toDateString(),
+    type: "date",
+  },
+  {
+    field: "amount",
+    headerName: "Amount(USD)",
+    type: "number",
+    minWidth: 100,
+  },
+  {
+    field: "",
+    headerName: "Action",
+    renderCell: (params) => (
+      <div className="col-center w-full h-full py-1 leading-none">
+        <PrimaryBorderBtn onClick={() => onActionClick(params)}>
+          Receipt
+        </PrimaryBorderBtn>
+      </div>
+    ),
+  },
+];

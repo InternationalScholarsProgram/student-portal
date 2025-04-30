@@ -4,6 +4,7 @@ import Instructions from "../components/Instructions";
 import { MenuItem, Select } from "@mui/material";
 import { InputsWithLabel } from "../../../components/inputs/InputField";
 import useTickets from "../hooks/useTickets";
+import ContentComponent from "../../../components/ContentComponent";
 
 interface FormData {
   category: string;
@@ -40,13 +41,9 @@ function CreateTicket() {
   return (
     <main>
       <Instructions />
-      <p className="my-5 opacity-65">Please fill out the form below </p>
-      <section className=" m-2 my-3 col-center">
-        <form
-          className="card w-full p-4 lg:w-3/4 col gap-6"
-          onSubmit={onSubmit}
-        >
-          <p className="text-center">Ticket Details</p>
+      <p className="my-4 opacity-65">Please fill out the form below </p>
+      <ContentComponent header="Enter Ticket Details">
+        <form className="col gap-6" onSubmit={onSubmit}>
           <FormSelect
             label="Select the category of your issue? *"
             value={formData.category}
@@ -87,7 +84,7 @@ function CreateTicket() {
             </PrimaryBtn>
           </div>
         </form>
-      </section>
+      </ContentComponent>
     </main>
   );
 }

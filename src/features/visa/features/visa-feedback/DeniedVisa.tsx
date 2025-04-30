@@ -23,7 +23,7 @@ const DeniedVisa = () => {
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (action === "school-application") {
-      navigate("/school-admission-requirements")
+      navigate("/school-admission/requirements")
       return;
     }
 

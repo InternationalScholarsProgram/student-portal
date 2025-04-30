@@ -1,3 +1,4 @@
+import ContentComponent from "../../../components/ContentComponent";
 import { FullLoader } from "../../../components/loaders/Loader";
 import ProgramConditions from "./components/ProgramConditions";
 import useSwitchProgram from "./hook/useSwitchProgram";
@@ -13,9 +14,8 @@ const SwitchPrograms = () => {
         <b className="first-letter:uppercase px-1">{programOption}</b> option
         student.
       </h3>
-      <section className="p-6 card col">
-        <ProgramConditions />
-      </section>
+      <div className="h-3" />
+      <ProgramConditions />
     </main>
   );
 };

@@ -8,7 +8,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
 
   if (user?.report === "active") {
     return (
-      <div className="col gap-5">
+      <ContentComponent header="Withdrawal Request">
         <p>You are about to make a withdrawal request...</p>
         <p>We will be sad to see you go!</p>
         <p>
@@ -22,7 +22,7 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
         <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
           Review
         </PrimaryBtn>
-      </div>
+      </ContentComponent>
     );
   }
   if (user?.report?.toLowerCase() === "disabled") {
@@ -39,34 +39,15 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
         </p>
         <p> Thank you for being a part of our community.</p>
         <ContactSupport />
-        {/* <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
-            Review
-          </PrimaryBtn> */}
       </ContentComponent>
     );
   }
   if (user?.report === "requested") {
     switch (user?.withdrwal_status) {
       case "1":
-        return (
-          <div className="col gap-2">
-            <p>Your withdrawal request has been received</p>
-            <p>
-              Kindly wait as the withdrawal request is being processed. Before
-              this request is processed, you still have time to review your
-              statement and cancel your withdrawal request if you wish so.
-            </p>
-            <PrimaryBtn
-              onClick={() => cancelRequest.mutate()}
-              className="w-1/3 self-end"
-            >
-              {cancelRequest.isPending ? "Canceling..." : "Cancel Request"}
-            </PrimaryBtn>
-          </div>
-        );
       case "2":
         return (
-          <div className="col gap-2">
+          <ContentComponent header="Withdrawal Request">
             <p>Your withdrawal request has been received</p>
             <p>
               Kindly wait as the withdrawal request is being processed. Before
@@ -79,12 +60,12 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
             >
               {cancelRequest.isPending ? "Canceling..." : "Cancel Request"}
             </PrimaryBtn>
-          </div>
+          </ContentComponent>
         );
 
       case "3":
         return (
-          <div className="col gap-2">
+          <ContentComponent header="Withdrawal Request">
             <p>Your withdrawal request has been processed</p>
             <p>
               Kindly review your statement and confirm the details. If you do
@@ -99,12 +80,12 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
             <PrimaryBtn onClick={toogleStatements} className="w-1/3 self-end">
               Review
             </PrimaryBtn>
-          </div>
+          </ContentComponent>
         );
 
       case "4":
         return (
-          <div className="col gap-2">
+          <ContentComponent header="Withdrawal Request">
             <p>Your withdrawal is being finalized</p>
             <p>
               Please be patient as we process your refund (if any). Once your
@@ -112,7 +93,8 @@ function WithdrawStatus({ toogleStatements, cancelRequest }: any) {
               confirmation through your personal email. This process can take up
               to 4 months.
             </p>
-          </div>
+            <ContactSupport />
+          </ContentComponent>
         );
 
       case "5":

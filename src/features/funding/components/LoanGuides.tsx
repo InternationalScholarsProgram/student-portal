@@ -13,50 +13,77 @@ export default function LoanGuides() {
       return (
         <Accordion title="Tuition and Living Expenses Loan Guide">
           <p>
-            The tuition and living expenses funding is needed for you to request
-            your I-20 from the school you have been admitted to. This loan is
-            sourced from our external lending partners. Once approved, the
-            funding will ultimately support your studies in North America. You
-            MUST request a funding advisory meeting to proceed with this funding
-            option by clicking the button above.
+            Securing tuition and living expenses funding is a crucial step in
+            requesting your I-20 from the school to which you have been
+            admitted. This funding is sourced through our external lending
+            partners and once approved, will support your studies in North
+            America. To proceed with this funding option, you must request a
+            funding advisory meeting by clicking the button above.
           </p>
+
+          <p>Please carefully follow the steps outlined below:</p>
+
           <li>
-            To start funding processing, you need to submit a funding advisory
-            meeting request with our team within this module.
+            <b>Submit a Funding Advisory Meeting Request:</b>
+            <br />
+            To initiate the funding process, you must submit a funding advisory
+            meeting request with our team through this module.
           </li>
           <li>
-            During the funding advisory meeting, our team will propose the best
-            funding options available to you.
+            <b>Attend the Funding Advisory Meeting:</b>
+            <br />
+            During your advisory meeting, our team will propose the best
+            available funding options based on your profile and needs.
           </li>
           <li>
-            You will be able to submit your funding application request within
-            this module.
+            <b>Submit Your Funding Application:</b>
+            <br />
+            After the meeting, you will be able to submit your funding
+            application request within this module.
           </li>
           <li>
-            Once your funding application is processed by our team, you will
-            receive notification in this module, and you should wait until the
-            lender's decision to award or reject is received in your email. This
-            can take up to two weeks, please be patient.
+            <b>Await Funding Application Processing and Decision:</b>
+            <br />
+            Once your application is processed by our team, you will receive a
+            notification within the module. You must then wait for the lender's
+            decision, which will be communicated to you via email.
+            <br />
+            <i>
+              Please note: This process can take up to two weeks. We appreciate
+              your patience.
+            </i>
           </li>
           <li>
-            Once approved or denied, you are required to submit the decision
-            feedback in <b>this module.</b>
+            <b>Submit Decision Feedback:</b>
+            <br />
+            Upon receiving either an approval or denial decision from the
+            lender, you are required to submit the decision feedback within this
+            module.
           </li>
           <li>
-            Upon receipt of an approval loan letter from the lender, request
-            your <b>I-20</b> from the school by following instructions that were
-            part of your admission acceptance communication from the school, on
-            how to request the same. If your loan is denied, submit another
-            funding advisory request with our team.
+            <b>Request Your I-20:</b>
+            <br />
+            If your loan is approved, request your I-20 from your school by
+            following the specific instructions provided in your admission
+            acceptance communication.
+            <br />
+            If your loan is denied, please submit another funding advisory
+            meeting request with our team to explore alternative funding
+            options.
           </li>
           <li>
-            Once you submit your I-20 request to the school, wait for it to be
-            processed. Timelines for I-20 processing can vary depending on
-            schools' processing policies, so please be patient.
+            <b>Await I-20 Processing:</b>
+            <br />
+            Once you have submitted your I-20 request to your school, please
+            allow time for processing. Timelines for I-20 issuance may vary
+            depending on each school’s policies, so your patience is
+            appreciated.
           </li>
           <li>
-            Once you have your I-20, please proceed to the next module of visa
-            processing.
+            <b>Proceed to Visa Processing:</b>
+            <br />
+            Once you have received your I-20, you may proceed to the next module
+            for visa processing.
           </li>
         </Accordion>
       );

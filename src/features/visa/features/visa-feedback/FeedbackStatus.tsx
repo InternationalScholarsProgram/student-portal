@@ -13,6 +13,7 @@ function FeedbackStatus() {
     () => <RenderStatus feedback={feedback} />,
     [feedback]
   );
+  return <ProvideVisaFeedback />;
 
   return <div className="my-2">{renderStatus()}</div>;
 }

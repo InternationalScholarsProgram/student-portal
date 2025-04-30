@@ -20,9 +20,9 @@ function OtherFundingSources() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     if (anyOther === "no") formData.append("visa_support", "loan");
-    // console.log(axios.formToJSON(formData));
     handleSubmit.mutate(formData);
   };
+
   const handleSubmit = useMutation({
     mutationFn: tuitionEndpoints.uploadFundingOptions,
     onSuccess: () => {
@@ -30,21 +30,19 @@ function OtherFundingSources() {
       inValidateStatus();
     },
   });
+
   return (
     <div className="col gap-2">
       <p>
-        Meeting attended successfully. The next step is to confirm sources of
-        your funding
+        Meeting attended successfully. The next step is to confirm sources of your funding.
       </p>
 
-      <h3 className="title-sm pt-3">Confirm source of funding</h3>
+      <h3 className="title-sm pt-3">Confirm Source of Funding</h3>
 
       <form onSubmit={onSubmit} className="col card gap-2 p-3">
         <div className="form-group px-2">
           <em className="mb-3">
-            Apart from student loan, do you wish to use other sources of funding
-            to request your I-20 from the school and also support your VISA
-            process at the embassy?
+            Apart from a student loan, do you wish to use other sources of funding to request your I-20 from the school and also support your visa process at the embassy?
           </em>
           <RadioBtns
             options={[
@@ -63,7 +61,7 @@ function OtherFundingSources() {
         {anyOther === "yes" && (
           <div className="col py-3">
             <p className="text-primary-light">
-              Please provide details of your funding source
+              Please provide details of your funding source.
             </p>
             <div className="col gap-3 p-2">
               <div className="form-group">
@@ -82,15 +80,12 @@ function OtherFundingSources() {
                     ))}
                 </Select>
               </div>
+
               {fundingSource && (
                 <>
                   <div className="form-group">
                     <label htmlFor="support_doc">
-                      Upload{" "}
-                      {fundingSource === "statement"
-                        ? "bank statement"
-                        : "scholarship letter"}{" "}
-                      for approval
+                      Upload {fundingSource === "statement" ? "bank statement" : "scholarship letter"} for approval
                     </label>
                     <PickFileButton
                       setFiles={setFile}
@@ -101,8 +96,7 @@ function OtherFundingSources() {
 
                   <div className="form-group">
                     <label>
-                      Do you wish to use a student loan later to fund your
-                      studies or will you be using personal funds
+                      Do you wish to use a student loan later to fund your studies, or will you be using personal funds?
                     </label>
                     <Select
                       variant="standard"
@@ -119,6 +113,7 @@ function OtherFundingSources() {
             </div>
           </div>
         )}
+
         <PrimaryBtn
           disabled={!anyOther || (anyOther === "yes" && !file)}
           className="self-end"

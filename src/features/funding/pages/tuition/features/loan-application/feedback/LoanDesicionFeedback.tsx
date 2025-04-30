@@ -52,9 +52,10 @@ const LoanDesicionFeedback = () => {
         <p>Your loan application is complete</p>
         <LoanPortal userName={"test"} password={"sdfe232@"} link={""} />
         <p>
-          Before moving forward, we need your final loan decision feedback.
+          Before we can proceed, we kindly request your final loan decision
+          feedback.
           <br />
-          Please submit your response below.
+          Please submit your response using the form below.
         </p>
 
         <PrimaryBtn onClick={toggleModal} className="self-end">
@@ -124,7 +125,7 @@ const acceptedFieds = [
     required: true,
   },
   {
-    inputLabel: "Attach approval letter",
+    inputLabel: "Upload approval letter",
     type: "file",
     name: "loan_letter",
     required: true,

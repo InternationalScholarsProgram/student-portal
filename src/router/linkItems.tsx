@@ -99,6 +99,10 @@ const modules = [
         name: "GRE",
         to: "gre",
       },
+      {
+        name: "Duolingo",
+        to: "duolingo",
+      },
     ],
   },
 

@@ -1,5 +1,5 @@
-import ContentComponent from "../../../../../../components/ContentComponent";
 import { Link } from "react-router-dom";
+import ContentComponent from "../../../../../../components/ContentComponent";
 
 function ProvideSchoolFeedback() {
   return (

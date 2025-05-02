@@ -10,7 +10,8 @@ function InputField(props: TextFieldProps) {
   if (props.type === "date") {
     delete rest.value;
     delete rest.defaultValue;
-    const isValue = typeof props.defaultValue === "string" && props.defaultValue !== "";
+    const isValue =
+      typeof props.defaultValue === "string" && props.defaultValue !== "";
     const date = props.defaultValue as Date;
 
     return (
@@ -24,6 +25,23 @@ function InputField(props: TextFieldProps) {
       />
     );
   }
+  if (props.type === "time") {
+    delete rest.value;
+    delete rest.defaultValue;
+    const isValue =
+      typeof props.defaultValue === "string" && props.defaultValue !== "";
+    const date = props.defaultValue as Date;
+    return (
+      <TimePicker
+        onChange={(e: any) => onChange?.(e)}
+        defaultValue={isValue ? dayjs(date) : null}
+        slotProps={{
+          textField: { ...rest, size: "medium" },
+        }}
+        format="HH:mm"
+      />
+    );
+  }
   if (props.type === "datetime-local")
     return (
       <DateTimePicker
@@ -31,16 +49,6 @@ function InputField(props: TextFieldProps) {
         slotProps={{
           textField: { ...rest, size: "medium" },
         }}
-      />
-    );
-  if (props.type === "time")
-    return (
-      <TimePicker
-        onChange={(e: any) => onChange?.(e)}
-        slotProps={{
-          textField: { ...rest, size: "medium" },
-        }}
-        format="HH:mm"
       />
     );
   return (

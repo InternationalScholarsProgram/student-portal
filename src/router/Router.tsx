@@ -12,6 +12,8 @@ import ErrorBoundary from "./ErrorBoundary";
 import Suspense from "./Suspense";
 import Disabled from "./Disabled";
 import ErrorElement from "./ErrorElement";
+import EntranceExams from "../features/entranceExams/EntranceExams";
+import Duolingo from "../features/entranceExams/features/duolingo/Duolingo";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -36,8 +38,8 @@ const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
   () => import("../features/finances/AccountStatements")
 );
-const Gmat = lazy(() => import("../features/entranceExams/gmat/Gmat"));
-const Gre = lazy(() => import("../features/entranceExams/gre/Gre"));
+const Gmat = lazy(() => import("../features/entranceExams/features/gmat/Gmat"));
+const Gre = lazy(() => import("../features/entranceExams/features/gre/Gre"));
 const TrainingResources = lazy(
   () => import("../features/entranceExams/components/TrainingResources")
 );
@@ -115,11 +117,12 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<Outlet />}>
+              <Route element={<EntranceExams />}>
                 <Route index path="gmat" element={<Gmat />} />
                 <Route path="gre" element={<Gre />} />
+                <Route path="duolingo" element={<Duolingo />} />
                 <Route
-                  path="training-resource"
+                  path="gmat/training-resource"
                   element={<TrainingResources />}
                 />
               </Route>

@@ -12,9 +12,8 @@ const StatusChip: React.FC<Props> = ({ type, ...props }) => {
   );
 };
 
-export default StatusChip;
 
-export const handleType = (type: string) => {
+const handleType = (type: string) => {
   const defaultClasses = " rounded-xl w-fit py-1 px-2 my-1";
   const bgClasses: Record<string, string> = {
     approved: "bg-dark-secondary-main/30",
@@ -23,12 +22,15 @@ export const handleType = (type: string) => {
     rejected: "bg-dark-error-main/30",
     "not paid": "bg-dark-error-main/30",
   };
-
+  
   return (
     (bgClasses[type?.toLowerCase()] || "bg-dark-secondary-main") +
     defaultClasses
   );
 };
+
+export default StatusChip;
+export { handleType };
 
 // const handleType = (type: string) => {
 //   switch (type?.toLowerCase()) {

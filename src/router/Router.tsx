@@ -40,8 +40,8 @@ const AccountStatements = lazy(
 );
 const Gmat = lazy(() => import("../features/entranceExams/features/gmat/Gmat"));
 const Gre = lazy(() => import("../features/entranceExams/features/gre/Gre"));
-const TrainingResources = lazy(
-  () => import("../features/entranceExams/components/TrainingResources")
+const SectionResource = lazy(
+  () => import("../features/entranceExams/components/SectionResource")
 );
 const SwitchPrograms = lazy(
   () => import("../features/program/switch/SwitchPrograms")
@@ -122,8 +122,8 @@ function Router() {
                 <Route path="gre" element={<Gre />} />
                 <Route path="duolingo" element={<Duolingo />} />
                 <Route
-                  path="gmat/training-resource"
-                  element={<TrainingResources />}
+                  path="entrance-exams/section-resource"
+                  element={<SectionResource />}
                 />
               </Route>
 

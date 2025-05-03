@@ -5,16 +5,16 @@ import { BASE_URL } from "../../../services/api/base";
 type Props = ModalProps & {
   resource:
     | {
-        category: "quant";
-        description: "desc desc desc";
-        id: 5;
-        link: "6787548566731_1736922245.pdf";
-        phase: "1";
+        category: string;
+        description: string;
+        id: number;
+        link: string;
+        phase: string;
         status: 1;
-        test_type: "GMAT";
-        title: "Resource test";
-        type: "video";
-        week: 1;
+        test_type: string;
+        title: string;
+        type: "video" | "pdf";
+        week: number;
       }
     | any;
 };
@@ -33,7 +33,7 @@ const ViewResource: React.FC<Props> = ({ open, toggleModal, resource }) => {
         }
       >
         {resource?.type === "video" ? (
-          <video controls>
+          <video controls className="flex-1 aspect-video">
             <source src={url} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

@@ -1,16 +1,25 @@
-import { useState } from "react";
-import FirstPhase from "./components/FirstPhase";
-import SecondPhase from "./components/SecondPhase";
+import { useEffect, useState } from "react";
+import FirstPhase from "../../components/FirstPhase";
+import SecondPhase from "../../components/SecondPhase";
 import useGMAT from "./services/useGMAT";
 import EnrollmentStatus from "../../components/EnrollmentStatus";
 import { InlineLoader } from "../../../../components/loaders/Loader";
 import AxiosError from "../../../../components/errors/AxiosError";
-
-const tabs = ["Phase 1", "Phase 2"];
+import Resources from "../../components/Resources";
+import useExamsStore from "../../services/useExamsStore";
 
 function Gmat() {
   const { status, invalidate, error, isLoading, testType } = useGMAT();
-  const [show, setShow] = useState(tabs[0]);
+
+  const { setSections, setResource, setSectionCount } = useExamsStore();
+
+  useEffect(() => {
+    if (status?.status === 2 || status?.status === 4) {
+      setSections(status?.resources);
+      setResource(status);
+      setSectionCount(status?.section_count);
+    }
+  }, [status?.status]);
 
   if (isLoading) return <InlineLoader />;
   if (error) return <AxiosError error={error} />;
@@ -29,24 +38,7 @@ function Gmat() {
       );
     case 2:
     case 4:
-      return (
-        <section className="card my-5 col">
-          <ul className="ul-links">
-            {tabs.map((tab) => (
-              <button
-                className={tab === show ? "selected" : ""}
-                key={tab}
-                onClick={() => setShow(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </ul>
-          <div className="p-3">
-            {show === "Phase 1" ? <FirstPhase /> : <SecondPhase />}
-          </div>
-        </section>
-      );
+      return <Resources />;
 
     default:
       return <div>Something went wrong</div>;

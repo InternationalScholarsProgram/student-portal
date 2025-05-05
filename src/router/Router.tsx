@@ -121,10 +121,7 @@ function Router() {
                 <Route index path="gmat" element={<Gmat />} />
                 <Route path="gre" element={<Gre />} />
                 <Route path="duolingo" element={<Duolingo />} />
-                <Route
-                  path="entrance-exams/section-resource"
-                  element={<SectionResource />}
-                />
+                <Route path=":exam/section-resource" element={<SectionResource />} />
               </Route>
 
               <Route element={<Outlet />}>

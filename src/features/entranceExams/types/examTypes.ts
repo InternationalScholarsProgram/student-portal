@@ -4,9 +4,16 @@ type ExamStatus = {
   message: string;
   status: number;
   section_count: number;
+  current_section: number;
+  current_phase: number;
   admin_comment: string | null;
-  resources: Resources[];
+  resources: {
+    phase_1: Resources[];
+    phase_2: Resources[];
+  };
+  enrollment_id: number;
 };
+
 type Resources = {
   category: string;
   description: string;
@@ -16,7 +23,7 @@ type Resources = {
   status: 1;
   test_type: string;
   title: string;
-  type: "video" | "pdf";
+  type: "video" | "document" | "link";
   week: number;
 };
 

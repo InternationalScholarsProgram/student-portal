@@ -16,7 +16,7 @@ function Gre() {
         status={status?.status}
         invalidate={invalidate}
       />
-      <BookExam enrollment_id="ds" invalidate={invalidate} />
+      {/* <BookExam enrollment_id="ds" invalidate={invalidate} /> */}
     </div>
   );
 }

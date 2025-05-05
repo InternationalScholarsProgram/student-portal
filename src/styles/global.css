@@ -210,5 +210,14 @@ p {
   @apply grid grid-cols-2 hover:bg-slate-400;
 }
 .data-table p {
-  @apply border-30 p-2 ;
+  @apply border-30 p-2;
+}
+.resource {
+  @apply drop-shadow-md shadow-lg rounded-md bg-default col p-3 overflow-clip hover:scale-105 cursor-pointer;
+}
+.resource .arrow {
+  @apply self-end bg-paper p-1 rounded-md;
+}
+.resource:hover .arrow {
+  @apply bg-primary-light/50;
 }

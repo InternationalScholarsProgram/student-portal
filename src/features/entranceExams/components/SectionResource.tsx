@@ -1,68 +1,116 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { gmatResources } from "../features/gmat/components/utils";
+import { useLocation, useNavigate } from "react-router-dom";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+
 import ViewResource from "./ViewResource";
-import useExamsStore from "../services/useExamsStore";
 import { Resources } from "../types/examTypes";
+import useThemeStore from "../../../styles/theme.store";
+import { useMutation } from "@tanstack/react-query";
+import examsEndpoints from "../services/examsEndpoints";
+import { toast } from "react-toastify";
+import { errorMsg } from "../../../components/errors/errorMsg";
+import useGetStatus from "../services/useGetStatus";
+import FormFooterBtns from "../../../components/buttons/FormFooterBtns";
+import TopTab from "../../../components/TopTab";
 
 function SectionResource() {
   const { state } = useLocation();
-  const [show, setShow] = useState("");
+  const sectionNumber = state?.sectionNumber;
+  const sectionResources: Resources[] = state?.sectionResources;
+
+  const [activeTab, setActiveTab] = useState("");
   const [tabs, setTabs] = useState<string[]>([]);
-  const [resource, setResource] = useState({});
-  const [resources, setResources] = useState<Resources[]>([]);
+  const [resource, setResource] = useState<Resources>();
+
+  const { themeMode } = useThemeStore();
+  const navigate = useNavigate();
+  const { status, invalidateStatus, testType } = useGetStatus();
+  const goBack = () => navigate(`/${testType}`);
+
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
 
-  const { sections } = useExamsStore();
-
   useEffect(() => {
-    const _resources = sections.filter((item) => item.week === state);
-    const categories = _resources.map((item) => item.category);
+    if (!sectionResources.length) return goBack();
+
+    const categories = sectionResources.map((item) => item.category);
     const uniqueCategories = [...new Set(categories)];
+
     setTabs(uniqueCategories);
-    setShow(uniqueCategories[0]);
-    setResources(_resources);
-  }, [sections]);
+    setActiveTab(uniqueCategories[0]);
+  }, [sectionNumber]);
+
+  const markComplete = useMutation({
+    mutationFn: () =>
+      examsEndpoints.markResourceComplete(status?.enrollment_id, sectionNumber),
+    onSuccess: () => {
+      invalidateStatus();
+      goBack();
+    },
+    onError: (error) => toast.error(errorMsg(error)),
+  });
 
   return (
-    <div className="w-full">
-      <header>
-        <h3 className="py-4 p-2 opacity-70">
-          {state?.name} Training Resources
-        </h3>
-      </header>
-      {tabs.length > 1 && (
-        <ul className="ul-links">
-          {tabs.map((tab) => (
-            <button
-              className={tab === show ? "selected" : ""}
-              key={tab}
-              onClick={() => setShow(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </ul>
+    <div className="col gap-2">
+      <h3 className="title-sm text-primary-light pb-2">
+        Section {sectionNumber} Training Resources
+      </h3>
+      <TopTab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      {!state?.hideMarkCompleteButton && (
+        <p>
+          Mark as completed only when you have finished going through all the
+          resources
+        </p>
       )}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-clip p-2 ">
-        {resources
-          ?.filter((item) => item.category === show)
+      <section className="grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-clip p-2 ">
+        {sectionResources
+          ?.filter((item) => item.category === activeTab)
           .map((item) => (
             <div
               key={item.id}
               onClick={() => {
                 setResource(item);
                 toggleModal();
+                console.log(item);
               }}
-              className="drop-shadow-md shadow-lg rounded-md bg-paper col p-3 overflow-clip hover:scale-105 cursor-pointer"
+              className="resource"
             >
-              <p className="font-bold">{item.title}</p>
-              <p className="text-sm">{item.description}</p>
-              <p className="text-sm">Category : {item.category}</p>
+              <div className="col py-2 text-primary-main">
+                {item.type === "video" ? (
+                  <OndemandVideoIcon />
+                ) : (
+                  <PictureAsPdfIcon />
+                )}
+              </div>
+              <b>{item.title}</b>
+              <p className="text-sm px-1">{item.description}</p>
+              <div className="arrow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  height="15"
+                  width="15"
+                >
+                  <path
+                    fill={themeMode === "dark" ? "#fff" : "#000"}
+                    d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"
+                  ></path>
+                </svg>
+              </div>
             </div>
           ))}
-      </div>
+      </section>
+      <footer>
+        <FormFooterBtns
+          closeText="Go back"
+          onClose={goBack}
+          onSubmit={markComplete.mutate}
+          btnText={markComplete.isPending ? "Loading..." : "Mark Complete"}
+          hideBtn={state?.hideMarkCompleteButton}
+        />
+      </footer>
       <ViewResource open={open} toggleModal={toggleModal} resource={resource} />
     </div>
   );

@@ -9,14 +9,15 @@ class ExamsEndpoints {
     api.get(`${url}status_check.php?test_type=${type}`);
   enroll = (payload: Enroll) =>
     api.post(`${url}entrance_exam_enrollment.php`, payload, multipart);
-  markComplete = (enrollment_id: string, section: string) =>
+
+  markResourceComplete = (enrollment_id?: number, section?: number) =>
     api.get(`${url}mark_section_complete.php`, {
       params: {
         enrollment_id: enrollment_id,
         completed_section: section,
       },
     });
-  mockComplete = (mock_id: string, score: string, result: File) =>
+  markMockComplete = (mock_id: string, score: string, result: File) =>
     api.post(
       `${url}mark_section_complete.php`,
       axios.toFormData({

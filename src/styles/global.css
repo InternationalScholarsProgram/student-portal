@@ -95,7 +95,7 @@
   @apply flex flex-row flex-wrap items-center gap-2 mb-4;
 }
 .ul-links * {
-  @apply first-letter:uppercase p-2 rounded-sm flex-1 text-base text-center;
+  @apply first-letter:uppercase p-2 rounded-sm text-base text-center;
 }
 .ul-links .selected {
   @apply text-primary-light border-b border-primary-main;

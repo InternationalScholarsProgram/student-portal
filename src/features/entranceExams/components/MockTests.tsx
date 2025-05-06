@@ -1,29 +1,36 @@
-import { useEffect, useState } from "react";
-import useThemeStore from "../../../styles/theme.store";
+import { useState } from "react";
+import LaunchIcon from "@mui/icons-material/Launch";
 
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import useGetStatus from "../services/useGetStatus";
-import TopTab from "../../../components/TopTab";
+import MarkCompleteMockModal from "./MarkCompleteMockModal";
+import { Resources } from "../types/examTypes";
+import Arrow from "../../../assets/Arrow";
+
+type Props = Resources & {
+  enrollment_id: number | undefined;
+};
 
 function MockTests() {
-  const { themeMode } = useThemeStore();
-  const { mockResources } = useGetStatus();
-  const [sections, setSections] = useState<any[]>();
-  const [activeTab, setActiveTab] = useState("");
+  const { mockResources, invalidateStatus, status } = useGetStatus();
+  const [mock, setMock] = useState<Props>();
+  const [openModal, setOpenModal] = useState(false);
+  const toggleModal = () => setOpenModal(!openModal);
 
-  const getSections = () => {
-    const categories = mockResources.map((item) => item.week);
-    const uniqueCategories = [...new Set(categories)];
-    const _sections = uniqueCategories.map((item) => `Section ${item}`);
+  // const [sections, setSections] = useState<any[]>();
+  // const [activeTab, setActiveTab] = useState("");
 
-    setActiveTab(_sections[0]);
-    setSections(_sections);
-  };
+  // const getSections = () => {
+  //   const categories = mockResources.map((item) => item.week);
+  //   const uniqueCategories = [...new Set(categories)];
+  //   const _sections = uniqueCategories.map((item) => `Section ${item}`);
 
-  useEffect(() => {
-    getSections();
-  }, []);
+  //   setActiveTab(_sections[0]);
+  //   setSections(_sections);
+  // };
+
+  // useEffect(() => {
+  //   getSections();
+  // }, []);
 
   if (!mockResources.length)
     return (
@@ -39,50 +46,35 @@ function MockTests() {
         This is the test phase. You will be doing the various mocks and
         submitting them for review.
       </p>
-      <TopTab
-        tabs={sections || []}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      <div className="h-2" />
 
       <section className="grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-clip p-2 ">
         {mockResources?.map((item) => (
           <div
             key={item.id}
-            onClick={() => {
-              // setResource(item);
-              // toggleModal();
-              window.open(item.link, "_blank");
-              console.log(item);
-            }}
             className="resource"
+            onClick={() => {
+              toggleModal();
+              setMock({ ...item, enrollment_id: status?.enrollment_id });
+            }}
           >
             <div className="col py-2 text-primary-main">
-              {item.type === "video" ? (
-                <OndemandVideoIcon />
-              ) : (
-                <PictureAsPdfIcon />
-              )}
+              <LaunchIcon />
             </div>
             <b>{item.title}</b>
             <p className="text-sm px-1">{item.description}</p>
             <div className="arrow">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                height="15"
-                width="15"
-              >
-                <path
-                  fill={themeMode === "dark" ? "#fff" : "#000"}
-                  d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"
-                ></path>
-              </svg>
+              <Arrow />
             </div>
           </div>
         ))}
       </section>
+      <MarkCompleteMockModal
+        open={openModal}
+        toggleModal={toggleModal}
+        invalidateStatus={invalidateStatus}
+        mock={mock}
+      />
     </div>
   );
 }

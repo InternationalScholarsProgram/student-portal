@@ -16,6 +16,8 @@ const FormFooterBtns: React.FC<Props> = ({
   closeText,
   ...props
 }) => {
+  const isLoading = typeof btnText === "string" && btnText.includes("...");
+  const disabled = props.disabled || isLoading;
   return (
     <footer
       data-html2canvas-ignore // ignore html2canvas when generating pdf
@@ -29,7 +31,8 @@ const FormFooterBtns: React.FC<Props> = ({
       {!hideBtn && (
         <button
           {...props}
-          className={`primary-btn ${props.disabled && "disabled-btn"}`}
+          disabled={disabled}
+          className={`primary-btn ${disabled && "disabled-btn"}`}
           {...(onSubmit ? { onClick: onSubmit } : { type: "submit" })}
         >
           {btnText ? btnText : "Submit"}

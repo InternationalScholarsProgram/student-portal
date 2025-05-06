@@ -17,18 +17,33 @@ class ExamsEndpoints {
         completed_section: section,
       },
     });
-  markMockComplete = (mock_id: string, score: string, result: File) =>
+    
+  markMockComplete = (payload: {
+    mock_id: number;
+    score: string;
+    mock_result: File;
+    enrollment_id: any;
+    section: number;
+  }) =>
     api.post(
       `${url}mark_section_complete.php`,
-      axios.toFormData({
-        mock_id: mock_id,
-        score: score,
-        mock_result: result,
-      }),
-      multipart
+      {
+        mock_id: payload?.mock_id,
+        score: payload?.score,
+        mock_result: payload?.mock_result,
+      },
+      {
+        params: {
+          enrollment_id: payload?.enrollment_id,
+          completed_section: payload?.section,
+        },
+        ...multipart,
+      }
     );
+
   bookExam = (payload: FormData) =>
     api.post(`${url}request_exam_booking.php`, payload, multipart);
+
   scoreVerification = (
     enrollment_id: string,
     booking_id: string,

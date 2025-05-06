@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router";
-import { NavLink } from "react-router-dom";
 import useAdmissions from "./services/useAdmissions";
 import { FullLoader } from "../../components/loaders/Loader";
+import TopTab from "../../components/TopTab";
 
 const tabs = [
   { to: "/school-admission/requirements", label: "Requirements" },
@@ -9,7 +9,7 @@ const tabs = [
 ];
 
 function AdmisionLayout() {
-  const { status, isLoading } = useAdmissions();
+  const { isLoading } = useAdmissions();
   const location = useLocation();
 
   if (isLoading) return <FullLoader />;
@@ -19,19 +19,7 @@ function AdmisionLayout() {
 
   return (
     <main>
-      {status?.code === 5 && (
-        <ul className="ul-links">
-          {tabs.map((tab) => (
-            <NavLink
-              key={tab.to}
-              to={tab.to}
-              className={({ isActive }) => (isActive ? "selected" : "")}
-            >
-              {tab.label}
-            </NavLink>
-          ))}
-        </ul>
-      )}
+      <TopTab tabs={tabs} link />
       <Outlet />
     </main>
   );

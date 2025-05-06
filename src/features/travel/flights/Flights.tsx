@@ -1,25 +1,16 @@
-import {  useState } from "react";
+import { useState } from "react";
 import FlightBookingGuide from "./components/FlightBookingGuide";
 import FindFlights from "./find-flights/FindFlights";
 import History from "./components/History";
 import { tabs } from "./components/utils";
 import "./styles/flights.css";
+import TopTab from "../../../components/TopTab";
 
 function Flights() {
-  const [show, setShow] = useState(tabs[0]);
+  const [show, setShow] = useState<any>(tabs[0]);
   return (
     <main>
-      <ul className="ul-links">
-        {tabs.map((tab) => (
-          <button
-            className={tab === show ? "selected" : ""}
-            key={tab}
-            onClick={() => setShow(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </ul>
+      <TopTab tabs={tabs} activeTab={show} setActiveTab={setShow} />
       <section className="w-full p-3">
         {show === tabs[0] ? (
           <FlightBookingGuide openTab={setShow} />

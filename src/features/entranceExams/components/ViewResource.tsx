@@ -22,7 +22,7 @@ const ViewResource: React.FC<Props> = ({ open, toggleModal, resource }) => {
         }
       >
         {resource?.type === "video" && (
-          <video controls className="h-full aspect-video" autoPlay>
+          <video controls className="flex-1 aspect-video" autoPlay>
             <source src={url} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

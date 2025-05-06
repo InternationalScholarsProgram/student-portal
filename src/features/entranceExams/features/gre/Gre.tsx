@@ -15,6 +15,7 @@ function Gre() {
         type={testType}
         status={status?.status}
         invalidate={invalidate}
+        reason={status?.admin_comment}
       />
       {/* <BookExam enrollment_id="ds" invalidate={invalidate} /> */}
     </div>

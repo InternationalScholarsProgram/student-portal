@@ -41,6 +41,8 @@ class ExamsEndpoints {
       }
     );
 
+  extraTime = (payload: FormData) =>
+    api.post(`${url}request_extra_time.php`, payload, multipart);
   bookExam = (payload: FormData) =>
     api.post(`${url}request_exam_booking.php`, payload, multipart);
 

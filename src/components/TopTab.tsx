@@ -8,7 +8,7 @@ type Props = {
 };
 
 const TopTab: React.FC<Props> = ({
-  tabs,
+  tabs = [],
   activeTab,
   setActiveTab,
   link = false,
@@ -16,35 +16,34 @@ const TopTab: React.FC<Props> = ({
   const onClick = (tab: string) => {
     if (setActiveTab) setActiveTab(tab);
   };
+  
   const classes = tabs.length === 1 ? " basis-1/2 " : " flex-1 ";
   return (
     <ul className="ul-links">
-      {tabs.map((tab, index) => (
-        <>
-          {link ? (
-            <NavLink
-              key={index}
-              to={tab.to}
-              className={({ isActive }) =>
-                `${isActive ? "selected" : ""} ${classes}`
-              }
-            >
-              {tab.label}
-            </NavLink>
-          ) : (
-            <button
-              className={`
+      {tabs.map((tab, index) =>
+        link ? (
+          <NavLink
+            key={index}
+            to={tab.to}
+            className={({ isActive }) =>
+              `${isActive ? "selected" : ""} ${classes}`
+            }
+          >
+            {tab.label}
+          </NavLink>
+        ) : (
+          <button
+            className={`
                 ${
                   (tab?.value || tab) === activeTab ? "selected" : ""
                 } ${classes}`}
-              key={index}
-              onClick={() => onClick(tab)}
-            >
-              {tab.label || tab}
-            </button>
-          )}
-        </>
-      ))}
+            key={index}
+            onClick={() => onClick(tab)}
+          >
+            {tab.label || tab}
+          </button>
+        )
+      )}
     </ul>
   );
 };

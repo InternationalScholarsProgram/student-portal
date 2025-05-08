@@ -3,7 +3,6 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
-import Receipt from "../features/finances/components/ReceiptModal";
 import Tuition from "../features/funding/pages/tuition/Tuition";
 import Relocation from "../features/funding/pages/relocation/Relocation";
 import Alternative from "../features/funding/pages/alternative/Alternative";
@@ -13,7 +12,7 @@ import Suspense from "./Suspense";
 import Disabled from "./Disabled";
 import ErrorElement from "./ErrorElement";
 import EntranceExams from "../features/entranceExams/EntranceExams";
-import Duolingo from "../features/entranceExams/features/duolingo/Duolingo";
+import EntranceExamLayout from "../features/entranceExams/EntranceExamLayout";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -38,8 +37,6 @@ const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
   () => import("../features/finances/AccountStatements")
 );
-const Gmat = lazy(() => import("../features/entranceExams/features/gmat/Gmat"));
-const Gre = lazy(() => import("../features/entranceExams/features/gre/Gre"));
 const SectionResource = lazy(
   () => import("../features/entranceExams/components/SectionResource")
 );
@@ -117,10 +114,10 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<EntranceExams />}>
-                <Route index path="gmat" element={<Gmat />} />
-                <Route path="gre" element={<Gre />} />
-                <Route path="duolingo" element={<Duolingo />} />
+              <Route element={<EntranceExamLayout />}>
+                <Route index path="gmat" element={<EntranceExams />} />
+                <Route path="gre" element={<EntranceExams />} />
+                <Route path="duolingo" element={<EntranceExams />} />
                 <Route path=":exam/section-resource" element={<SectionResource />} />
               </Route>
 

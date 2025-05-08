@@ -17,7 +17,7 @@ function Modal({ children, title, open, setOpen }: CustomModalProps) {
         {setOpen && (
           <>
             <div className="p-4 flex justify-between items-center">
-              <h5 className="first-letter:uppercase text-lg font-semibold">
+              <h5 className="first-letter:uppercase text-lg font-semibold text-primary-main">
                 {title}
               </h5>
               <button

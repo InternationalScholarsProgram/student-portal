@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import useGetStatus from "../services/useGetStatus";
+import { Tooltip } from "@mui/material";
 
 const TrainingMaterials = () => {
   const { testType, status, trainingResources } = useGetStatus();
   const navigate = useNavigate();
-  
+
   const currentSection = status?.current_section || 0;
-  const sectionsArray = Array.from({ length: status?.section_count || 0 });
+  const sectionCount =
+    status?.section_count.find((item) => item.phase === 1)?.sections || 0;
+  const sectionsArray = Array.from({ length: sectionCount });
 
   const hasResources = (sectionNo: number) =>
     trainingResources.some((item) => item.week === sectionNo);
@@ -38,23 +41,30 @@ const TrainingMaterials = () => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 overflow-clip p-2">
         {sectionsArray.map((_item, index) => (
-          <div
+          <Tooltip
+            title={
+              hasResources(index + 1)
+                ? ""
+                : "Complete previous mock in order to proceed"
+            }
             key={index}
-            onClick={() => sectionOnClick(index + 1)}
-            className={`drop-shadow-md shadow-lg rounded-md bg-paper col justify-center h-[10vh] alert
+          >
+            <div
+              onClick={() => sectionOnClick(index + 1)}
+              className={`drop-shadow-md shadow-lg rounded-md bg-paper col justify-center h-[10vh] alert
                 ${
                   hasResources(index + 1)
                     ? "cursor-pointer hover:scale-105"
                     : "cursor-not-allowed opacity-60"
                 }
-               `}
-          >
-            <p className="font-bold">Section {index + 1}</p>
-            <p className="text-primary-light underline">View</p>
-          </div>
+                  `}
+            >
+              <p className="font-bold">Section {index + 1}</p>
+              <p className="text-primary-light">View</p>
+            </div>
+          </Tooltip>
         ))}
       </div>
-
     </div>
   );
 };

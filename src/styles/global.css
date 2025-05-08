@@ -213,7 +213,7 @@ p {
   @apply border-30 p-2;
 }
 .resource {
-  @apply drop-shadow-md shadow-lg rounded-md bg-default col p-3 overflow-clip hover:scale-105 cursor-pointer;
+  @apply drop-shadow-md shadow-lg rounded-md col p-3 overflow-clip;
 }
 .resource .arrow {
   @apply self-end bg-paper p-1 rounded-md;

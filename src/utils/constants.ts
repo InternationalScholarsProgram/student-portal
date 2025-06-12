@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const counties = [
   { value: 1, label: "Mombasa" },
   { value: 2, label: "Kwale" },

@@ -2,8 +2,7 @@ import useAdmissions from "../../services/useAdmissions";
 import CareerAdvisory from "../../../../components/career-advisory/CareerAdvisory";
 import MakeApplication from "./components/MakeApplication";
 import SchoolApplicationStatus from "./components/SchoolApplicationStatus";
-import Loader, { InlineLoader } from "../../../../components/loaders/Loader";
-import { Navigate } from "react-router";
+import { InlineLoader } from "../../../../components/loaders/Loader";
 import ContentComponent from "../../../../components/ContentComponent";
 import { Link } from "react-router-dom";
 
@@ -12,7 +11,7 @@ function SchoolApplication() {
     useAdmissions();
 
   if (isLoading) return <InlineLoader />;
-  
+
   if (status?.code !== 5 || !proposedSchools)
     return (
       <ContentComponent header="Application Status">
@@ -40,8 +39,8 @@ function SchoolApplication() {
       {appliedSchools.length > 0 && (
         <SchoolApplicationStatus appliedSchools={appliedSchools} />
       )}
-      <div className="h-5"></div>
-      <section className="m-4 col">
+
+      <section className="mt-8 m-4 col">
         <p className="text-sm">
           Do you wish to seek clarification or guidance on the schools you
           applied to ? Kindly submit another career advisory request.

@@ -10,6 +10,7 @@ import { darkTheme, lightTheme } from "./styles/theme";
 import Router from "./router/Router";
 import { FullLoader } from "./components/loaders/Loader";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import 'react-circular-progressbar/dist/styles.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,7 +48,7 @@ function AppWrapper() {
             pauseOnHover={true}
             transition={Bounce}
           />
-          <ReactQueryDevtools />
+          {/* <ReactQueryDevtools /> */}
           <Router />
         </LocalizationProvider>
       </ThemeProvider>

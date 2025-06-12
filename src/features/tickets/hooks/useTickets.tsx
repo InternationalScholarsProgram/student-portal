@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "../../../services/api/base";
+import api, { baseDirectory } from "../../../services/api/base";
 import { json2formData } from "../../../utils/utils";
 import useFetchUser from "../../../services/hooks/useFetchUser";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ function useTickets() {
       if (resData.code === 200) return resData.data;
       return response.data.data;
     },
+    select: (response) => response as TicketProps[],
   });
 
   const closedTickets = allTickets?.filter(
@@ -33,7 +34,7 @@ function useTickets() {
     mutationFn: async (data: any) => {
       const payload = json2formData(data);
       const response = await api.post(
-        "/login/member/dashboard/APIs/tickets/create_ticket.php",
+        baseDirectory + "/tickets/create_ticket.php",
         payload
       );
       return response.data;
@@ -69,7 +70,7 @@ function useTickets() {
     },
     onSuccess: (data) => {
       if (data.code === 200) {
-        toast.success("Message sent")
+        toast.success("Message sent");
         queryClient.invalidateQueries({ queryKey: data?.queryKey });
       }
     },
@@ -88,3 +89,16 @@ function useTickets() {
 }
 
 export default useTickets;
+type TicketProps = {
+  action: number;
+  category: string;
+  feedback: null;
+  id: number;
+  img: null;
+  issue: string;
+  phone: string;
+  status: string;
+  ticket_date: string;
+  unread_count: number;
+  unread_notifications: any[];
+};

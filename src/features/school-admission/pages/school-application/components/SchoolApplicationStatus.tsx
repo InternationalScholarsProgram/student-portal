@@ -3,7 +3,7 @@ import GetApplicationStatus from "./GetApplicationStatus";
 
 function SchoolApplicationStatus({ appliedSchools }: any) {
   return (
-    <section className="card p-2">
+    <section className="py-2">
       <h3 className="border-b-30 p-2 text-lg title-sm text-primary-main">
         School Application Status
       </h3>
@@ -15,7 +15,7 @@ function SchoolApplicationStatus({ appliedSchools }: any) {
       <div className="sm:m-[5%] p-4 gap-5 col">
         {appliedSchools?.map((item: any, index: number) => (
           <Paper
-            onClick={() => console.log(item)}
+            // onClick={() => console.log(item)}
             elevation={8}
             key={index}
             className="card borders rounded-sm"

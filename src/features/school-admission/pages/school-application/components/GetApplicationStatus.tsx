@@ -15,7 +15,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
   const comment = school?.application_details?.comment;
   const feedbackCode =
     school?.application_details?.feedback?.feedback?.toString();
-    
+
   if (status === "1")
     return (
       <>
@@ -38,27 +38,38 @@ const GetApplicationStatus = ({ status, school }: Props) => {
           Your application to this school has been completed. Please use the
           below credentials to login to the school application portal. Do not
           act on any emails you receive from the school without first seeking
-          guidance from our team by raising a ticket.
+          guidance from our team by raising a ticket. <br />
+          <span className="">
+            Admin Comments : <em>{comment}</em>
+          </span>
         </p>
-        <p>{comment}</p>
         <p>Access the school portal using the following details:</p>
         <div className="px-4 m-2 border-30 rounded-md">
-          <a
-            className="text-primary-light underline"
-            href={school?.application_details?.school_link}
-            target="_blank"
-          >
-            School Portal Link
-          </a>
           <p>
-            UserName : {userName} <CopyToClipBoard text={userName} />
+            School Portal :
+            <a
+              className="text-primary-light underline px-2"
+              href={school?.application_details?.school_link || "#"}
+              target="_blank"
+            >
+              Open Link
+            </a>
+          </p>
+          <p className="row items-center w-full">
+            UserName : {"  "}
+            <span className="pl-1 flex-1 max-w-fit text-nowrap truncate text-ellipsis">
+              {userName}
+            </span>{" "}
+            <CopyToClipBoard text={userName} />
           </p>
           <p>
             Password : {password}
             <CopyToClipBoard text={password} />
           </p>
         </div>
+
         <div className="col">
+          <b>Feedback</b>
           {feedbackCode ? (
             <FeedBackStatus school={school} />
           ) : (
@@ -95,7 +106,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
         {comment && (
           <>
             <p className="underline">Comments</p>
-            <p>{comment}</p>
+            <em>{comment}</em>
           </>
         )}
       </>

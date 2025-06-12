@@ -3,15 +3,13 @@ import GridTable from "../../../../components/tables/GridTable";
 import { GridColDef } from "@mui/x-data-grid";
 import Loader from "../../../../components/loaders/Loader";
 import { useState } from "react";
-import Modal from "../../../../components/Modal";
-import BookingMessages from "./BookingMessages";
 import OrderHistoryModal from "./OrderHistoryModal";
 import { formatDate } from "../../../../utils/utils";
 
 const History = ({ setShow }: { setShow: any }) => {
   const [open, setOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { orderHistory } = useFlightHook();
+  const { orderHistory, isLoading } = useFlightHook();
 
   const columns: GridColDef[] = [
     {
@@ -71,9 +69,8 @@ const History = ({ setShow }: { setShow: any }) => {
       ),
     },
   ];
-  if (!orderHistory) {
-    return <Loader />;
-  }
+  if (isLoading) return <Loader />;
+
   return (
     <div>
       <div className="p-6">

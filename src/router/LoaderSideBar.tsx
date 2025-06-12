@@ -1,14 +1,16 @@
-import { FullLoader } from "../components/loaders/Loader";
+import { Skeleton, Stack } from "@mui/material";
 
 function LoaderSideBar() {
   return (
-    <div className="row h-screen-dvh w-screen">
-      <aside className="sidebar" />
-      <main className="flex-1 col bg-default">
-        <nav className="w-full h-[9vh] bg-paper" />
-        <FullLoader />
-      </main>
-    </div>
+    <Stack spacing={1} direction="row" className="w-screen h-dvh">
+      <Stack spacing={1} className="col p-4 w-[30vw] h-dvh">
+        <Skeleton variant="rounded" className="flex-1 h-full" />
+      </Stack>
+      <Stack spacing={1} direction="column" className="w-[65vw]">
+        <Skeleton variant="text" height={200} />
+        <Skeleton variant="rounded" className="w-full flex-1" />
+      </Stack>
+    </Stack>
   );
 }
 

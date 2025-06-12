@@ -1,4 +1,3 @@
-import axios from "axios";
 import api, { baseDirectory, multipart } from "../../../services/api/base";
 import { TestTypes } from "../types/examTypes";
 
@@ -17,7 +16,7 @@ class ExamsEndpoints {
         completed_section: section,
       },
     });
-    
+
   markMockComplete = (payload: {
     mock_id: number;
     score: string;

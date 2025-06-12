@@ -19,7 +19,7 @@ const linkItems = [
   {
     icon: <DashboardOutlinedIcon />,
     name: "Dashboard",
-    to: "",
+    to: "dashboard",
   },
   {
     icon: <PersonOutlineOutlinedIcon />,

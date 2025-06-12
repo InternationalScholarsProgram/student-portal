@@ -1,5 +1,11 @@
 import { lazy } from "react";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
@@ -24,7 +30,7 @@ const AdmisionLayout = lazy(
 
 // Components
 const ErrorPage = lazy(() => import("../components/errors/ErrorPage"));
-const Dashboard = lazy(() => import("../features/Dashboard"));
+const Dashboard = lazy(() => import("../features/dashboard/Dashboard"));
 const Profile = lazy(() => import("../features/user/Profile"));
 const WebMail = lazy(() => import("../features/WebMail"));
 const Resources = lazy(() => import("../features/info-resources/Resources"));
@@ -87,7 +93,8 @@ function Router() {
               <Route path="/disabled" element={<Disabled />} />
             </Route>
             <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
-              <Route index element={<Dashboard />} />
+              <Route index element={<Navigate to="/dashboard" />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="webmail" element={<WebMail />} />
               <Route path="resources" element={<Resources />} />
@@ -118,7 +125,10 @@ function Router() {
                 <Route index path="gmat" element={<EntranceExams />} />
                 <Route path="gre" element={<EntranceExams />} />
                 <Route path="duolingo" element={<EntranceExams />} />
-                <Route path=":exam/section-resource" element={<SectionResource />} />
+                <Route
+                  path=":exam/section-resource"
+                  element={<SectionResource />}
+                />
               </Route>
 
               <Route element={<Outlet />}>

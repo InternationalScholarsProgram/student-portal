@@ -5,45 +5,44 @@ import Typography from "@mui/material/Typography";
 import ContentComponent from "../../../components/ContentComponent";
 import { ProgressData } from "../Dashboard";
 import { CircularProgressbar } from "react-circular-progressbar";
+import { Theme, useTheme } from "@mui/material";
 type Props = {
   progressData: ProgressData | undefined;
 };
 
 const ProgressTracker: React.FC<Props> = ({ progressData }) => {
+  const { palette: colors } = useTheme();
   return (
     <ContentComponent header="Progress Tracker">
-      <div className="w-full space-y-6 p-4">
-        <div className="grid grid-cols-5 flex-wrap gap-2">
-          {progressData &&
-            Object.entries(progressData).map(([key, progress]) => {
-              if (typeof progress !== "number") return null;
-              return (
-                <div key={key} className="">
-                  {/* <p className="font-bold text-sm w-">{formatLabel(key)}</p>
-
-                <div className="col-span-2 flex items-center gap-2 px-2">
-                  <LinearProgress
-                    className="w-[100%]"
-                    variant="determinate"
-                    color={getProgressColor(progress)}
-                    value={progress}
-                  />
-                </div>
-                <Typography
-                  variant="body2"
-                  sx={{ color: "text.secondary" }}
-                >{`${Math.round(progress)}%`}</Typography> */}
-                  <div>
-                    <CircularProgressbar
-                      value={progress}
-                      text={`${Math.round(progress)}%`}
-                    ></CircularProgressbar>
-                    <p className="font-bold text-sm w-">{formatLabel(key)}</p>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
+      <div className="grid grid-cols-5 gap-2">
+        {progressData &&
+          Object.entries(progressData).map(([key, progress]) => {
+            if (typeof progress !== "number") return null;
+            return (
+              <div key={key} className="col gap-2">
+                <CircularProgressbar
+                  value={progress}
+                  text={`${Math.round(progress)}%`}
+                  styles={{
+                    path: {
+                      stroke: getProgressColor(progress, colors),
+                    },
+                    root: {
+                      width: "100%",
+                      height: "7em",
+                    },
+                    trail: {
+                      stroke: colors.action.active,
+                      opacity: 0.1,
+                    }
+                  }}
+                />
+                <p className="font-bold text-sm text-center">
+                  {formatLabel(key)}
+                </p>
+              </div>
+            );
+          })}
       </div>
     </ContentComponent>
   );
@@ -51,17 +50,15 @@ const ProgressTracker: React.FC<Props> = ({ progressData }) => {
 
 export default ProgressTracker;
 
-const getProgressColor: (progress: number) => LinearProgressProps["color"] = (
-  progress
-) => {
+const getProgressColor = (progress: number, colors: Theme["palette"]) => {
   if (progress <= 25) {
-    return "error";
+    return colors.error.light;
   } else if (progress <= 50) {
-    return "warning";
+    return colors.warning.light;
   } else if (progress <= 75) {
-    return "primary";
+    return colors.primary.light;
   } else {
-    return "success";
+    return colors.success.light;
   }
 };
 const formatLabel = (key: string) => {

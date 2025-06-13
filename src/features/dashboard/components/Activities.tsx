@@ -95,15 +95,14 @@ function Activities() {
   }, [flightLoading, ticketLoading]);
   return (
     <div>
-      {" "}
-      <b>
+      <b className="text-primary-light">
         <HistoryIcon /> Upcoming and recent activities
       </b>
       <div className="w-full min-h-[20vh]">
         <GridTable
           name="dashboard"
           columns={[
-            { field: "module", headerName: "Module", minWidth: 150 },
+            { field: "module", headerName: "Module" },
             {
               field: "description",
               headerName: "Description",
@@ -115,7 +114,6 @@ function Activities() {
             {
               field: "link",
               headerName: "Action",
-              minWidth: 100,
               renderCell: (params) => (
                 <Link className="text-primary-main" to={params.row.link}>
                   View

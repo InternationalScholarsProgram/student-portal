@@ -40,13 +40,13 @@ export const columns: GridColDef[] = [
       if (params.row.id === "3") {
         return (
           <div className="py-2">
-            {params.row.schools?.map((school: any) => {
+            {params.row.schools?.map((school: any, index : number) => {
               const getSchoolDocStatus = params.row.uploaded_documents?.find(
                 (doc: any) => doc?.course?.id === school?.id
               )?.status;
               const status = handleStatus(getSchoolDocStatus);
               return (
-                <p key={school?.id} className="text-sm my-1 w-full">
+                <p key={index} className="text-sm my-1 w-full">
                   {school?.school_name} :
                   <span className={statusClass(status)}>{" " + status}</span>
                 </p>
@@ -59,11 +59,11 @@ export const columns: GridColDef[] = [
         if (!params.row.consents) return null;
         return (
           <div className="py-2">
-            {params.row.consents?.map((item: SchoolConsentDocument) => {
+            {params.row.consents?.map((item: SchoolConsentDocument, index : number) => {
               const status = handleStatus(item?.document?.status);
               return (
                 <p
-                  key={item?.school?.school_id}
+                  key={index}
                   className="text-sm my-1 w-full"
                 >
                   {item?.school?.school_name} :

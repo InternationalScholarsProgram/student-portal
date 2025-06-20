@@ -17,9 +17,13 @@ const multipart = {
     "Content-Type": "multipart/form-data",
   },
 };
+
+const url =
+  process.env.NODE_ENV === "production" ? BASE_URL : "http://localhost:5173";
+
 const api = axios.create({
   // baseURL: BASE_URL,
-  baseURL: "/",
+  baseURL: url,
 });
 
 api.interceptors.request.use(

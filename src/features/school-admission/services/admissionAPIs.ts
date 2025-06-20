@@ -49,6 +49,7 @@ class AdmissionAPIs {
     );
     return response?.data?.data;
   };
+  
   getUploadedDocs = async () => {
     const response = await api.get(`${url}/uploaded_docs.php`);
     return response?.data?.message || [];

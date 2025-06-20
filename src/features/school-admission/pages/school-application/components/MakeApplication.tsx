@@ -1,20 +1,16 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { formatCurrency } from "../../../../../utils/utils";
 import { admissionAPIs } from "../../../services/admissionAPIs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import useAdmissions from "../../../services/useAdmissions";
 import SchoolIcon from "@mui/icons-material/School";
-import { useLocation } from "react-router";
 import ConsentStatus from "../../../components/ConsentStatus";
 import useAdmissionConsents from "../../../services/useAdmissionConsents";
 
 function MakeApplication() {
-  const { state } = useLocation();
   const {
-    queryKeys,
-    queryClient,
     notAppliedSchools,
     hasAppliedToAllSchools,
     currentIntake,
@@ -23,17 +19,6 @@ function MakeApplication() {
   const { consentsWithSchool } = useAdmissionConsents();
 
   const [school, setSchool] = useState("");
-
-  useEffect(() => {
-    // when the navigate with a predetermined school
-    if (state) {
-      const find = notAppliedSchools.find(
-        (item: any) => item.school_name === state.school_name
-      );
-      if (!find?.school_name) return;
-      setSchool(find?.school_name);
-    }
-  }, [state]);
 
   const handleSubmit = async () => {
     if (!school || !currentIntake?.id)
@@ -59,7 +44,7 @@ function MakeApplication() {
     school && (!hasConsent || hasConsent?.document?.status === 2);
   return (
     <>
-      <h3 className="p-2 opacity-70 font-semibold text-lg row w-full gap-3 border-b-30">
+      <h3 className="p-2 title-sm text-primary-main text-lg row w-full gap-3 border-b-30">
         <SchoolIcon /> School Application
       </h3>
       {notAppliedSchools?.length > 0 ? (

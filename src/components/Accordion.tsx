@@ -9,12 +9,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 interface AccordionProps extends MuiAccordionProps {
   title: string;
   label?: boolean;
+  list?: boolean;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
   children,
   label,
   title,
+  list = true,
   ...props
 }) => {
   return (
@@ -35,9 +37,13 @@ const Accordion: React.FC<AccordionProps> = ({
             <p className="">{title}</p>
           </AccordionSummary>
           <AccordionDetails>
-            <ul className="list-decimal col p-4 gap-3 opacity-70">
-              {children}
-            </ul>
+            {list ? (
+              <ul className="list-decimal col p-4 gap-3 opacity-70">
+                {children}
+              </ul>
+            ) : (
+              children
+            )}
           </AccordionDetails>
         </MuiAccordion>
       </div>

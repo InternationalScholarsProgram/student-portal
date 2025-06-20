@@ -14,7 +14,7 @@ import { FullLoader } from "../../../../../../components/loaders/Loader";
 
 const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
   const { transcripts, user, queryKeys, queryClient } = useAdmissions();
-  const name = capitalizeFirstCharacter(user?.fullnames);
+  const name = capitalizeFirstCharacter(user?.fullnames || "");
   const targetRef = useRef<HTMLDivElement>(null);
 
   const requestLetter = useMutation({
@@ -148,15 +148,7 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
           btnText={
             requestLetter.isPending ? "Downloading..." : "Download Letter"
           }
-          onSubmit={async () => {
-            // if (targetRef.current) {
-            //   targetRef.current.style.backgroundColor = "white";
-            //   targetRef.current.style.color = "black";
-            // }
-            // const docs = await generateBlob(name, targetRef.current, 0.5);
-            // docs.download();
-            requestLetter.mutateAsync();
-          }}
+          onSubmit={async () => requestLetter.mutateAsync()}
         />
       </section>
     </Modal>

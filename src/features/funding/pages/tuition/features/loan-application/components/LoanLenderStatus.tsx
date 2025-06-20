@@ -53,8 +53,8 @@ const LoanLenderStatus: React.FC<Props> = ({
         <ContentComponent header={`${loanProvider} loan application status`}>
           <p>
             Your loan application request has been received and is currently
-            awaiting review by our team. You will be notified once it moves to
-            the next stage.
+            under review by our team. You will be notified as soon as it
+            progresses to the next stage
           </p>
           <ContactSupport />
         </ContentComponent>
@@ -64,14 +64,14 @@ const LoanLenderStatus: React.FC<Props> = ({
       return (
         <>
           <p>
-            Unfortunately, your application has been <strong>rejected</strong>.
-            Please review the reason provided below, resolve the issue, and
-            submit a new application.
+            Unfortunately, your loan application request has been{" "}
+            <b>rejected</b>. Please review the reason provided below, address
+            the issue, and submit a new application.
           </p>
           <p className="p-2">
             <strong>Remarks:</strong> <em>{remarks}</em>
           </p>
-          <p>When you're ready, please complete the form below to reapply.</p>
+          <p>When you're ready, kindly complete the form below to reapply.</p>
           {loanForm}
         </>
       );
@@ -79,8 +79,8 @@ const LoanLenderStatus: React.FC<Props> = ({
       return (
         <ContentComponent header={`${loanProvider} loan application status`}>
           <p>
-            Your request has been approved. You will be notified once the
-            application has been made.
+            Your loan application request has been approved. You will be
+            notified once the application has been submitted.
           </p>
           <ContactSupport />
         </ContentComponent>

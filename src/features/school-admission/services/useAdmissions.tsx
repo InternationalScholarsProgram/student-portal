@@ -87,7 +87,7 @@ const useAdmissions = () => {
   const transcripts = _transcripts?.data?.message as TranscriptsProps;
 
   const hasAnyVerified =
-    transcripts?.requests?.some((item) => item.status === "2") ||
+    transcripts?.request?.status === "2" ||
     transcripts?.requirements?.some((item) => item.ver_status === "2");
 
   const canMakeSchoolApplication = status?.code === 5 && hasAnyVerified;

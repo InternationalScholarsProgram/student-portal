@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import useVisa from "../../services/hooks/useVisa";
 import ContentComponent from "../../../../components/ContentComponent";
 import ProvideVisaFeedback from "./ProvideVisaFeedback";
@@ -5,26 +6,21 @@ import DeniedVisa from "./DeniedVisa";
 import ContactSupport from "../../../../components/ContactSupport";
 import Administrative from "./Administrative";
 import GotVisa from "./GotVisa";
-import { useMemo } from "react";
 
 function FeedbackStatus() {
   const { feedback } = useVisa();
-  const renderStatus = useMemo(
+  const renderStatus = useCallback(
     () => <RenderStatus feedback={feedback} />,
     [feedback]
   );
+  return <ProvideVisaFeedback />;
 
-  return <div className="my-2">{renderStatus}</div>;
+  return <div className="my-2">{renderStatus()}</div>;
 }
 
 export default FeedbackStatus;
 
-function VisaOutcome({ outcome }: { outcome: number }) {
-  if (outcome === 1) return <GotVisa />;
-  if (outcome === 2) return <DeniedVisa />;
-  if (outcome === 3) return <Administrative />;
-  return null;
-}
+
 function RenderStatus({ feedback }: any) {
   switch (feedback?.status) {
     case 1:
@@ -68,4 +64,11 @@ function RenderStatus({ feedback }: any) {
     default:
       return <ProvideVisaFeedback />;
   }
+}
+
+function VisaOutcome({ outcome }: { outcome: number }) {
+  if (outcome === 1) return <GotVisa />;
+  if (outcome === 2) return <DeniedVisa />;
+  if (outcome === 3) return <Administrative />;
+  return null;
 }

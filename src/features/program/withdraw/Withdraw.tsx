@@ -18,6 +18,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FullLoader } from "../../../components/loaders/Loader";
+import { formatCurrency } from "../../../utils/utils";
 
 function Withdraw() {
   const { user, isLoading, userQueryKey } = useFetchUser();
@@ -43,7 +44,10 @@ function Withdraw() {
         return "Amount to be refunded $ 0.00 (Enrolled for less than 6 months)";
       }
     } else {
-      return "You owe us $" + Math.abs(accountStatements?.balance);
+      return (
+        "You owe us " +
+        formatCurrency(Math.abs(accountStatements?.balance), "USD", 2)
+      );
     }
   };
   useEffect(() => {
@@ -91,17 +95,14 @@ function Withdraw() {
       {/* {user?.report + " " + user?.withdrwal_status} */}
       <main className="">
         {user?.withdrwal_status !== "6" && (
-          <div
-            // onClick={() => toast.success("Success!")}
-            className="row items-center gap-1 p-3 w-full border-b opacity-70"
-          >
+          <div className="row items-center gap-1 pb-3 w-full border-b opacity-70">
             <p className="">Current Withdrawal Status: </p>
             <span className="font-semibold capitalize">
               {getStatus(user ? user?.withdrwal_status : "")}
             </span>
           </div>
         )}
-        <section className="m-5 col">
+        <section className="col">
           {viewStatements ? (
             <div className="col-center gap-4">
               <AccountStatements hideBalance={true} />

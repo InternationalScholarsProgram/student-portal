@@ -52,6 +52,8 @@ function useTuition() {
   const loanDetails: LoanDetailsProps[] = tuitionData?.loan_app_details;
   const activeLoanApplication = checkActiveLoan(loanDetails);
 
+  
+
   const invalidate = (key: KeyProps) =>
     queryClient.invalidateQueries({ queryKey: querKeys[key] });
   const inValidateStatus = () => invalidate("tuitionStatus");
@@ -85,6 +87,7 @@ export default useTuition;
 
 const checkActiveLoan = (data: LoanDetailsProps[]) => {
   if (!data?.length) return undefined;
+  if (data?.length === 1) return data[0];
 
   // 1. Check for exactly one active loan
   const activeLoan = data.find(
@@ -96,7 +99,6 @@ const checkActiveLoan = (data: LoanDetailsProps[]) => {
   const awardedLoans = data.filter(
     (loan) => loan.loan_app_feedback?.loan_status === 2
   );
-
   if (awardedLoans.length === 1) return awardedLoans[0];
 
   // 3. Sort awarded loans by approved_on date (descending)

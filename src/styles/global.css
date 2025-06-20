@@ -95,7 +95,7 @@
   @apply flex flex-row flex-wrap items-center gap-2 mb-4;
 }
 .ul-links * {
-  @apply p-2 rounded-sm flex-1 text-base text-center;
+  @apply first-letter:uppercase p-2 rounded-sm text-base text-center;
 }
 .ul-links .selected {
   @apply text-primary-light border-b border-primary-main;
@@ -160,7 +160,7 @@ p {
   @apply mx-3 p-3 pl-5 list-disc list-inside;
 }
 .modal {
-  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] col p-3;
+  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] max-h-[80vh] overflow-y-auto col p-3;
 }
 .title {
   @apply text-xl sm:text-2xl font-semibold;
@@ -196,4 +196,28 @@ p {
 }
 .row-buttons button {
   @apply primary-btn;
+}
+.form-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10;
+}
+.form-grid > div {
+  @apply col justify-between;
+}
+.data-table {
+  @apply col;
+}
+.data-table div {
+  @apply grid grid-cols-2 hover:bg-slate-400;
+}
+.data-table p {
+  @apply border-30 p-2;
+}
+.resource {
+  @apply drop-shadow-md shadow-lg rounded-md col p-3 overflow-clip;
+}
+.resource .arrow {
+  @apply self-end bg-paper p-1 rounded-md;
+}
+.resource:hover .arrow {
+  @apply bg-primary-light/50;
 }

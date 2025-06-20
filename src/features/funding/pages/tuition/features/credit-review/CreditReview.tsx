@@ -25,13 +25,11 @@ function CreditReview() {
         return (
           <>
             <p>
-              Your credit review is currently <strong>in progress</strong>. Our
-              team is carefully assessing your information to ensure the best
-              funding options for you.
+              Your credit review is currently <strong>in progress</strong>.
             </p>
             <p>
-              This process may take some time, but rest assured, we’ll update
-              you as soon as a decision is made.
+              Our team is carefully evaluating your information to determine the
+              most suitable funding options available to you
             </p>
             <ContactSupport />
           </>
@@ -39,19 +37,17 @@ function CreditReview() {
 
       case 2:
         // is approved, hence will render funding advisory
-        return (
-          <p>Credit Approved</p>
-        );
+        return <p>Credit Approved</p>;
       case 3:
         return (
           <>
             <p>
-              Unfortunately, your credit review was{" "}
+              We regret to inform you that your credit review was{" "}
               <strong className="">not approved</strong>.
             </p>
             <p>
-              Please review the reason below and make the necessary adjustments
-              before resubmitting.
+              Please review the reason provided below and make the necessary
+              adjustments before resubmitting another review request,
             </p>
             <div className="py-">
               <p className="alert-error">
@@ -72,9 +68,9 @@ function CreditReview() {
         return (
           <>
             <p>
-              Your credit review is currently{" "}
-              <strong>under review for the second time</strong>. We appreciate
-              your patience as our team carefully re-evaluates your application.
+              YYour credit review is currently undergoing a
+              <strong> second evaluation.</strong>. We appreciate your continued
+              patience as our team carefully re-assesses your application.
             </p>
             <ContactSupport />
           </>

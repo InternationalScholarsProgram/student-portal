@@ -17,7 +17,7 @@ function SevisFeesPayment() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("country", user?.country);
+    if (user?.country) formData.append("country", user?.country);
     formData.append("type", "sevis");
     handlePayment.mutate(formData);
   };

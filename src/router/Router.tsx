@@ -1,21 +1,28 @@
-import {  lazy } from "react";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { lazy } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
 import Test from "./Test";
-import Receipt from "../features/finances/Receipt";
 import Tuition from "../features/funding/pages/tuition/Tuition";
 import Relocation from "../features/funding/pages/relocation/Relocation";
 import Alternative from "../features/funding/pages/alternative/Alternative";
 import Personal from "../features/funding/pages/personal/Personal";
 import ErrorBoundary from "./ErrorBoundary";
 import Suspense from "./Suspense";
+import Disabled from "./Disabled";
+import ErrorElement from "./ErrorElement";
+import EntranceExams from "../features/entranceExams/EntranceExams";
+import EntranceExamLayout from "../features/entranceExams/EntranceExamLayout";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
-const FinancesLayout = lazy(
-  () => import("../features/finances/layout/FinancesLayout")
-);
+
 const TicketsLayout = lazy(() => import("../features/tickets/TicketsLayout"));
 const AdmisionLayout = lazy(
   () => import("../features/school-admission/AdmisionLayout")
@@ -23,24 +30,21 @@ const AdmisionLayout = lazy(
 
 // Components
 const ErrorPage = lazy(() => import("../components/errors/ErrorPage"));
-const Dashboard = lazy(() => import("../features/Dashboard"));
+const Dashboard = lazy(() => import("../features/dashboard/Dashboard"));
 const Profile = lazy(() => import("../features/user/Profile"));
 const WebMail = lazy(() => import("../features/WebMail"));
 const Resources = lazy(() => import("../features/info-resources/Resources"));
 const Funding = lazy(() => import("../features/funding/Layout"));
 const Flights = lazy(() => import("../features/travel/flights/Flights"));
-const SchoolAdmission = lazy(
-  () =>
-    import("../features/school-admission/pages/requirements/SchoolAdmission")
+const Requirements = lazy(
+  () => import("../features/school-admission/pages/requirements/Requirements")
 );
 const MakePayments = lazy(() => import("../features/finances/MakePayments"));
 const AccountStatements = lazy(
   () => import("../features/finances/AccountStatements")
 );
-const Gmat = lazy(() => import("../features/entranceExams/gmat/Gmat"));
-const Gre = lazy(() => import("../features/entranceExams/gre/Gre"));
-const TrainingResources = lazy(
-  () => import("../features/entranceExams/components/TrainingResources")
+const SectionResource = lazy(
+  () => import("../features/entranceExams/components/SectionResource")
 );
 const SwitchPrograms = lazy(
   () => import("../features/program/switch/SwitchPrograms")
@@ -86,9 +90,11 @@ function Router() {
                 path="/visa-processing/expedite-letter"
                 element={<ExpediteLetter />}
               />
+              <Route path="/disabled" element={<Disabled />} />
             </Route>
             <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
-              <Route index element={<Dashboard />} />
+              <Route index element={<Navigate to="/dashboard" />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="webmail" element={<WebMail />} />
               <Route path="resources" element={<Resources />} />
@@ -103,8 +109,8 @@ function Router() {
               <Route path="flights" element={<Flights />} />
               <Route path="test" element={<Test />} />
               <Route path="visa-processing" element={<Visa />} />
-              <Route path="school-admission" element={<SchoolAdmission />} />
-              <Route element={<FinancesLayout />}>
+
+              <Route element={<Outlet />}>
                 <Route path="make-payments">
                   <Route index element={<MakePayments />} />
                   <Route path=":reason" element={<MakePayments />} />
@@ -113,15 +119,15 @@ function Router() {
                   path="account-statements"
                   element={<AccountStatements />}
                 />
-                <Route path="/finances/receipt" element={<Receipt />} />
               </Route>
 
-              <Route element={<Outlet />}>
-                <Route index path="gmat" element={<Gmat />} />
-                <Route path="gre" element={<Gre />} />
+              <Route element={<EntranceExamLayout />}>
+                <Route index path="gmat" element={<EntranceExams />} />
+                <Route path="gre" element={<EntranceExams />} />
+                <Route path="duolingo" element={<EntranceExams />} />
                 <Route
-                  path="training-resource"
-                  element={<TrainingResources />}
+                  path=":exam/section-resource"
+                  element={<SectionResource />}
                 />
               </Route>
 
@@ -138,19 +144,22 @@ function Router() {
                 <Route path="view-tickets" element={<ViewTickets />} />
               </Route>
 
-              <Route element={<AdmisionLayout />}>
-                <Route
-                  path="school-admission-requirements"
-                  index
-                  element={<SchoolAdmission />}
-                />
-                <Route
-                  path="school-admission-application"
-                  element={<SchoolApplication />}
-                />
+              <Route path="school-admission" element={<AdmisionLayout />}>
+                <Route index path="requirements" element={<Requirements />} />
+                <Route path="application" element={<SchoolApplication />} />
               </Route>
 
-              <Route path="*" element={<div />} />
+              <Route
+                path="*"
+                element={
+                  <div
+                    className="h-[50vh] col-center"
+                    children={
+                      <ErrorElement error={{ message: "Page not found" }} />
+                    }
+                  />
+                }
+              />
             </Route>
           </Routes>
         </Suspense>

@@ -6,13 +6,19 @@ import axios from "axios";
 
 type TableData = (string | number)[][];
 
-function formatCurrency(amount: number | bigint | any) {
+function formatCurrency(
+  amount: number | bigint | any,
+  currency = "USD",
+  decimals = 0
+) {
   if (typeof amount === "string") amount = parseFloat(amount);
   if (typeof amount === "object") return "";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
-  }).format(amount?.toFixed(2));
+    currency: currency,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(Math.abs(amount) || amount?.toFixed(2));
 }
 
 const contacts = (country: string) =>
@@ -92,7 +98,7 @@ function json2formData(json: any) {
   return formData;
 }
 
-const formatDate = (date: string | Date | null, format?: string) => {
+const formatDate = (date: any, format?: string) => {
   if (!date) return "";
   const _date = new Date(date);
   return dayjs(_date).format(format || "dddd, MMMM D, YYYY");
@@ -153,36 +159,44 @@ const pdfOptions = {
   pagebreak: { mode: ["avoid-all", "css", "legacy"] },
 };
 
-export async function printPDF(filename: string, element: any) {
-  const opt = {
+export async function generatePdf(
+  filename: string,
+  element: HTMLElement,
+  download = true
+) {
+  if (!element) return new Error("Section ref is not assigned.");
+  const original = {
+    backgroundColor: element?.style.backgroundColor,
+    text: element?.style.color,
+  };
+
+  if (element?.style.backgroundColor !== "white") {
+    element.style.backgroundColor = "white";
+    element.style.color = "black";
+  }
+  const options = {
     ...pdfOptions,
     margin: 1,
     filename: filename,
   };
-  html2pdf().set(opt).from(element).save();
+  const instance = html2pdf().set(options).from(element);
+  const pdf = await instance.toPdf().get("pdf");
+  if (download) await instance.save();
+
+  element.style.backgroundColor = original.backgroundColor;
+  element.style.color = original.text;
+
+  const blob = pdf.output("blob");
+  return {
+    blob: blob,
+    doc: new File([blob], filename, {
+      type: "application/pdf",
+    }),
+    instance,
+    name: filename,
+  };
 }
 
-// function convertImageToBase64(url: string) {
-//   return new Promise((resolve, reject) => {
-//     const img = new Image();
-//     img.crossOrigin = "Anonymous"; // Prevents CORS issues if the image is hosted elsewhere
-//     img.src = url;
-
-//     img.onload = function () {
-//       const canvas = document.createElement("canvas");
-//       canvas.width = img.width;
-//       canvas.height = img.height;
-//       const ctx = canvas.getContext("2d");
-
-//       ctx?.drawImage(img, 0, 0);
-//       const dataURL = canvas.toDataURL("image/png"); // Converts image to Base64
-
-//       resolve(dataURL); // Return Base64 image
-//     };
-
-//     img.onerror = reject; // Handle errors
-//   });
-// }
 function convertImageToBase64(url: string, quality: number = 0.7) {
   return new Promise((resolve, reject) => {
     const img = new Image();

@@ -1,8 +1,12 @@
-import { useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
 import styled from "styled-components";
 
-const ErrorElement = ({ error, resetErrorBoundary }: FallbackProps) => {
+type Props = {
+  error: FallbackProps["error"];
+  resetErrorBoundary?: FallbackProps["resetErrorBoundary"];
+};
+
+const ErrorElement = ({ error, resetErrorBoundary }: Props) => {
   // resetErrorBoundary();
   // useEffect(() => {
   //   console.log(error);
@@ -39,7 +43,9 @@ const ErrorElement = ({ error, resetErrorBoundary }: FallbackProps) => {
               <div className="screen_out">
                 <div className="screen_out1">
                   <div className="screen">
-                    <span className="notfound_text">{error?.message || "404"}</span>
+                    <span className="notfound_text">
+                      {error?.message || "404"}
+                    </span>
                     {/* <span className="notfound_text">{"404"}</span> */}
                   </div>
                 </div>

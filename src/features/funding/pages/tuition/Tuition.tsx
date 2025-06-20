@@ -22,8 +22,8 @@ function Tuition() {
   // return <CreditReview />;
   // return <FundingAdvisory />;
   // return <OtherFundingSources />;
-  return <LoanApplication />;
-
+  // return <LoanApplication />;
+      return <ProvideSchoolFeedback />;
   switch (tuitionStatus) {
     case 0:
       return <ProvideSchoolFeedback />;

@@ -1,13 +1,5 @@
 import { create } from "zustand";
 
-interface ThemeStoreTypes {
-  themeMode: string;
-  setTheme: (theme: string) => void;
-  toggleTheme: () => void;
-  setDarkTheme: () => void;
-  setLightTheme: () => void;
-}
-
 const THEME_KEY = "ispTheme";
 const DARK_CLASS = "dark";
 const bodyClass = document.body.classList;
@@ -16,13 +8,12 @@ const bodyClass = document.body.classList;
 const systemPrefersDark = window.matchMedia(
   "(prefers-color-scheme: dark)"
 ).matches;
-const storedTheme = localStorage.getItem(THEME_KEY);
-const initialTheme = storedTheme || (systemPrefersDark ? "dark" : "light");
+const storedTheme = localStorage.getItem(THEME_KEY) as Theme;
+const initialTheme = storedTheme ?? (systemPrefersDark ? "dark" : "light");
 
 const useThemeStore = create<ThemeStoreTypes>((set, get) => ({
   themeMode: initialTheme,
-
-  setTheme: (theme) => {
+  setTheme: (theme: Theme) => {
     localStorage.setItem(THEME_KEY, theme);
     if (theme === "dark") {
       bodyClass.add(DARK_CLASS);
@@ -32,7 +23,6 @@ const useThemeStore = create<ThemeStoreTypes>((set, get) => ({
 
     set({ themeMode: theme });
   },
-
   toggleTheme: () => {
     const newTheme = get().themeMode === "light" ? "dark" : "light";
     get().setTheme(newTheme);
@@ -42,3 +32,12 @@ const useThemeStore = create<ThemeStoreTypes>((set, get) => ({
 }));
 
 export default useThemeStore;
+
+interface ThemeStoreTypes {
+  themeMode: Theme;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
+  setDarkTheme: () => void;
+  setLightTheme: () => void;
+}
+type Theme = "dark" | "light";

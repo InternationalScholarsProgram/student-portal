@@ -4,7 +4,7 @@ import { RequirementsAccordion } from "./RequirementsTable";
 function UploadDocuments({ canApply }: { canApply: boolean }) {
   return (
     <div className="col gap-2">
-      <h3 className="text-lg opacity-70 font-semibold">
+      <h3 className="title-sm text-primary-main">
         School Application Requirements
       </h3>
       <div className="sm:p-2">
@@ -12,7 +12,7 @@ function UploadDocuments({ canApply }: { canApply: boolean }) {
           <p>
             You have been approved to make an application
             <Link
-              to="/school-admission-application"
+              to="/school-admission/application"
               className="text-primary-light hover:border-b hover:border-primary-main pl-2"
             >
               Go to Application Page

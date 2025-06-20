@@ -12,10 +12,8 @@ function useSwitchProgram() {
 
   const { data: status } = useQuery({
     queryKey: ["required-pay", user?.email],
-    queryFn: async () => {
-      const response = await api.get(`${url}?action=check_balance`);
-      return response.data;
-    },
+    queryFn: () => api.get(`${url}?action=check_balance`),
+    select: (response) => response?.data,
     enabled: !!user?.email,
   });
 
@@ -45,7 +43,7 @@ function useSwitchProgram() {
     },
     onError: () => toast.error("Failed to switch program."),
   });
-  
+
   return {
     status,
     requiredPay: status?.data?.deficit,

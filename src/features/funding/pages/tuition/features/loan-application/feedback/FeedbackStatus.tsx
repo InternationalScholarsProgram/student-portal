@@ -5,31 +5,31 @@ import useTuition from "../../../services/useTuition";
 
 const FeedbackStatus = () => {
   const { loanFeedback, fundingAdvisory } = useTuition();
+  const status = loanFeedback?.loan_status;
+
   return (
     <div>
-      {loanFeedback?.loan_status === 3 ? (
+      {status === 3 && (
         <ContentComponent header="Loan Awarded">
           <p>🎉 Congratulations on your loan approval.</p>
           <p>The next step is to begin processing your I-20 form.</p>
           <ContactSupport />
         </ContentComponent>
-      ) : (
-        loanFeedback?.loan_status === 2 && (
-          <ContentComponent header="Loan denied">
-            <div className="col gap-2">
-              <p className="mb-2">
-                We are sorry your loan application was not approved by the
-                lender.
-                <br />
-                We recommend booking a career advisory meeting to discuss your
-                options and next steps.
-              </p>
-            </div>
-            {fundingAdvisory?.status === 2 && (
-              <CalendlyFundingAdvisory classes="primary-btn self-end" />
-            )}
-          </ContentComponent>
-        )
+      )}
+      {status === 2 && (
+        <ContentComponent header="Loan denied">
+          <div className="col gap-2">
+            <p className="mb-2">
+              We are sorry your loan application was not approved by the lender.
+              <br />
+              We recommend booking a funding advisory meeting to discuss your
+              options and next steps.
+            </p>
+          </div>
+          {fundingAdvisory?.status === 2 && (
+            <CalendlyFundingAdvisory classes="primary-btn self-end" />
+          )}
+        </ContentComponent>
       )}
     </div>
   );

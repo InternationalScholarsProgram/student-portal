@@ -10,16 +10,6 @@ import ContentComponent from "../../../../../../../components/ContentComponent";
 
 const MpowerLoanForm = () => {
   const { invalidate, activeLoanApplication, schoolAppId } = useTuition();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    formData.append("mpower_school", activeLoanApplication?.school);
-    formData.append("mpower_program", activeLoanApplication?.program);
-    formData.append("app_id", schoolAppId);
-    uploadMpower.mutate(formData);
-  };
-
   const uploadMpower = useMutation({
     mutationFn: tuitionEndpoints.makeMpowerApplication,
     onSuccess: () => {
@@ -33,6 +23,17 @@ const MpowerLoanForm = () => {
       );
     },
   });
+
+  
+  if (!activeLoanApplication) return;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.append("mpower_school", activeLoanApplication?.school);
+    formData.append("mpower_program", activeLoanApplication?.program);
+    if (schoolAppId) formData.append("app_id", schoolAppId);
+    uploadMpower.mutate(formData);
+  };
 
   const convert = (fields: any) =>
     fields.map((field: any) => ({

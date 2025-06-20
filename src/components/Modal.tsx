@@ -13,11 +13,11 @@ function Modal({ children, title, open, setOpen }: CustomModalProps) {
   };
   return (
     <MuiModal className="" open={open} onClose={toggleModal}>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-default rounded-lg border-none outline-none">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-default rounded-lg border-none outline-none overflow-y-auto">
         {setOpen && (
           <>
             <div className="p-4 flex justify-between items-center">
-              <h5 className="first-letter:uppercase text-lg font-semibold">
+              <h5 className="first-letter:uppercase text-lg font-semibold text-primary-main">
                 {title}
               </h5>
               <button

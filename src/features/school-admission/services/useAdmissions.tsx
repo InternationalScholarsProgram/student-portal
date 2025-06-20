@@ -53,6 +53,7 @@ const useAdmissions = () => {
     queryFn: admissionAPIs.applicationDocs,
     enabled: status?.code >= 2,
   });
+
   const sortedAppDocs = useMemo(() => {
     if (!appDocs) return [];
     return [...appDocs].sort((a, b) => {
@@ -67,6 +68,7 @@ const useAdmissions = () => {
     queryFn: admissionAPIs.getUploadedDocs,
     enabled: !!appDocs,
   });
+  
   const { data: gpaReport } = useQuery<GPAReport>({
     queryKey: queryKeys.gpaReport,
     queryFn: admissionAPIs.getGPA,

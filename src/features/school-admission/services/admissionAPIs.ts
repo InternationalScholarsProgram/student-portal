@@ -43,13 +43,15 @@ class AdmissionAPIs {
       throw new Error(error.response.data);
     }
   };
-  applicationDocs = async () => {
+  applicationDocs = async (schoolId?: string, courseId?: string) => {
     const response = await api.get(
-      `${url}/fetch_school_app_docs_requirements.php`
+      `${url}/fetch_school_app_docs_requirements.php?school_id=${schoolId}&program_id=${courseId}`
     );
-    return response?.data?.data;
+    return response?.data?.data?.filter(
+      (item: any) => item.acronym !== "extra document" && item.id !== "14"
+    );
   };
-  
+
   getUploadedDocs = async () => {
     const response = await api.get(`${url}/uploaded_docs.php`);
     return response?.data?.message || [];
@@ -192,34 +194,27 @@ class AdmissionAPIs {
       return error.response.data;
     }
   };
-  consents = async (school: { id: string; course: string }) => {
-    const url =
-      "/login/member/dashboard/APIs/others/sign_consent.php?action=fetch_consent";
-    const _schoolResponse = await api.get(url, {
-      params: {
-        consent_type: "2",
-        extra_column: "school_id",
-        extra_value: school.id,
-      },
-    });
+  consents = async (schoolId?: string, courseId?: string) => {
+    const url = `${baseDirectory}/others/sign_consent.php?action=fetch_consent`;
+    return await Promise.all([
+      await api.get(url, {
+        params: {
+          action: "fetch_consent",
+          consent_type: "2",
+          extra_column: "school_id",
+          extra_value: schoolId,
+        },
+      }),
 
-    const _programResponse = await api.get(url, {
-      params: {
-        consent_type: "5",
-        extra_column: "program_id",
-        extra_value: school.course,
-      },
-    });
-
-    const schoolResponse = _schoolResponse?.data?.message;
-    const programResponse = _programResponse?.data?.message;
-
-    const resData =
-      schoolResponse && schoolResponse?.length > 0
-        ? schoolResponse
-        : programResponse;
-    if (resData.length > 0) return resData;
-    return null;
+      await api.get(url, {
+        params: {
+          action: "fetch_consent",
+          consent_type: "5",
+          extra_column: "program_id",
+          extra_value: courseId,
+        },
+      }),
+    ]);
   };
 }
 const admissionAPIs = new AdmissionAPIs();

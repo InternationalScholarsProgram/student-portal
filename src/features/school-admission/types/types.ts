@@ -2,6 +2,8 @@ type School = {
   course: string;
   id: string;
   school_id: string;
+  intake_start: string;
+  intake_end: string;
   school_name: string;
   web_link: string;
   program_name: string;
@@ -40,6 +42,7 @@ type Consent = {
   loan_id: number | null;
   sign_type: "digital" | "hand";
   URL: string;
+  description: string;
   signed: string | null; // Adjust based on actual data type (e.g., `string | null` if applicable)
 };
 
@@ -55,24 +58,21 @@ type UploadedDocument = {
   status: number;
   reject_docname: string;
   item_name: string;
+  course: any; // Adjust based on actual data type
 };
-
-type SchoolConsentDocument = {
-  school: School;
-  consent: Consent;
-  document: UploadedDocument | undefined;
-};
-
-type SchoolConsentDocumentArray = SchoolConsentDocument[] | undefined;
 
 interface DocRequirements {
   acronym?: string;
   description?: string;
   id: string;
   item_name: string;
-  sample_link?: string;
+  sample_link: string;
   type?: string;
+  doc_id: string;
+  docs: UploadedDocument | any | null; // Adjust based on actual data type
+  uniqueId?: number; // Optional, used for unique identification in lists
 }
+
 interface TranscriptsProps {
   school_count: number;
   requirements: TranscriptsRequirementProps[];
@@ -103,8 +103,6 @@ type GPAReport = {
 };
 
 export type {
-  SchoolConsentDocument,
-  SchoolConsentDocumentArray,
   Consent,
   UploadedDocument,
   School,

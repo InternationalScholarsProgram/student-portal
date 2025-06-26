@@ -11,6 +11,7 @@ import useAdmissionConsents from "../../../services/useAdmissionConsents";
 
 function MakeApplication() {
   const {
+    appliedSchools,
     notAppliedSchools,
     hasAppliedToAllSchools,
     currentIntake,
@@ -37,6 +38,8 @@ function MakeApplication() {
   const findSchool = notAppliedSchools.find(
     (item) => item.school_name === school
   );
+  console.log("appliedSchools", appliedSchools);
+
   const hasConsent = consentsWithSchool?.find(
     (item) => item.school.school_name === school
   );

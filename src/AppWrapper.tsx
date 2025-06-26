@@ -48,7 +48,7 @@ function AppWrapper() {
             pauseOnHover={true}
             transition={Bounce}
           />
-          {/* <ReactQueryDevtools /> */}
+          <ReactQueryDevtools />
           <Router />
         </LocalizationProvider>
       </ThemeProvider>

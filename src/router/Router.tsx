@@ -19,6 +19,7 @@ import Disabled from "./Disabled";
 import ErrorElement from "./ErrorElement";
 import EntranceExams from "../features/entranceExams/EntranceExams";
 import EntranceExamLayout from "../features/entranceExams/EntranceExamLayout";
+import ViewSchool from "../features/school-admission/pages/requirements/ViewSchool";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -147,6 +148,10 @@ function Router() {
               <Route path="school-admission" element={<AdmisionLayout />}>
                 <Route index path="requirements" element={<Requirements />} />
                 <Route path="application" element={<SchoolApplication />} />
+                <Route
+                  path="view-school/:schoolId/:courseId"
+                  element={<ViewSchool />}
+                />
               </Route>
 
               <Route

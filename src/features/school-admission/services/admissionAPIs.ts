@@ -5,6 +5,7 @@ import {
   html2pdf,
   json2formData,
 } from "../../../utils/utils";
+import axios from "axios";
 
 const url = `${baseDirectory}/school_application/`;
 const admissionsUrl = `${url}/school_admission.php`;
@@ -136,34 +137,12 @@ class AdmissionAPIs {
     // docs.download();
     // return api.get("https://ipapi.co/json/");
   };
-  submitSchoolApplication = async (payload: any) => {
-    try {
-      const response = await api.post(`${url}/school_application.php`, payload);
-      if (response.status === 201)
-        toast.success("Application submitted successfully");
-      return response?.data;
-    } catch (error: any) {
-      const data = error?.response?.data;
-      if (data?.code === 400) toast.error(data.message);
-      if (!data || data?.code !== 400)
-        toast.error("Application submission failed");
-    }
-  };
-  uploadFile = async (data: any) => {
-    try {
-      const formData = json2formData(data);
-      console.log(data, "data");
+  submitSchoolApplication = (payload: any) =>
+    api.post(`${url}/school_application.php`, payload);
 
-      const response = await api.post(
-        `${url}/school_app_docs_upload.php`,
-        formData
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.response.data);
-      return error.response.data;
-    }
-  };
+  uploadFile = (data: any) =>
+    api.post(`${url}/school_app_docs_upload.php`, axios.toFormData(data));
+
   uploadConsent = async (data: any) => {
     try {
       const formData = json2formData(data);

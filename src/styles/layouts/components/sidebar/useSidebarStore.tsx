@@ -15,9 +15,10 @@ const useSidebarStore = create<useSidebarStore>((set, get) => ({
     const updatedSections: Record<string, boolean> = {};
     linksWithDivider.forEach((item: any) => {
       if (item?.subItems) {
-        const isOpen = item?.subItems.some(
-          (subItem: any) => `/${subItem?.to}` === window.location.pathname
-        );
+        const isOpen = item?.subItems.some((subItem: any) => {
+          const splitCurrentPath = subItem?.to.split("/");
+          return window.location.pathname.includes(splitCurrentPath[0]);
+        });
         updatedSections[item?.name] = isOpen;
       }
     });

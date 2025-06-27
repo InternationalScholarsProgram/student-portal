@@ -7,7 +7,6 @@ import NoOpenIntakes from "../../components/NoOpenIntakes";
 import EligibilityStatusCheck from "../../components/EligibilityStatusCheck";
 import Transcripts from "./compenents/transcripts/Transcripts";
 import ProposedSchools from "../../components/ProposedSchools";
-import UploadDocuments from "./compenents/UploadDocuments";
 import IntakeStatus from "../../components/IntakeStatus";
 
 function Requirements() {
@@ -30,10 +29,7 @@ function Requirements() {
           <Guides />
         </div>
         <Transcripts />
-        {transcripts?.hasAnyVerified && (
-          <UploadDocuments canApply={status?.code === 5} />
-        )}
-        <ProposedSchools />
+        {transcripts?.hasAnyVerified && <ProposedSchools />}
       </div>
     );
 }

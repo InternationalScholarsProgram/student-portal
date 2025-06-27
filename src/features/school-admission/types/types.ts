@@ -43,7 +43,7 @@ type Consent = {
   sign_type: "digital" | "hand";
   URL: string;
   description: string;
-  signed: string | null; // Adjust based on actual data type (e.g., `string | null` if applicable)
+  signed: string | null;
 };
 
 type UploadedDocument = {
@@ -58,18 +58,19 @@ type UploadedDocument = {
   status: number;
   reject_docname: string;
   item_name: string;
-  course: any; // Adjust based on actual data type
+  course: any;
 };
 
 interface DocRequirements {
   acronym?: string;
   description?: string;
   id: string;
+  consent: Consent | null; // Optional, used for consent documents
   item_name: string;
   sample_link: string;
   type?: string;
-  doc_id: string;
-  docs: UploadedDocument | any | null; // Adjust based on actual data type
+  doc_id?: string;
+  docs: undefined | UploadedDocument | null;
   uniqueId?: number; // Optional, used for unique identification in lists
 }
 
@@ -102,6 +103,18 @@ type GPAReport = {
   gpa_status: number;
 };
 
+type UploadModalProps = {
+  open: boolean;
+  row: DocRequirements;
+  onClose: () => void;
+  payload: {
+    intakeId?: number | null;
+    invalidateQuery: () => void;
+    applicationId: string;
+    proposed_course_id: string | number;
+  };
+};
+
 export type {
   Consent,
   UploadedDocument,
@@ -109,4 +122,5 @@ export type {
   DocRequirements,
   TranscriptsProps,
   GPAReport,
+  UploadModalProps,
 };

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { BASE_URL } from "../../../services/api/base";
 import { Consent, DocRequirements, UploadedDocument } from "../types/types";
 import { admissionAPIs } from "./admissionAPIs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 const sampleLinkBaseUrl = `${BASE_URL}/login/member/dashboard/school_app_docs/samples/`;
 
 const useApplicationDocs = (schoolId?: string, courseId?: string) => {
@@ -16,11 +16,13 @@ const useApplicationDocs = (schoolId?: string, courseId?: string) => {
     queryKey: queryKeys.appDocs,
     queryFn: () => admissionAPIs.applicationDocs(schoolId, courseId),
     enabled: Boolean(schoolId && courseId),
+    refetchOnWindowFocus: false,
   });
 
   const uploadedDocsQuery = useQuery<UploadedDocument[]>({
     queryKey: queryKeys.uploadedDocs,
     queryFn: admissionAPIs.getUploadedDocs,
+    refetchOnWindowFocus: false,
   });
 
   const consentsQuery = useQuery({
@@ -35,24 +37,26 @@ const useApplicationDocs = (schoolId?: string, courseId?: string) => {
     enabled: Boolean(schoolId && courseId),
     refetchOnWindowFocus: false,
   });
+  const isFetching =
+    appDocs.isFetching ||
+    consentsQuery.isFetching ||
+    uploadedDocsQuery.isFetching;
+  const isLoading =
+    appDocs.isFetching ||
+    consentsQuery.isFetching ||
+    uploadedDocsQuery.isFetching;
+
   const uploadedDocs = uploadedDocsQuery.data;
 
   const sortedAppDocs = useMemo(() => {
-    if (!appDocs?.data?.length) return console.log("appDocs is not an array");
-
-    if (!consentsQuery.data?.length)
-      return console.log("consentsQuery is not loading");
-    if (!uploadedDocs?.length)
-      return console.log("uploadedDocs is not an array");
+    if (isLoading || isFetching || !appDocs?.data?.length) return [];
 
     const appDocItem = appDocs?.data?.find((item) => item.id === "12");
-    const appDocConsentItems = appDocs?.data?.find((item) => item.id === "14");
-
     const requirementDocs: any =
       appDocs?.data
         ?.map((item) => {
-          if (item?.id === "13") return null;
-          if (item?.id === "12") return null;
+          if (item?.id === "13") return null; //gpa
+          if (item?.id === "12") return null; //any other docs
 
           const _docs = uploadedDocs?.filter((uploadedDoc) => {
             return item?.id === "3"
@@ -75,26 +79,26 @@ const useApplicationDocs = (schoolId?: string, courseId?: string) => {
         description: item?.comment,
         docs: item,
       }));
-
       requirementDocs.push(...updatedAnyOtherDoc);
     }
 
-    if (consentsQuery.data?.length && appDocConsentItems) {
+    if (consentsQuery.data?.length) {
       const doc = uploadedDocs?.filter((item) => item.doc_id === 14);
       const consents =
         consentsQuery.data
           ?.map((consent, index) => {
-            const foundDoc =
-              doc?.find((item) => item.comment === consent.id.toString()) ||
-              null;
+            const foundDoc = doc?.find(
+              (item) => item.comment === consent.id.toString()
+            );
             return {
-              ...consent,
-              ...appDocConsentItems,
               id: "14",
-              consentId: consent?.id,
-              docs: foundDoc ?? null,
-              item_name: `School Consent/ Agreement ${index + 1}`,
+              consent: consent,
+              docs: foundDoc,
+              description: consent?.description,
+              item_name: `School Consent ${index + 1}`,
               sample_link: consent?.URL,
+              acronym: "School Consent",
+              doc_id: "",
             };
           })
           .filter(Boolean) || [];
@@ -105,21 +109,25 @@ const useApplicationDocs = (schoolId?: string, courseId?: string) => {
       (item: any, index: number) => ({
         ...item,
         uniqueId: index + 1,
-        sample_link: sampleLinkBaseUrl + item?.sample_link,
+        sample_link: item?.consent?.id
+          ? item?.sample_link
+          : sampleLinkBaseUrl + item?.sample_link,
       })
     );
-    console.log(reqDocs, "reqDocs");
 
     return reqDocs;
-  }, [
-    appDocs.isLoading,
-    consentsQuery.isLoading,
-    uploadedDocsQuery.isLoading,
-    schoolId,
-    courseId,
-  ]);
+  }, [isLoading, isFetching, schoolId, courseId]);
 
-  return { requirementDocs: sortedAppDocs };
+  const queryClient = useQueryClient();
+  const invalidateQuery = () => uploadedDocsQuery.refetch();
+  // queryClient.invalidateQueries({ queryKey: queryKeys.uploadedDocs });
+
+  return {
+    requirementDocs: sortedAppDocs,
+    invalidateQuery,
+    isLoading,
+    isFetching,
+  };
 };
 
 export default useApplicationDocs;

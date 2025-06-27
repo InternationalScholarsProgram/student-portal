@@ -1,181 +1,86 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useMemo } from "react";
 import Modal from "../../../../../components/Modal";
+import { admissionAPIs } from "../../../services/admissionAPIs";
+import { UploadModalProps } from "../../../types/types";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { errorMsg } from "../../../../../components/errors/errorMsg";
+import {
+  ConsentInstructions,
+  DocumentInstructions,
+  FileUploadSection,
+} from "./UploadModalComponents";
 import FormFooterBtns from "../../../../../components/buttons/FormFooterBtns";
 
-interface UploadedDoc {
-  document_name?: string;
-  remarks?: string;
-  status: number;
-  comment: string;
-  course?: { id: number };
-}
-
-interface CombinedReqDoc {
-  id?: string;
-  item_name: string;
-  sample_link?: string;
-  docs?: UploadedDoc;
-  uniqueId: number | string;
-}
-
-interface UploadModalProps {
-  open: boolean;
-  onClose: () => void;
-  doc: CombinedReqDoc | null;
-  intakeId?: number | null;
-  appId: string;
-  onSubmit: (formData: FormData) => void;
-}
-
-const UploadModal: React.FC<UploadModalProps> = ({
-  open,
-  onClose,
-  doc,
-  onSubmit,
-}) => {
+const UploadModal = ({ open, row, onClose, payload }: UploadModalProps) => {
   const [file, setFile] = useState<File | null>(null);
-  const [comment, setComment] = useState<string>(doc?.docs?.comment || "");
+  const [comment, setComment] = useState<string>(row?.docs?.comment || "");
+  const docs = row?.docs;
+  const hideBtn = row?.consent?.sign_type === "digital" || docs?.status === 2;
+
+  const title = useMemo(() => {
+    if (row?.id === "12") return `Extra document - ${row?.description}`;
+    if (row?.id) return row?.item_name;
+    return "Upload an extra document";
+  }, [row]);
 
   useEffect(() => {
-    if (!open) {
-      setFile(null);
-      setComment(doc?.docs?.comment || "");
-    }
-  }, [open, doc]);
+    const getComment =
+      (row?.id === "15"
+        ? row?.doc_id
+        : row?.id === "14"
+        ? row?.consent?.id
+        : row?.item_name
+      )?.toString() || "";
+    setFile(null);
+    setComment(docs?.comment ? docs?.comment : getComment);
+  }, [row]);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setComment(e.target.value);
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!file) return;
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("comment", comment);
-    fd.append("doc_type_id", doc?.id || "12");
-    fd.append("action", doc?.docs?.document_name ? "update" : "upload");
-    if (doc?.docs?.document_name) {
-      fd.append("current_doc_name", doc.docs.document_name);
-    }
-    if (doc?.docs?.course?.id) {
-      fd.append("proposed_course_id", String(doc.docs.course.id));
-    }
-    onSubmit(fd);
-  };
+  const upload = useMutation({
+    mutationFn: (e: FormEvent) => {
+      e.preventDefault();
+      const data = {
+        school_app_id: payload.applicationId,
+        intake_id: payload.intakeId,
+        doc_type_id: row?.id || "12",
+        comment,
+        action: docs?.document_name ? "update" : "upload",
+        ...(docs?.document_name
+          ? { current_doc_name: docs.document_name }
+          : {}),
+        file,
+        ...(docs?.course?.id ? { proposed_course_id: payload.proposed_course_id } : {}),
+      };
+      return admissionAPIs.uploadFile(data);
+    },
+    onSuccess: () => {
+      payload.invalidateQuery();
+      toast.success("Document uploaded successfully");
+      onClose();
+    },
+    onError: (error) => toast.error(errorMsg(error)),
+  });
 
   if (!open) return null;
-
-  const renderUploadFields = () => (
-    <div className="space-y-3">
-      {doc?.sample_link && (
-        <p>
-          View sample:{" "}
-          <a
-            href={doc.sample_link}
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-blue-600"
-          >
-            Click Here
-          </a>
-        </p>
-      )}
-      <div>
-        <label className="block mb-1">Upload Document</label>
-        <input type="file" required onChange={handleFileChange} />
-      </div>
-      <div>
-        <label className="block mb-1">Comment</label>
-        <input
-          type="text"
-          value={comment}
-          required
-          onChange={handleCommentChange}
-          className="w-full border px-2 py-1 rounded"
-        />
-      </div>
-    </div>
-  );
-
-  const renderBody = () => {
-    const status = doc?.docs?.status;
-    if (status === 2) {
-      return (
-        <div className="space-y-2">
-          <p>
-            Document <strong>approved</strong>.
-          </p>
-          <a
-            href={`/school_app_docs/${doc?.docs?.document_name}`}
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-blue-600"
-          >
-            View Uploaded Document
-          </a>
-        </div>
-      );
-    }
-    if (status === 1) {
-      return (
-        <div className="space-y-4">
-          <p className="text-yellow-800">Your document is pending review.</p>
-          <a
-            href={`/school_app_docs/${doc?.docs?.document_name}`}
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-blue-600"
-          >
-            View Uploaded Document
-          </a>
-          {renderUploadFields()}
-        </div>
-      );
-    }
-    if (status === 3) {
-      return (
-        <div className="space-y-4">
-          <p className="text-red-800">Your document was rejected.</p>
-          <p className="italic">Comments: {doc?.docs?.remarks}</p>
-          <a
-            href={`/school_app_docs/${doc?.docs?.document_name}`}
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-blue-600"
-          >
-            View Uploaded Document
-          </a>
-          <div>
-            <strong>Resubmit document:</strong>
-            {renderUploadFields()}
-          </div>
-        </div>
-      );
-    }
-    // default / new upload
-    return renderUploadFields();
-  };
-
   return (
-    <Modal
-      open={open}
-      setOpen={onClose}
-      title={doc?.item_name || "Add Extra Document"}
-    >
-      <div className="modal">
-        <form onSubmit={handleSubmit}>
-          {renderBody()}
+    <Modal title={title} open={open} setOpen={onClose}>
+      <div className="col p-3 w-[80vw] sm:w-[65vw] lg:w-[50vw] xl:w-[38vw]">
+        <ConsentInstructions row={row} />
+        <DocumentInstructions row={row} />
+        <form onSubmit={upload.mutate} className="col gap-2 py-2">
+          <FileUploadSection
+            row={row}
+            setFile={setFile}
+            comment={comment}
+            setComment={setComment}
+          />
           <FormFooterBtns
             onClose={onClose}
-            btnText={doc?.docs?.document_name ? "Update" : "Submit"}
-            hideBtn={doc?.docs?.status === 2}
+            btnText={
+              upload.isPending ? "Uploading..." : docs ? "Update" : "Upload"
+            }
+            disabled={upload.isPending || !file}
+            hideBtn={hideBtn}
           />
         </form>
       </div>

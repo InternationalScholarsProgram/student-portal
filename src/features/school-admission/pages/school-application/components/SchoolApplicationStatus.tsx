@@ -1,11 +1,12 @@
 import { Paper } from "@mui/material";
 import GetApplicationStatus from "./GetApplicationStatus";
+import SchoolIcon from "@mui/icons-material/School";
 
 function SchoolApplicationStatus({ appliedSchools }: any) {
   return (
     <section className="py-2">
-      <h3 className="border-b-30 p-2 text-lg title-sm text-primary-main">
-        School Application Status
+      <h3 className="p-2 title-sm text-primary-main text-lg row w-full gap-3 border-b-30">
+        <SchoolIcon /> School Application Status
       </h3>
       <p>
         The following are the statuses of your school application request.

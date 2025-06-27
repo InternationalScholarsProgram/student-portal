@@ -1,6 +1,5 @@
 import useAdmissions from "../../services/useAdmissions";
 import CareerAdvisory from "../../../../components/career-advisory/CareerAdvisory";
-import MakeApplication from "./components/MakeApplication";
 import SchoolApplicationStatus from "./components/SchoolApplicationStatus";
 import { InlineLoader } from "../../../../components/loaders/Loader";
 import ContentComponent from "../../../../components/ContentComponent";
@@ -35,7 +34,6 @@ function SchoolApplication() {
 
   return (
     <main>
-      <MakeApplication />
       {appliedSchools.length > 0 && (
         <SchoolApplicationStatus appliedSchools={appliedSchools} />
       )}

@@ -100,7 +100,7 @@ function Router() {
               <Route path="webmail" element={<WebMail />} />
               <Route path="resources" element={<Resources />} />
 
-              <Route element={<Funding />}>
+              <Route path="/funding" element={<Funding />}>
                 <Route path="tuition" element={<Tuition />} />
                 <Route path="relocation" element={<Relocation />} />
                 <Route path="alternative" element={<Alternative />} />
@@ -111,7 +111,7 @@ function Router() {
               <Route path="test" element={<Test />} />
               <Route path="visa-processing" element={<Visa />} />
 
-              <Route element={<Outlet />}>
+              <Route path="/finances" element={<Outlet />}>
                 <Route path="make-payments">
                   <Route index element={<MakePayments />} />
                   <Route path=":reason" element={<MakePayments />} />
@@ -122,7 +122,7 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<EntranceExamLayout />}>
+              <Route path="/entrance-exams" element={<EntranceExamLayout />}>
                 <Route index path="gmat" element={<EntranceExams />} />
                 <Route path="gre" element={<EntranceExams />} />
                 <Route path="duolingo" element={<EntranceExams />} />
@@ -132,26 +132,23 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<Outlet />}>
+              <Route path="/program-options" element={<Outlet />}>
                 <Route
-                  path="switch-program-package"
+                  path="switch"
                   element={<SwitchPrograms />}
                 />
                 <Route path="withdraw" element={<Withdraw />} />
               </Route>
 
-              <Route element={<TicketsLayout />}>
+              <Route path="/tickets" element={<TicketsLayout />}>
                 <Route path="create-ticket" element={<CreateTicket />} />
                 <Route path="view-tickets" element={<ViewTickets />} />
               </Route>
 
-              <Route path="school-admission" element={<AdmisionLayout />}>
+              <Route path="/school-admission" element={<AdmisionLayout />}>
                 <Route index path="requirements" element={<Requirements />} />
                 <Route path="application" element={<SchoolApplication />} />
-                <Route
-                  path="view-school/:schoolId/:courseId"
-                  element={<ViewSchool />}
-                />
+                <Route path="requirements/view-school" element={<ViewSchool />} />
               </Route>
 
               <Route

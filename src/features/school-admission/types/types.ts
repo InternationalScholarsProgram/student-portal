@@ -105,6 +105,7 @@ type GPAReport = {
 
 type UploadModalProps = {
   open: boolean;
+  disabled: boolean;
   row: DocRequirements;
   onClose: () => void;
   payload: {

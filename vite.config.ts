@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+export const BASE_URL = "https://finsapdev.qhtestingserver.com";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -25,12 +27,12 @@ export default defineConfig({
         secure: false,
       },
       "^/login/": {
-        target: "https://finkapinternational.qhtestingserver.com/",
+        target: BASE_URL,
         changeOrigin: true,
         secure: false,
       },
       "^/logo/": {
-        target: "https://finkapinternational.qhtestingserver.com/",
+        target: BASE_URL,
         changeOrigin: true,
         secure: false,
       },

@@ -24,6 +24,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 export default function ViewSchool(): JSX.Element {
   const { state } = useLocation();
   const { schoolId, courseId } = state || {};
+  const [disabled, setDisabled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<any | null>(null);
   const { currentIntake, proposedSchools, schoolAppId } = useAdmissions();
@@ -56,7 +57,8 @@ export default function ViewSchool(): JSX.Element {
 
   useEffect(() => {
     setBreadCrumbsLabel("Application Requirements");
-  }, [schoolId]);
+    setDisabled(schoolData?.application_status === "applied");
+  }, [schoolId, schoolData?.application_status]);
 
   if (!schoolId || !courseId) {
     // Handle fallback (e.g., redirect or show error)
@@ -78,7 +80,7 @@ export default function ViewSchool(): JSX.Element {
       <div className="">
         <button
           onClick={() => navigate(-1)}
-          className="fixed top-4 right-4 flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 p-2 shadow transition"
+          className="row-center gap-2 rounded-full p-2 shadow transition hover:text-primary-light"
         >
           <ArrowBackIcon fontSize="small" />
           <span className="text-sm font-medium">Back</span>
@@ -152,9 +154,11 @@ export default function ViewSchool(): JSX.Element {
       <div className="my-2">
         <div className="row justify-between items-center mb-3">
           <h3 className="text-xl font-semibold">Required Documents</h3>
-          <PrimaryBorderBtn onClick={() => openModal(null)}>
-            Add Extra Document
-          </PrimaryBorderBtn>
+          {disabled ? null : (
+            <PrimaryBorderBtn onClick={() => openModal(null)}>
+              Add Extra Document
+            </PrimaryBorderBtn>
+          )}
         </div>
         <GridTable
           name="requirements"
@@ -172,6 +176,7 @@ export default function ViewSchool(): JSX.Element {
       <UploadModal
         open={modalOpen}
         onClose={closeModal}
+        disabled={disabled}
         payload={{
           intakeId: currentIntake?.id,
           invalidateQuery,

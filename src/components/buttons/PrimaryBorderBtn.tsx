@@ -2,7 +2,12 @@ function PrimaryBorderBtn(
   props: React.ButtonHTMLAttributes<HTMLButtonElement>
 ) {
   return (
-    <button {...props} className={` primary-border-btn ${props.className}`}>
+    <button
+      {...props}
+      className={`${props.disabled && "disabled-btn"} primary-border-btn ${
+        props.className ?? ""
+      }`}
+    >
       {props.children}
     </button>
   );

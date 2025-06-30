@@ -13,7 +13,7 @@ type Props = {
 const SubItems: React.FC<Props> = ({ item, openSections, setOpenSections }) => {
   const isOpen = openSections[item.name] || false;
   return (
-    <React.Fragment>
+    <li className="col ">
       <button
         onClick={() => setOpenSections(item.name)}
         className="sidebar-link"
@@ -34,7 +34,7 @@ const SubItems: React.FC<Props> = ({ item, openSections, setOpenSections }) => {
           </SidebarNavLink>
         ))}
       </Collapse>
-    </React.Fragment>
+    </li>
   );
 };
 

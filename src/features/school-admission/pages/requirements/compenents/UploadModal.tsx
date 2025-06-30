@@ -12,11 +12,18 @@ import {
 } from "./UploadModalComponents";
 import FormFooterBtns from "../../../../../components/buttons/FormFooterBtns";
 
-const UploadModal = ({ open, row, onClose, payload }: UploadModalProps) => {
+const UploadModal = ({
+  open,
+  row,
+  onClose,
+  payload,
+  disabled,
+}: UploadModalProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [comment, setComment] = useState<string>(row?.docs?.comment || "");
   const docs = row?.docs;
-  const hideBtn = row?.consent?.sign_type === "digital" || docs?.status === 2;
+  const hideBtn =
+    row?.consent?.sign_type === "digital" || docs?.status === 2 || disabled;
 
   const title = useMemo(() => {
     if (row?.id === "12") return `Extra document - ${row?.description}`;
@@ -49,7 +56,9 @@ const UploadModal = ({ open, row, onClose, payload }: UploadModalProps) => {
           ? { current_doc_name: docs.document_name }
           : {}),
         file,
-        ...(docs?.course?.id ? { proposed_course_id: payload.proposed_course_id } : {}),
+        ...(docs?.course?.id
+          ? { proposed_course_id: payload.proposed_course_id }
+          : {}),
       };
       return admissionAPIs.uploadFile(data);
     },

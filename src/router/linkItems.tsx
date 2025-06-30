@@ -70,7 +70,7 @@ const linkItems = [
   },
   {
     icon: <SupportAgentOutlinedIcon />,
-    name: "Open Ticket",
+    name: "Tickets",
     to: "tickets",
     subItems: [
       {
@@ -116,7 +116,7 @@ const modules = [
         to: "requirements",
       },
       {
-        name: "Application",
+        name: "Applications",
         to: "application",
       },
     ],

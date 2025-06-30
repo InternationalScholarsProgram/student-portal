@@ -35,38 +35,48 @@ const GetApplicationStatus = ({ status, school }: Props) => {
           Status :<span className="text-secondary-main px-1">Applied</span>
         </p>
         <p className="opacity-70">
-          Your application to this school has been completed. Please use the
-          below credentials to login to the school application portal. Do not
-          act on any emails you receive from the school without first seeking
-          guidance from our team by raising a ticket. <br />
-          <span className="">
-            Admin Comments : <em>{comment}</em>
-          </span>
+          Your application has been completed. Do not act on any emails you
+          receive from the school without first seeking guidance from our team
+          by raising a ticket. <br />
         </p>
-        <p>Access the school portal using the following details:</p>
-        <div className="px-4 m-2 border-30 rounded-md">
-          <p>
-            School Portal :
-            <a
-              className="text-primary-light underline px-2"
-              href={school?.application_details?.school_link || "#"}
-              target="_blank"
-            >
-              Open Link
-            </a>
-          </p>
-          <p className="row items-center w-full">
-            UserName : {"  "}
-            <span className="pl-1 flex-1 max-w-fit text-nowrap truncate text-ellipsis">
-              {userName}
-            </span>{" "}
-            <CopyToClipBoard text={userName} />
-          </p>
-          <p>
-            Password : {password}
-            <CopyToClipBoard text={password} />
-          </p>
-        </div>
+        <span className="">
+          <b className="">Admin Comments : </b>
+          <em>{comment}</em>
+        </span>
+        <p className="font-semibold opacity-75">School portal Access</p>
+        {school?.isinto ? (
+          <em className="pb-3">
+            Your application is processed through a special platform. You will
+            not have login access until the school makes a decision. Login
+            credentials will be shared by ISP staff upon offer
+          </em>
+        ) : (
+          <>
+            <div className="px-4 m-2 border-30 rounded-md">
+              <p>
+                School Portal :
+                <a
+                  className="text-primary-light underline px-2"
+                  href={school?.application_details?.school_link || "#"}
+                  target="_blank"
+                >
+                  Open Link
+                </a>
+              </p>
+              <p className="row items-center w-full">
+                UserName : {"  "}
+                <span className="pl-1 flex-1 max-w-fit text-nowrap truncate text-ellipsis">
+                  {userName}
+                </span>{" "}
+                <CopyToClipBoard text={userName} />
+              </p>
+              <p>
+                Password : {password}
+                <CopyToClipBoard text={password} />
+              </p>
+            </div>
+          </>
+        )}
 
         <div className="col">
           <b>Feedback</b>

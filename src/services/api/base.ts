@@ -11,7 +11,7 @@ const testStudents = [
 const activeStudentId = testStudents[4];
 
 const baseDirectory = "/login/member/dashboard/APIs/";
-const BASE_URL = "https://finkapinternational.qhtestingserver.com";
+const BASE_URL = "https://finsapdev.qhtestingserver.com";
 const multipart = {
   headers: {
     "Content-Type": "multipart/form-data",

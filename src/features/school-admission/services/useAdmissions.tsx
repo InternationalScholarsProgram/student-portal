@@ -19,7 +19,7 @@ const useAdmissions = () => {
     [user?.email]
   );
 
-  const { data: eligibility }: any = useQuery({
+  const { data: eligibility, isLoading: isLoadingEligibility } = useQuery({
     queryKey: queryKeys.eligibility,
     queryFn: admissionAPIs.eligibilityCheck,
   });
@@ -62,6 +62,7 @@ const useAdmissions = () => {
 
   return {
     eligibility,
+    isLoadingEligibility,
     currentIntake,
     status,
     user,

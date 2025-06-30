@@ -1,5 +1,8 @@
 import Guides from "../../components/Guides";
-import Loader from "../../../../components/loaders/Loader";
+import Loader, {
+  InlineLoader,
+  SkeletonLoader,
+} from "../../../../components/loaders/Loader";
 import BookMeeting from "../../components/BookMeeting";
 import Meeting from "../../components/Meeting";
 import useAdmissions from "../../services/useAdmissions";
@@ -10,10 +13,16 @@ import ProposedSchools from "../../components/ProposedSchools";
 import IntakeStatus from "../../components/IntakeStatus";
 
 function Requirements() {
-  const { eligibility, status, isLoading, currentIntake, transcripts } =
-    useAdmissions();
+  const {
+    eligibility,
+    isLoadingEligibility,
+    status,
+    isLoading,
+    currentIntake,
+    transcripts,
+  } = useAdmissions();
 
-  if (!eligibility || isLoading) return <main children={<Loader />} />;
+  if (isLoadingEligibility || isLoading) return <SkeletonLoader />;
 
   if (eligibility?.code !== 200)
     return <EligibilityStatusCheck eligibility={eligibility} />;

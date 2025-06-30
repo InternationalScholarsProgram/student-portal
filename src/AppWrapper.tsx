@@ -9,8 +9,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { darkTheme, lightTheme } from "./styles/theme";
 import Router from "./router/Router";
 import { FullLoader } from "./components/loaders/Loader";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import 'react-circular-progressbar/dist/styles.css';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "react-circular-progressbar/dist/styles.css";
+import { BASE_URL } from "./services/api/base";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,11 +27,16 @@ function AppWrapper() {
   );
 
   useEffect(() => {
-    document.title = "Student Portal";
-    // To set dark mode for the first time for both tailwind and mui themes
     if (themeMode === "dark") setDarkTheme();
     if (themeMode === "light") setLightTheme();
+
+    const link = document.createElement("link");
+    link.rel = "icon";
+    link.type = "image/svg+xml";
+    link.href = `${BASE_URL}/login/includes/includes/assets/images/finkap-ico.png`;
+    document.head.appendChild(link);
   }, [themeMode, setDarkTheme, setLightTheme]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={themeMode === "light" ? lightTheme : darkTheme}>

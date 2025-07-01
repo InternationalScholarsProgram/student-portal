@@ -39,10 +39,12 @@ const GetApplicationStatus = ({ status, school }: Props) => {
           receive from the school without first seeking guidance from our team
           by raising a ticket. <br />
         </p>
-        <span className="">
-          <b className="">Admin Comments : </b>
-          <em>{comment}</em>
-        </span>
+        {comment && (
+          <span className="">
+            <b className="">Admin Comments : </b>
+            <em>{comment}</em>
+          </span>
+        )}
         <p className="font-semibold opacity-75">School portal Access</p>
         {school?.isinto ? (
           <em className="pb-3">

@@ -39,7 +39,7 @@ function ProvideSchoolFeedback() {
         our support team for assistance.
       </p>
       <div className="row justify-end gap-2">
-        <Link to={"/create-ticket"} className="text-btn">
+        <Link to={"/tickets/create-ticket"} className="text-btn">
           Contact Support
         </Link>
         <Link to={"/school-admission/application"} className="primary-btn">

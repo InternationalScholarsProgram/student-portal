@@ -9,38 +9,44 @@ import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import { toast } from "react-toastify";
 import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
+import { errorMsg } from "../../../../components/errors/errorMsg";
+import SelectCountry from "../../../../components/inputs/SelectCountry";
+import axios from "axios";
 
 function DS160RequestModal({ open, toggleModal }: ModalProps) {
-  const { schools, user, inValidateStatus } = useVisa();
+  const { status, schools, user, inValidateStatus } = useVisa();
+  // console.log(status, "status");
+  const countries = status?.value?.countries?.sort((a: any, b: any) => {
+    if (a?.name < b?.name) return -1;
+    if (a?.name > b?.name) return 1;
+    return 0;
+  });
 
   const requestReview = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const schoolName = formData.get("school-name");
+    const surname = formData.get("surname");
     const course = schools?.find(
       (item: any) => item?.school_name === schoolName
     )?.program_name;
 
     if (course) formData.set("course", course);
     formData.append("fullnames", user?.fullnames || "");
+    if (typeof surname !== "string" || surname.length > 5)
+      return toast.error("Surname must be less than 5 characters");
 
     ds160RequestReview.mutate(formData);
   };
 
   const ds160RequestReview = useMutation({
-    mutationFn: async (data: any) => {
-      return visaEndpoints.ds160RequestReview(data);
+    mutationFn: async (data: any) => visaEndpoints.ds160RequestReview(data),
+    onSuccess: (response) => {
+      toast.success(response?.data.message);
+      inValidateStatus();
+      toggleModal();
     },
-    onSuccess: (data) => {
-      if (data?.code === 200) {
-        toast.success(data.message);
-        inValidateStatus();
-        toggleModal();
-      }
-    },
-    onError: (error: any) => {
-      toast.error(error.response);
-    },
+    onError: (error) => toast.error(errorMsg(error)),
   });
   return (
     <Modal open={open} setOpen={toggleModal} title="DS-160 Request for Review">
@@ -62,7 +68,13 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
                   title={input?.inputLabel}
                   {...input}
                 >
-                  {input?.name === "school-name"
+                  {input?.name === "visa_interview_country"
+                    ? countries?.map((country: any) => (
+                        <MenuItem key={country?.name} value={country?.name}>
+                          {country?.name}
+                        </MenuItem>
+                      ))
+                    : input?.name === "school-name"
                     ? schools?.map((school: any) => (
                         <MenuItem
                           key={school?.school_name}
@@ -77,6 +89,16 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
                         </MenuItem>
                       ))}
                 </Select>
+              );
+            }
+            if (input?.type === "country") {
+              return (
+                <SelectCountry
+                  key={input?.name}
+                  placeholder={input?.inputLabel}
+                  title={input?.inputLabel}
+                  {...input}
+                />
               );
             }
             return (
@@ -99,6 +121,26 @@ function DS160RequestModal({ open, toggleModal }: ModalProps) {
 
 export default DS160RequestModal;
 
+// const testData = {
+//   "application-id": "ssss",
+//   "birth-year": "21323",
+//   current_country: "Australia",
+//   surname: "John",
+//   "security-answer": "12ewads",
+//   "school-name": "Grand Valley State University (GVSU)",
+//   "reporting-date": "2025-07-16",
+//   "denied-before": "no",
+//   "approved-before": "yes",
+//   intake: "fall",
+//   year: "2025",
+//   "with-family": "Single",
+//   financial: "Loan",
+//   visa_attempt: "Subsequent",
+//   visa_interview_country: "Gambia",
+//   course: "MS Applied Statistics",
+//   fullnames: "Test Four",
+// };
+
 const formInputs = [
   {
     type: "text",
@@ -115,6 +157,12 @@ const formInputs = [
     required: true,
     min: 1950,
     max: new Date().getFullYear() - 18,
+  },
+  {
+    type: "country",
+    name: "current_country",
+    inputLabel: "Which country are you based currently",
+    required: true,
   },
   {
     type: "text",
@@ -225,5 +273,12 @@ const formInputs = [
       { value: "First", label: "First Time" },
       { value: "Subsequent", label: "Subsequent" },
     ],
+  },
+  {
+    type: "select",
+    name: "visa_interview_country",
+    inputLabel: "Select country for the visa interview",
+    required: true,
+    options: [],
   },
 ];

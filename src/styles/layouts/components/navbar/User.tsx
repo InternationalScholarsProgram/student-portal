@@ -8,7 +8,7 @@ import DropDown from "../../../../components/DropDown";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
 
 function User() {
-  const { user } = useFetchUser();
+  const { user, logout } = useFetchUser();
   return (
     <DropDown
       title={
@@ -42,7 +42,7 @@ function User() {
         </Link>
 
         <button
-          // onClick={handleLogOut}
+          onClick={logout}
           className="px-6 py-2 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
           <LoginOutlinedIcon />

@@ -82,6 +82,10 @@ function useVisa() {
   const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
   const feedback = status?.value?.feedback as FeedBack;
   const pastFeedbacks = status?.value?.pastFeedbacks as FeedBack[];
+  const visaBookingLink =
+    status?.value?.countries.find(
+      (country: any) => country?.name === ds160Review?.current_country
+    )?.embassy_link || "";
   // console.log(proposedSchools, "schools");
 
   return {
@@ -103,18 +107,8 @@ function useVisa() {
     isMockMarksQualified,
     feedback,
     pastFeedbacks: pastFeedbacks?.length > 0 ? pastFeedbacks : null,
+    visaBookingLink,
   };
 }
 
 export default useVisa;
-
-/*
-test@gmail.com 1741946231655 new date
-test@gmail.com 1741946231656 new date
-test@gmail.com 1741946231657 new date
-test@gmail.com 1741946231663 new date
-test@gmail.com 1741946231664 new date
-test@gmail.com 1741946231666 new date
-
-
-*/

@@ -20,6 +20,7 @@ import ErrorElement from "./ErrorElement";
 import EntranceExams from "../features/entranceExams/EntranceExams";
 import EntranceExamLayout from "../features/entranceExams/EntranceExamLayout";
 import ViewSchool from "../features/school-admission/pages/requirements/ViewSchool";
+import Login from "../features/user/Login";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -81,6 +82,7 @@ function Router() {
         <Suspense name="router">
           <Routes>
             <Route element={<PageLayout />}>
+              <Route path="/" element={<Login />} />
               <Route path="contract" element={<Outlet />}>
                 <Route
                   path="onboarding-agreement"
@@ -94,7 +96,6 @@ function Router() {
               <Route path="/disabled" element={<Disabled />} />
             </Route>
             <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
-              <Route index element={<Navigate to="/dashboard" />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="webmail" element={<WebMail />} />
@@ -133,10 +134,7 @@ function Router() {
               </Route>
 
               <Route path="/program-options" element={<Outlet />}>
-                <Route
-                  path="switch"
-                  element={<SwitchPrograms />}
-                />
+                <Route path="switch" element={<SwitchPrograms />} />
                 <Route path="withdraw" element={<Withdraw />} />
               </Route>
 
@@ -148,7 +146,10 @@ function Router() {
               <Route path="/school-admission" element={<AdmisionLayout />}>
                 <Route index path="requirements" element={<Requirements />} />
                 <Route path="application" element={<SchoolApplication />} />
-                <Route path="requirements/view-school" element={<ViewSchool />} />
+                <Route
+                  path="requirements/view-school"
+                  element={<ViewSchool />}
+                />
               </Route>
 
               <Route

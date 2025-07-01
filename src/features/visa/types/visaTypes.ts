@@ -88,6 +88,8 @@ type Ds160Review = {
   surname: string;
   visa_attempt: "First" | "Second" | "Third+" | string;
   with_family: "Alone" | "Family" | "Friends" | string;
+  visa_interview_country: string;
+  current_country: string;
 };
 type DS160Req = {
   declined: number;

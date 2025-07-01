@@ -1,6 +1,10 @@
 import { create } from "zustand";
+type StudentStore = {
+  activeStudentId: string;
+  setActiveStudentId: (id: string) => void;
+};
 
-type GlobalStore = {
+type GlobalStore = StudentStore & {
   breadCrumbs: string[];
   setBreadCrumbs: (crumbs: string[]) => void;
   breadCrumbsLabel: string;
@@ -12,5 +16,7 @@ const useGlobalStore = create<GlobalStore>((set) => ({
   setBreadCrumbs: (crumbs: string[]) => set({ breadCrumbs: crumbs }),
   breadCrumbsLabel: "",
   setBreadCrumbsLabel: (label: string) => set({ breadCrumbsLabel: label }),
+  activeStudentId: "", // Default to the first test student
+  setActiveStudentId: (id) => set({ activeStudentId: id }),
 }));
 export default useGlobalStore;

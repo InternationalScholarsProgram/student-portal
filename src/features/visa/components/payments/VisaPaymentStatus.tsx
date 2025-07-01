@@ -6,6 +6,7 @@ import VisaTrainingStatus from "../../features/visa-training-resources/VisaTrain
 import { Link } from "react-router-dom";
 import ContentComponent from "../../../../components/ContentComponent";
 import { formatDateAndTime } from "../../../../utils/utils";
+import ContactSupport from "../../../../components/ContactSupport";
 
 const ModalBtn = () => {
   const [open, setOpen] = useState(false);
@@ -20,7 +21,7 @@ const ModalBtn = () => {
 };
 
 function VisaPaymentStatus() {
-  const { visaPayments, pastFeedbacks } = useVisa();
+  const { visaPayments, pastFeedbacks, visaBookingLink } = useVisa();
 
   const status = () => {
     switch (visaPayments?.status) {
@@ -31,21 +32,12 @@ function VisaPaymentStatus() {
               Your request for visa fees payment has been submitted successfully
             </p>
             <p>Kindly be patient as our team reviews your request</p>
-            <p className="">
-              For any inquiries, please <strong>create a ticket</strong> to
-              contact support.
-            </p>
-            <Link
-              to="/create-ticket"
-              className="primary-border-btn my-2 self-end"
-            >
-              Create Ticket
-            </Link>
+            <ContactSupport />
           </ContentComponent>
         );
       case 2:
         return (
-          <section className="col gap-5">
+          <section className="col gap-3">
             <div className="mt-2 px-3">
               {pastFeedbacks ? (
                 <p>
@@ -61,9 +53,18 @@ function VisaPaymentStatus() {
                   visa expedite letter if needed.
                 </p>
               )}
-              {/* <p>
-                Please submit a request below to access visa training resources.
-              </p> */}
+
+              <p>
+                Please use the following link to book your visa interview.{" "}
+                <Link
+                  to={visaBookingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-main px-1 font-semibold border-b-2 border-primary-main hover:scale-105"
+                >
+                  Book Visa Interview
+                </Link>
+              </p>
             </div>
             <VisaTrainingStatus />
             <Expedite />

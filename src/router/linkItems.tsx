@@ -60,7 +60,7 @@ const linkItems = [
     subItems: [
       {
         name: "Switch Options",
-        to: "switch-program-package",
+        to: "switch",
       },
       {
         name: "Withdraw",
@@ -70,7 +70,7 @@ const linkItems = [
   },
   {
     icon: <SupportAgentOutlinedIcon />,
-    name: "Open Ticket",
+    name: "Tickets",
     to: "tickets",
     subItems: [
       {
@@ -108,16 +108,16 @@ const modules = [
 
   {
     name: "School Admission",
-    to: "school-admission/requirements",
+    to: "school-admission",
     icon: <SchoolOutlinedIcon />,
     subItems: [
       {
         name: "Requirements",
-        to: "school-admission/requirements",
+        to: "requirements",
       },
       {
-        name: "Application",
-        to: "school-admission/application",
+        name: "Applications",
+        to: "application",
       },
     ],
   },

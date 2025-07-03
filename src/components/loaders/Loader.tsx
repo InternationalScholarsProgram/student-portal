@@ -1,4 +1,4 @@
-import { Modal } from "@mui/material";
+import { Modal, Skeleton, Stack } from "@mui/material";
 const dots = [1, 2, 3, 4, 5];
 
 function Loader() {
@@ -23,6 +23,14 @@ export function FullLoader() {
     >
       <div className="w-full h-full flex-1 col-center" children={<Loader />} />
     </Modal>
+  );
+}
+export function SkeletonLoader() {
+  return (
+    <Stack spacing={1} direction="column" className="w-full h-[80dvh]">
+      <Skeleton variant="text" height={200} />
+      <Skeleton variant="rounded" className="w-full flex-1" />
+    </Stack>
   );
 }
 export function InlineLoader() {

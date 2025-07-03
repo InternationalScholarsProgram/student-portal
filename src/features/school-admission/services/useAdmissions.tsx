@@ -1,37 +1,25 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { admissionAPIs } from "./admissionAPIs";
 import useFetchUser from "../../../services/hooks/useFetchUser";
-import {
-  DocRequirements,
-  GPAReport,
-  School,
-  TranscriptsProps,
-  UploadedDocument,
-} from "../types/types";
+import { GPAReport, TranscriptsProps } from "../types/types";
 import { useMemo } from "react";
 import useSchools from "./useSchools";
 
 const useAdmissions = () => {
   const { user } = useFetchUser();
-
   const queryClient = useQueryClient();
   const admissionKey = ["admission", user?.email];
   const queryKeys = useMemo(
     () => ({
       eligibility: [...admissionKey, "check_eligibility"],
-      appDocs: [...admissionKey, "fetch_school_app_docs_requirements"],
-      uploadedDocs: [...admissionKey, "getUploadedDocs"],
       intakes: [...admissionKey, "intakes"],
-      consents: [...admissionKey, "consents"],
       transcripts: [...admissionKey, "transcripts"],
       gpaReport: [...admissionKey, "gpaReport"],
     }),
     [user?.email]
   );
-  const invalidateDocs = () => {
-    queryClient.invalidateQueries({ queryKey: queryKeys.uploadedDocs });
-  };
-  const { data: eligibility }: any = useQuery({
+
+  const { data: eligibility, isLoading: isLoadingEligibility } = useQuery({
     queryKey: queryKeys.eligibility,
     queryFn: admissionAPIs.eligibilityCheck,
   });
@@ -48,31 +36,9 @@ const useAdmissions = () => {
     invalidate: invalidateStatus,
   } = useSchools(isEligible);
 
-  const { data: appDocs } = useQuery<DocRequirements[]>({
-    queryKey: queryKeys.appDocs,
-    queryFn: admissionAPIs.applicationDocs,
-    enabled: status?.code >= 2,
-  });
-
-  const sortedAppDocs = useMemo(() => {
-    if (!appDocs) return [];
-    return [...appDocs].sort((a, b) => {
-      if (a.id === "3") return 1; // a should come after b
-      if (b.id === "3") return -1; // b should come after a
-      return 0; // otherwise, keep original order
-    });
-  }, [appDocs]);
-
-  const { data: uploadedDocs } = useQuery<UploadedDocument[]>({
-    queryKey: queryKeys.uploadedDocs,
-    queryFn: admissionAPIs.getUploadedDocs,
-    enabled: !!appDocs,
-  });
-  
   const { data: gpaReport } = useQuery<GPAReport>({
     queryKey: queryKeys.gpaReport,
     queryFn: admissionAPIs.getGPA,
-    enabled: !!uploadedDocs,
   });
 
   const { data: currentIntake } = useQuery({
@@ -96,8 +62,8 @@ const useAdmissions = () => {
 
   return {
     eligibility,
+    isLoadingEligibility,
     currentIntake,
-    appDocs: sortedAppDocs,
     status,
     user,
     proposedSchools,
@@ -105,7 +71,6 @@ const useAdmissions = () => {
     notAppliedSchools,
     hasAppliedToAllSchools,
     isLoading: isLoading || transcriptsLoading,
-    uploadedDocs,
     gpaReport: {
       ...gpaReport,
       // gpa_status: 2,
@@ -122,7 +87,6 @@ const useAdmissions = () => {
       hasAnyVerified,
     },
     canMakeSchoolApplication,
-    invalidateDocs,
     invalidateStatus,
   };
 };

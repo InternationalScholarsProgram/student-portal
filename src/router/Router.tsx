@@ -19,6 +19,8 @@ import Disabled from "./Disabled";
 import ErrorElement from "./ErrorElement";
 import EntranceExams from "../features/entranceExams/EntranceExams";
 import EntranceExamLayout from "../features/entranceExams/EntranceExamLayout";
+import ViewSchool from "../features/school-admission/pages/requirements/ViewSchool";
+import Login from "../features/user/Login";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -80,6 +82,7 @@ function Router() {
         <Suspense name="router">
           <Routes>
             <Route element={<PageLayout />}>
+              <Route path="/" element={<Login />} />
               <Route path="contract" element={<Outlet />}>
                 <Route
                   path="onboarding-agreement"
@@ -93,13 +96,12 @@ function Router() {
               <Route path="/disabled" element={<Disabled />} />
             </Route>
             <Route element={<PortalLayout />} errorElement={<ErrorPage />}>
-              <Route index element={<Navigate to="/dashboard" />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="webmail" element={<WebMail />} />
               <Route path="resources" element={<Resources />} />
 
-              <Route element={<Funding />}>
+              <Route path="/funding" element={<Funding />}>
                 <Route path="tuition" element={<Tuition />} />
                 <Route path="relocation" element={<Relocation />} />
                 <Route path="alternative" element={<Alternative />} />
@@ -110,7 +112,7 @@ function Router() {
               <Route path="test" element={<Test />} />
               <Route path="visa-processing" element={<Visa />} />
 
-              <Route element={<Outlet />}>
+              <Route path="/finances" element={<Outlet />}>
                 <Route path="make-payments">
                   <Route index element={<MakePayments />} />
                   <Route path=":reason" element={<MakePayments />} />
@@ -121,7 +123,7 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<EntranceExamLayout />}>
+              <Route path="/entrance-exams" element={<EntranceExamLayout />}>
                 <Route index path="gmat" element={<EntranceExams />} />
                 <Route path="gre" element={<EntranceExams />} />
                 <Route path="duolingo" element={<EntranceExams />} />
@@ -131,22 +133,23 @@ function Router() {
                 />
               </Route>
 
-              <Route element={<Outlet />}>
-                <Route
-                  path="switch-program-package"
-                  element={<SwitchPrograms />}
-                />
+              <Route path="/program-options" element={<Outlet />}>
+                <Route path="switch" element={<SwitchPrograms />} />
                 <Route path="withdraw" element={<Withdraw />} />
               </Route>
 
-              <Route element={<TicketsLayout />}>
+              <Route path="/tickets" element={<TicketsLayout />}>
                 <Route path="create-ticket" element={<CreateTicket />} />
                 <Route path="view-tickets" element={<ViewTickets />} />
               </Route>
 
-              <Route path="school-admission" element={<AdmisionLayout />}>
+              <Route path="/school-admission" element={<AdmisionLayout />}>
                 <Route index path="requirements" element={<Requirements />} />
                 <Route path="application" element={<SchoolApplication />} />
+                <Route
+                  path="requirements/view-school"
+                  element={<ViewSchool />}
+                />
               </Route>
 
               <Route

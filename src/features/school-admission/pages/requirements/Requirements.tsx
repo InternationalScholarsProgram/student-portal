@@ -1,5 +1,8 @@
 import Guides from "../../components/Guides";
-import Loader from "../../../../components/loaders/Loader";
+import Loader, {
+  InlineLoader,
+  SkeletonLoader,
+} from "../../../../components/loaders/Loader";
 import BookMeeting from "../../components/BookMeeting";
 import Meeting from "../../components/Meeting";
 import useAdmissions from "../../services/useAdmissions";
@@ -7,14 +10,19 @@ import NoOpenIntakes from "../../components/NoOpenIntakes";
 import EligibilityStatusCheck from "../../components/EligibilityStatusCheck";
 import Transcripts from "./compenents/transcripts/Transcripts";
 import ProposedSchools from "../../components/ProposedSchools";
-import UploadDocuments from "./compenents/UploadDocuments";
 import IntakeStatus from "../../components/IntakeStatus";
 
 function Requirements() {
-  const { eligibility, status, isLoading, currentIntake, transcripts } =
-    useAdmissions();
+  const {
+    eligibility,
+    isLoadingEligibility,
+    status,
+    isLoading,
+    currentIntake,
+    transcripts,
+  } = useAdmissions();
 
-  if (!eligibility || isLoading) return <main children={<Loader />} />;
+  if (isLoadingEligibility || isLoading) return <SkeletonLoader />;
 
   if (eligibility?.code !== 200)
     return <EligibilityStatusCheck eligibility={eligibility} />;
@@ -30,10 +38,7 @@ function Requirements() {
           <Guides />
         </div>
         <Transcripts />
-        {transcripts?.hasAnyVerified && (
-          <UploadDocuments canApply={status?.code === 5} />
-        )}
-        <ProposedSchools />
+        {transcripts?.hasAnyVerified && <ProposedSchools />}
       </div>
     );
 }

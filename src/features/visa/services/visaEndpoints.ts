@@ -34,8 +34,7 @@ class VisaEndpoints {
   };
   ds160RequestReview = async (data: any) => {
     const payload = formData2json(data);
-    const response = await api.post(`${url}/ds160_request_review.php`, payload);
-    return response?.data;
+    return await api.post(`${url}/ds160_request_review.php`, payload);
   };
   payments = async (data: any) => {
     return api.post(`${url}/payment.php`, data);

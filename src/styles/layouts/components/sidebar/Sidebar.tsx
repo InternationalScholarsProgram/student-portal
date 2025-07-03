@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link,  useLocation } from "react-router-dom";
 import Logo from "../../../../components/Logo";
 import { linksWithDivider } from "../../../../router/linkItems";
 import SubItems from "./SubItems";
@@ -21,14 +21,14 @@ function Sidebar() {
         <Logo />
       </div>
 
-      <ul className="portal-sidebar-ul flex-1 py-3 overflow-y-auto overflow-x-clip">
+      <ul className="portal-sidebar-ul h-fit py-3 overflow-y-auto overflow-x-clip">
         {linksWithDivider.map((item: any, index) => {
           if (item?.hidden) return null;
           if (item?.type === "divider") {
             return (
-              <p key={index} className="my-5">
-                {item.name}
-              </p>
+              <li key={index} className="my-5">
+                <p>{item.name}</p>
+              </li>
             );
           }
 

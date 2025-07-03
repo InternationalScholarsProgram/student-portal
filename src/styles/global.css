@@ -16,7 +16,7 @@
   @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
 }
 .content-container main {
-  @apply w-full mx-auto my-4 sm:p-2;
+  @apply w-full mx-auto sm:p-2;
 }
 .headers {
   @apply flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between w-full;

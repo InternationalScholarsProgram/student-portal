@@ -20,9 +20,9 @@ function PickFileButton({ setFiles, text, file, ...props }: Props) {
           display: "flex",
           flexWrap: "nowrap",
           flexDirection: "row",
-          gap: "2px",
           alignItems: "center",
           justifyContent: "flex-start",
+          gap: 1,
           color: "primary.light",
         }}
       >

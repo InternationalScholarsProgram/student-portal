@@ -5,6 +5,7 @@ import {
   html2pdf,
   json2formData,
 } from "../../../utils/utils";
+import axios from "axios";
 
 const url = `${baseDirectory}/school_application/`;
 const admissionsUrl = `${url}/school_admission.php`;
@@ -43,13 +44,15 @@ class AdmissionAPIs {
       throw new Error(error.response.data);
     }
   };
-  applicationDocs = async () => {
+  applicationDocs = async (schoolId?: string, courseId?: string) => {
     const response = await api.get(
-      `${url}/fetch_school_app_docs_requirements.php`
+      `${url}/fetch_school_app_docs_requirements.php?school_id=${schoolId}&program_id=${courseId}`
     );
-    return response?.data?.data;
+    return response?.data?.data?.filter(
+      (item: any) => item.acronym !== "extra document" && item.id !== "14"
+    );
   };
-  
+
   getUploadedDocs = async () => {
     const response = await api.get(`${url}/uploaded_docs.php`);
     return response?.data?.message || [];
@@ -134,34 +137,12 @@ class AdmissionAPIs {
     // docs.download();
     // return api.get("https://ipapi.co/json/");
   };
-  submitSchoolApplication = async (payload: any) => {
-    try {
-      const response = await api.post(`${url}/school_application.php`, payload);
-      if (response.status === 201)
-        toast.success("Application submitted successfully");
-      return response?.data;
-    } catch (error: any) {
-      const data = error?.response?.data;
-      if (data?.code === 400) toast.error(data.message);
-      if (!data || data?.code !== 400)
-        toast.error("Application submission failed");
-    }
-  };
-  uploadFile = async (data: any) => {
-    try {
-      const formData = json2formData(data);
-      console.log(data, "data");
+  submitSchoolApplication = (payload: any) =>
+    api.post(`${url}/school_application.php`, payload);
 
-      const response = await api.post(
-        `${url}/school_app_docs_upload.php`,
-        formData
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.response.data);
-      return error.response.data;
-    }
-  };
+  uploadFile = (data: any) =>
+    api.post(`${url}/school_app_docs_upload.php`, axios.toFormData(data));
+
   uploadConsent = async (data: any) => {
     try {
       const formData = json2formData(data);
@@ -192,34 +173,27 @@ class AdmissionAPIs {
       return error.response.data;
     }
   };
-  consents = async (school: { id: string; course: string }) => {
-    const url =
-      "/login/member/dashboard/APIs/others/sign_consent.php?action=fetch_consent";
-    const _schoolResponse = await api.get(url, {
-      params: {
-        consent_type: "2",
-        extra_column: "school_id",
-        extra_value: school.id,
-      },
-    });
+  consents = async (schoolId?: string, courseId?: string) => {
+    const url = `${baseDirectory}/others/sign_consent.php?action=fetch_consent`;
+    return await Promise.all([
+      await api.get(url, {
+        params: {
+          action: "fetch_consent",
+          consent_type: "2",
+          extra_column: "school_id",
+          extra_value: schoolId,
+        },
+      }),
 
-    const _programResponse = await api.get(url, {
-      params: {
-        consent_type: "5",
-        extra_column: "program_id",
-        extra_value: school.course,
-      },
-    });
-
-    const schoolResponse = _schoolResponse?.data?.message;
-    const programResponse = _programResponse?.data?.message;
-
-    const resData =
-      schoolResponse && schoolResponse?.length > 0
-        ? schoolResponse
-        : programResponse;
-    if (resData.length > 0) return resData;
-    return null;
+      await api.get(url, {
+        params: {
+          action: "fetch_consent",
+          consent_type: "5",
+          extra_column: "program_id",
+          extra_value: courseId,
+        },
+      }),
+    ]);
   };
 }
 const admissionAPIs = new AdmissionAPIs();

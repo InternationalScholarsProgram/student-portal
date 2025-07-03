@@ -1,13 +1,15 @@
 import { Breadcrumbs } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { getLabels } from "../../router/utils";
+import useGlobalStore from "../../services/global.store";
 
-const BreadCrumbs = ({ pathnames }: any) => {
+const BreadCrumbs = () => {
+  const { breadCrumbs } = useGlobalStore();
   return (
     <Breadcrumbs className="pl-1" separator="›" aria-label="breadcrumb">
-      {pathnames?.map((path: string, index: any) => {
-        const to = `/${pathnames.slice(0, index + 1).join("/")}`;
-        const isLast = index === pathnames.length - 1;
+      {breadCrumbs?.map((path: string, index: any) => {
+        const to = `/${breadCrumbs.slice(0, index + 1).join("/")}`;
+        const isLast = index === breadCrumbs.length - 1;
         return (
           <NavLink
             key={to}

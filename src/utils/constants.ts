@@ -1,3 +1,10 @@
+const testStudents = [
+  "test@gmail.com",
+  "test_one@gmail.com",
+  "test_two@gmail.com",
+  "test_three@gmail.com",
+  "test_four@gmail.com",
+];
 const counties = [
   { value: 1, label: "Mombasa" },
   { value: 2, label: "Kwale" },
@@ -258,4 +265,11 @@ const yesNoOptions = [
   { value: "no", label: "No" },
 ];
 
-export { counties, countries, fundingOptions, acceptReject, yesNoOptions };
+export {
+  counties,
+  countries,
+  fundingOptions,
+  acceptReject,
+  yesNoOptions,
+  testStudents,
+};

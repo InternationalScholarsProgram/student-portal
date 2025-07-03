@@ -1,8 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import api, { activeStudentId } from "../api/base";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "../api/base";
 import { UserProfile } from "../../types";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router";
 
 const useFetchUser = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const activeStudentId = Cookies.get("activeStudentId");
   const { data, isLoading, error } = useQuery<UserProfile>({
     queryKey: [activeStudentId, "user"],
     queryFn: async () => {
@@ -22,11 +27,17 @@ const useFetchUser = () => {
       country: data?.country?.toLowerCase(),
     }),
   });
+  const logout = () => {
+    Cookies.remove("activeStudentId");
+    queryClient.clear();
+    navigate("/");
+  };
 
   return {
     user: data,
     isLoading,
     error,
+    logout,
     userQueryKey: [activeStudentId, "user"],
   };
 };

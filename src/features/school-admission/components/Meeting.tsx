@@ -5,7 +5,6 @@ import PrimaryBtn from "../../../components/buttons/PrimaryBtn";
 import PrimaryBorderBtn from "../../../components/buttons/PrimaryBorderBtn";
 import dayjs from "dayjs";
 import CareerAdvisory from "../../../components/career-advisory/CareerAdvisory";
-import { RequirementsAccordion } from "../pages/requirements/compenents/RequirementsTable";
 import useAdmissions from "../services/useAdmissions";
 import ContactSupport from "../../../components/ContactSupport";
 
@@ -41,7 +40,7 @@ const Meeting = () => {
                 Meeting Link
               </a>
             </div>
-            <RequirementsAccordion />
+            {/* <RequirementsAccordion /> */}
             <div className="row justify-end gap-3">
               <button onClick={toggleModal} className="text-btn self-end">
                 Reschedule Meeting

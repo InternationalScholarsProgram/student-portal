@@ -6,7 +6,7 @@ function ContactSupport() {
       <p>
         If you have any questions or concerns, please contact our support team.
       </p>
-      <Link className="primary-btn self-end" to="/create-ticket">Contact Support</Link>
+      <Link className="primary-btn self-end" to="/tickets/create-ticket">Contact Support</Link>
     </div>
   );
 }

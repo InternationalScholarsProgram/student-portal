@@ -2,6 +2,8 @@ type School = {
   course: string;
   id: string;
   school_id: string;
+  intake_start: string;
+  intake_end: string;
   school_name: string;
   web_link: string;
   program_name: string;
@@ -40,7 +42,8 @@ type Consent = {
   loan_id: number | null;
   sign_type: "digital" | "hand";
   URL: string;
-  signed: string | null; // Adjust based on actual data type (e.g., `string | null` if applicable)
+  description: string;
+  signed: string | null;
 };
 
 type UploadedDocument = {
@@ -55,24 +58,22 @@ type UploadedDocument = {
   status: number;
   reject_docname: string;
   item_name: string;
+  course: any;
 };
-
-type SchoolConsentDocument = {
-  school: School;
-  consent: Consent;
-  document: UploadedDocument | undefined;
-};
-
-type SchoolConsentDocumentArray = SchoolConsentDocument[] | undefined;
 
 interface DocRequirements {
   acronym?: string;
   description?: string;
   id: string;
+  consent: Consent | null; // Optional, used for consent documents
   item_name: string;
-  sample_link?: string;
+  sample_link: string;
   type?: string;
+  doc_id?: string;
+  docs: undefined | UploadedDocument | null;
+  uniqueId?: number; // Optional, used for unique identification in lists
 }
+
 interface TranscriptsProps {
   school_count: number;
   requirements: TranscriptsRequirementProps[];
@@ -102,13 +103,25 @@ type GPAReport = {
   gpa_status: number;
 };
 
+type UploadModalProps = {
+  open: boolean;
+  disabled: boolean;
+  row: DocRequirements;
+  onClose: () => void;
+  payload: {
+    intakeId?: number | null;
+    invalidateQuery: () => void;
+    applicationId: string;
+    proposed_course_id: string | number;
+  };
+};
+
 export type {
-  SchoolConsentDocument,
-  SchoolConsentDocumentArray,
   Consent,
   UploadedDocument,
   School,
   DocRequirements,
   TranscriptsProps,
   GPAReport,
+  UploadModalProps,
 };

@@ -135,7 +135,7 @@ const modules = [
   },
   {
     name: "Travel & Logistics",
-    to: "logistics",
+    to: "travel-logistics",
     icon: <FlightTakeoffOutlinedIcon />,
     subItems: [
       {

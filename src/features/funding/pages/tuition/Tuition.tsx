@@ -23,7 +23,7 @@ function Tuition() {
   // return <FundingAdvisory />;
   // return <OtherFundingSources />;
   // return <LoanApplication />;
-      return <ProvideSchoolFeedback />;
+      // return <ProvideSchoolFeedback />;
   switch (tuitionStatus) {
     case 0:
       return <ProvideSchoolFeedback />;

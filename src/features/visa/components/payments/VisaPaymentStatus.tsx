@@ -22,6 +22,7 @@ const ModalBtn = () => {
 
 function VisaPaymentStatus() {
   const { visaPayments, pastFeedbacks, visaBookingLink } = useVisa();
+  console.log(visaBookingLink, "visaBookingLink");
 
   const status = () => {
     switch (visaPayments?.status) {
@@ -38,7 +39,18 @@ function VisaPaymentStatus() {
       case 2:
         return (
           <section className="col gap-3">
-            <div className="mt-2 px-3">
+            <div className="col gap-2 mt-2 px-3">
+              <p>
+                Please use the following link to book your visa interview.{" "}
+                <Link
+                  to={visaBookingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-main px-1 font-semibold border-b-2 border-primary-main hover:scale-105"
+                >
+                  Book Visa Interview
+                </Link>
+              </p>
               {pastFeedbacks ? (
                 <p>
                   Since we covered the cost of your previous visa interview, we
@@ -53,18 +65,6 @@ function VisaPaymentStatus() {
                   visa expedite letter if needed.
                 </p>
               )}
-
-              <p>
-                Please use the following link to book your visa interview.{" "}
-                <Link
-                  to={visaBookingLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-main px-1 font-semibold border-b-2 border-primary-main hover:scale-105"
-                >
-                  Book Visa Interview
-                </Link>
-              </p>
             </div>
             <VisaTrainingStatus />
             <Expedite />

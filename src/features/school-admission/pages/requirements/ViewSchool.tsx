@@ -75,6 +75,13 @@ export default function ViewSchool(): JSX.Element {
   const closed = Boolean(
     schoolData?.id && new Date() > new Date(schoolData.intake_end)
   );
+
+  console.log("schoolData:", schoolData);
+  console.log("schoolData.application_status:", schoolData?.application_status);
+  console.log("requirementDocs status:", requirementDocs?.map((d) => d.docs?.status));
+  console.log("intake_end:", schoolData?.intake_end);
+  console.log("new Date(schoolData.intake_end):", new Date(schoolData.intake_end));
+  console.log("closed:", closed);
   return (
     <main>
       <div className="">
@@ -83,9 +90,9 @@ export default function ViewSchool(): JSX.Element {
           className="row-center gap-2 rounded-full p-2 shadow transition hover:text-primary-light"
         >
           <ArrowBackIcon fontSize="small" />
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-sm font-medium">Back&nbsp;</span>
         </button>
-        <div className="border-b">
+        <div className="border-b my-4">
           <h2>
             {schoolData?.school_name} — ({schoolData?.program_name})
           </h2>
@@ -96,7 +103,7 @@ export default function ViewSchool(): JSX.Element {
         </div>
 
         <div className="py-2">
-          <h3 className="title-sm text-primary-main">
+          <h3 className="title-sm mb-2 text-primary-main">
             Make school application
           </h3>
           <div className="col card sm:p-3 p-1">
@@ -111,6 +118,13 @@ export default function ViewSchool(): JSX.Element {
                   View Application Status
                 </Link>
               </p>
+            ) : closed ? (
+              <>
+                <p className="p-3">
+                  The intake period for this application {" "}
+                  <StatusChip type="rejected" label="closed" /> on <b>{formatDate(schoolData?.intake_end)}</b>. You can no longer submit an application.
+                </p>
+              </>
             ) : requirementDocs?.every((d) => d.docs?.status === 2) ? (
               <>
                 <p className="">
@@ -151,27 +165,29 @@ export default function ViewSchool(): JSX.Element {
         </div>
       </div>
 
-      <div className="my-2">
-        <div className="row justify-between items-center mb-3">
-          <h3 className="text-xl font-semibold">Required Documents</h3>
-          {disabled ? null : (
-            <PrimaryBorderBtn onClick={() => openModal(null)}>
-              Add Extra Document
-            </PrimaryBorderBtn>
-          )}
+      {closed ? null : (
+        <div className="my-2">
+          <div className="row justify-between items-center mb-3">
+            <h3 className="text-xl font-semibold">Required Documents</h3>
+            {disabled ? null : (
+              <PrimaryBorderBtn onClick={() => openModal(null)}>
+                Add Extra Document
+              </PrimaryBorderBtn>
+            )}
+          </div>
+          <GridTable
+            name="requirements"
+            rows={requirementDocs}
+            loading={isLoading}
+            columns={columns(openModal)}
+            pageSizeOptions={[20, -1]}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 20 } },
+            }}
+            getRowId={(row) => row.uniqueId}
+          />
         </div>
-        <GridTable
-          name="requirements"
-          rows={requirementDocs}
-          loading={isLoading}
-          columns={columns(openModal)}
-          pageSizeOptions={[20, -1]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 20 } },
-          }}
-          getRowId={(row) => row.uniqueId}
-        />
-      </div>
+      )}
 
       <UploadModal
         open={modalOpen}

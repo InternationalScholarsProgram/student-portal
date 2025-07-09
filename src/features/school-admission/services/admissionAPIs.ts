@@ -7,7 +7,7 @@ import {
 } from "../../../utils/utils";
 import axios from "axios";
 
-const url = `${baseDirectory}/school_application/`;
+const url = `${baseDirectory}school_application`;
 const admissionsUrl = `${url}/school_admission.php`;
 
 class AdmissionAPIs {

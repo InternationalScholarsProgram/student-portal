@@ -82,11 +82,12 @@ function useVisa() {
   const sevisPayments = status?.value?.payments.sevis as SevisFeePayment;
   const feedback = status?.value?.feedback as FeedBack;
   const pastFeedbacks = status?.value?.pastFeedbacks as FeedBack[];
+  const countries = status?.value?.countries || [];
   const visaBookingLink =
-    status?.value?.countries.find(
-      (country: any) => country?.name === ds160Review?.current_country
-    )?.embassy_link || "";
-  // console.log(proposedSchools, "schools");
+    countries.find(
+      (country: any) => country?.name === ds160Review?.visa_interview_country
+    )?.embassy_link || null;
+  console.log(visaBookingLink, countries, "schools");
 
   return {
     user,

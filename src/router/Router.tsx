@@ -1,14 +1,7 @@
 import { lazy } from "react";
-import {
-  BrowserRouter,
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import PageLayout from "../styles/layouts/PageLayout";
 import Visa from "../features/visa/Visa";
-import Test from "./Test";
 import Tuition from "../features/funding/pages/tuition/Tuition";
 import Relocation from "../features/funding/pages/relocation/Relocation";
 import Alternative from "../features/funding/pages/alternative/Alternative";
@@ -108,10 +101,6 @@ function Router() {
                 <Route path="personal" element={<Personal />} />
               </Route>
 
-              <Route path="flights" element={<Flights />} />
-              <Route path="test" element={<Test />} />
-              <Route path="visa-processing" element={<Visa />} />
-
               <Route path="/finances" element={<Outlet />}>
                 <Route path="make-payments">
                   <Route index element={<MakePayments />} />
@@ -151,16 +140,20 @@ function Router() {
                   element={<ViewSchool />}
                 />
               </Route>
+              <Route path="visa-processing" element={<Visa />} />
+
+              <Route path="/travel-logistics" element={<Outlet />}>
+                <Route path="flights" element={<Flights />} />
+                <Route path="accommodations" element={<CommingSoon />} />
+                <Route path="pick-up" element={<CommingSoon />} />
+              </Route>
 
               <Route
                 path="*"
                 element={
-                  <div
-                    className="h-[50vh] col-center"
-                    children={
-                      <ErrorElement error={{ message: "Page not found" }} />
-                    }
-                  />
+                  <div className="h-[50vh] col-center">
+                    <ErrorElement error={{ message: "Page not found" }} />
+                  </div>
                 }
               />
             </Route>
@@ -172,3 +165,10 @@ function Router() {
 }
 
 export default Router;
+const CommingSoon = () => {
+  return (
+    <div className="h-[50vh] col-center">
+      <ErrorElement error={{ message: "Comming soon" }} />
+    </div>
+  );
+};

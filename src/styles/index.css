@@ -1,0 +1,22 @@
+@import url("https://fonts.cdnfonts.com/css/century-gothic-paneuropean");
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'global.css';
+
+
+/* Global font styles */
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark; /* Specify color scheme */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto;
+}
+
+body * {
+  font-family: "Century Gothic", sans-serif;
+}

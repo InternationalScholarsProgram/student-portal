@@ -1,0 +1,318 @@
+@import "custom-utilities.css";
+@import "../pathways/tickets/tickets.css";
+@import "../components/loaders/loaders.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.test-imports {
+  @apply dark:bg-test;
+}
+
+/* === Sidebar (desktop) — layout + gradient combined === */
+.sidebar {
+  /* layout / visibility */
+  @apply hidden lg:flex lg:min-w-[27vw] xl:min-w-[22vw] h-screen-dvh;
+
+  /* look & feel */
+  @apply relative bg-gradient-to-b from-blue-950 via-blue-900 to-indigo-900
+         text-blue-50 border-r border-white/10 shadow-lg;
+}
+
+/* subtle amber wash on top */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(252, 211, 77, 0.07),
+    rgba(252, 211, 77, 0) 30%
+  );
+}
+
+/* make sure inner content sits above the wash */
+.sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Content shell */
+.content-container {
+  @apply bg-paper content-width drop-shadow-2xl shadow-2xl px-2 outline outline-1 outline-color rounded-md flex flex-col items-center;
+}
+.content-container main {
+  @apply w-full mx-auto sm:p-2;
+}
+
+/* Headers */
+.headers {
+  @apply flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between w-full;
+}
+.header-title {
+  @apply text-xl sm:text-2xl lg:text-3xl font-semibold px-4 py-2;
+}
+.section-title {
+  @apply text-lg font-medium text-primary-main;
+}
+
+/* === Sidebar rows (links & headers) === */
+
+/* base link row */
+.sidebar-link {
+  @apply w-full justify-start p-2 text-sm flex items-center gap-3 rounded-md
+         text-blue-100 transition-colors;
+}
+
+/* hover: subtle emerald → lime → amber blend */
+.sidebar-link:hover {
+  background-image: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.18),
+    rgba(163, 230, 53, 0.12),
+    rgba(252, 211, 77, 0.10)
+  );
+  @apply text-white ring-1 ring-emerald-400/30;
+}
+/* Mobile Drawer Sidebar: same gradient/look, but VISIBLE on small screens */
+.sidebar--drawer {
+  /* visible + layout */
+  @apply flex w-[60vw] sm:max-w-[40vw] lg:max-w-[35vw] h-screen-dvh;
+
+  /* look & feel to match desktop sidebar */
+  @apply relative bg-gradient-to-b from-blue-950 via-blue-900 to-indigo-900
+         text-blue-50 border-r border-white/10 shadow-lg;
+}
+
+.sidebar--drawer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(252, 211, 77, 0.07),
+    rgba(252, 211, 77, 0) 30%
+  );
+}
+.sidebar--drawer > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* active route */
+.portal-sidebar-ul a.active-link {
+  background-image: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.28),
+    rgba(163, 230, 53, 0.18),
+    rgba(252, 211, 77, 0.14)
+  );
+  @apply text-white ring-1 ring-emerald-400/40;
+}
+
+/* list container + text */
+.portal-sidebar-ul {
+  @apply px-[3%] sm:px-[6%] text-xs flex flex-col;
+}
+/* ensure all <a> items get the row style */
+.portal-sidebar-ul a {
+  @apply sidebar-link;
+}
+.portal-sidebar-ul p {
+  @apply text-left truncate;
+}
+
+/* Divider label over dark bg */
+.portal-sidebar-ul li.my-5 p {
+  @apply text-[10px] uppercase tracking-wider text-blue-200/70 px-2;
+}
+
+/* caret button (no extra borders) */
+.caret-btn {
+  @apply ml-1 px-2 py-1 text-sm text-blue-200 hover:text-white bg-transparent;
+}
+
+/* Profile */
+.profile {
+  @apply w-full;
+}
+.profile section {
+  @apply w-full card px-10 py-2 my-3;
+}
+.profile section h2 {
+  @apply section-title border-b-2 border-b-light-background-paper dark:border-b-dark-background-paper;
+}
+.profile-info {
+  @apply flex flex-row flex-wrap w-full;
+}
+.profile-info div {
+  @apply flex flex-col w-full sm:w-1/2 p-3;
+}
+.profile-info p {
+  @apply font-medium first-letter:uppercase;
+}
+.profile-info span {
+  @apply opacity-50 font-normal;
+}
+.documents {
+  @apply flex flex-row flex-wrap w-full items-center justify-center gap-2;
+}
+.documents button {
+  @apply p-2 border-2 border-dark-background-paper/30 dark:border-light-background-paper/30 dark:hover:bg-dark-background-paper
+   hover:bg-light-background-paper rounded-lg w-fit;
+}
+
+/* Fundings */
+.funding-details {
+  @apply flex flex-col p-1 sm:p-3;
+}
+.funding-details section {
+  @apply flex flex-col w-full gap-2;
+}
+.funding-details button {
+  @apply self-end w-fit;
+}
+
+/* Resources */
+.ul-links {
+  @apply flex flex-row flex-wrap items-center gap-2 mb-4;
+}
+.ul-links * {
+  @apply first-letter:uppercase p-2 rounded-sm text-base text-center;
+}
+.ul-links .selected {
+  @apply text-primary-light border-b border-primary-main;
+}
+
+.table-toolbar {
+  @apply flex flex-col py-1 px-3 gap-4;
+}
+.table-toolbar button {
+  @apply outline outline-none hover:outline-1 hover:outline-primary-main rounded-sm  px-2;
+}
+
+.text {
+  @apply text-sm sm:text-base;
+}
+p {
+  @apply text;
+}
+
+.scrollbar-scheme * {
+  @apply dark:scrollbar-dark scrollbar-light;
+}
+
+.pulsate-fwd {
+  animation: pulsate-fwd 0.5s ease-in-out infinite both;
+}
+@keyframes pulsate-fwd {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Contract print safety */
+.contract {
+  @apply col mx-1 gap-3;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.contract div {
+  @apply col gap-2;
+  page-break-before: auto;
+}
+.contract p,
+.contract span,
+.contract b,
+.contract h5,
+.contract li,
+.contract ul,
+.contract ol {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+.contract h5 {
+  @apply font-semibold;
+}
+.contract ul {
+  @apply mx-3 p-3 pl-5 list-disc list-inside;
+}
+
+/* Modal */
+.modal {
+  @apply w-[80vw] md:w-[60vw] xl:w-[50vw] max-h-[80vh] overflow-y-auto col p-3;
+}
+
+/* Titles */
+.title {
+  @apply text-xl sm:text-2xl font-semibold;
+}
+.title-sm {
+  @apply opacity-70 sm:text-lg font-semibold;
+}
+
+/* Alerts */
+.alert {
+  @apply border-l-4 border-primary-main drop-shadow-lg shadow-lg p-2;
+}
+.alert-error {
+  @apply border-l-4 border-red-500 bg-error-main/5 drop-shadow-lg shadow-lg p-4 text-error-main;
+}
+
+/* Transcripts */
+.transcript-details {
+  @apply col gap-2;
+}
+.transcript-details p {
+  @apply font-semibold opacity-85;
+}
+.transcript-details span {
+  @apply px-2 opacity-75 font-normal;
+}
+
+/* Forms */
+.form-group {
+  @apply col justify-between;
+}
+.form-group label {
+  @apply text-sm sm:text-base mb-1;
+}
+.row-buttons {
+  @apply row gap-3 items-center justify-center;
+}
+.row-buttons button {
+  @apply primary-btn;
+}
+.form-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-10;
+}
+.form-grid > div {
+  @apply col justify-between;
+}
+
+/* Data table (legacy) */
+.data-table {
+  @apply col;
+}
+.data-table div {
+  @apply grid grid-cols-2 hover:bg-slate-400;
+}
+.data-table p {
+  @apply border-30 p-2;
+}
+
+/* Resource card */
+.resource {
+  @apply drop-shadow-md shadow-lg rounded-md col p-3 overflow-clip;
+}
+.resource .arrow {
+  @apply self-end bg-paper p-1 rounded-md;
+}
+.resource:hover .arrow {
+  @apply bg-primary-light/50;
+}

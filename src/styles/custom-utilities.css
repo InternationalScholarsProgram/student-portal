@@ -1,0 +1,149 @@
+@layer utilities {
+  .row {
+    @apply flex flex-row;
+  }
+  .row-center {
+    @apply flex flex-row items-center justify-center;
+  }
+  .col {
+    @apply flex flex-col;
+  }
+  .col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+  .bg-test {
+    @apply dark:bg-[#a144fefb] bg-light-background-paper;
+  }
+  .test-border {
+    @apply border-4 border-red-500;
+  }
+  .test-borders {
+    @apply border border-green-500;
+  }
+
+  .bg-paper {
+    @apply dark:bg-dark-background-paper bg-light-background-paper;
+  }
+  .bg-paper-50 {
+    @apply dark:bg-dark-background-paper/50 bg-light-background-paper/50;
+  }
+  .bg-default {
+    @apply dark:bg-dark-background-default bg-light-background-default;
+  }
+  .outline-color {
+    @apply outline-light-background-paper dark:outline-dark-background-paper;
+  }
+  .content-width {
+    @apply w-full max-w-[100vw] sm:max-w-[560px] md:max-w-[768px] lg:max-w-[800px] xl:max-w-[900px] mx-auto my-4;
+  }
+  .card {
+    @apply bg-default outline outline-1 outline-color drop-shadow-lg shadow-lg rounded-md space-y-2;
+  }
+
+  .border-30 {
+    @apply border dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-b-30 {
+    @apply border-b dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-t-30 {
+    @apply border-t dark:border-light-background-paper/30 border-dark-background-paper/30;
+  }
+  .border-b-30 {
+    @apply border-b dark:border-b-light-background-paper border-b-dark-background-paper;
+  }
+  .btn {
+    @apply p-2 sm:py-2 sm:px-3 text-center rounded-md w-fit;
+  }
+  .btn-sm {
+    @apply p-0 text-center rounded-md w-1/2;
+  }
+}
+@layer components {
+  .primary-btn {
+    @apply bg-primary-main text-white  rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .secondary-btn {
+    @apply bg-secondary-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .primary-border-btn {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main btn;
+  }
+  .warning-btn {
+    @apply bg-error-main text-white rounded-md hover:outline hover:outline-2 
+    dark:hover:outline-light-background-paper/50 btn;
+  }
+  .text-btn {
+    @apply hover:outline hover:outline-2 text-primary-light  btn;
+  }
+  .btn-outline {
+    @apply outline outline-2 outline-primary-main dark:hover:outline-light-background-paper/50 
+    hover:text-white hover:bg-primary-main;
+  }
+  .table-btn {
+    @apply btn-outline rounded cursor-pointer p-1 px-2;
+  }
+  .disabled-btn {
+    @apply opacity-60 cursor-default btn;
+  }
+  /* Hide scrollbar */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+
+  /* Dark theme scrollbar */
+  .scrollbar-dark * {
+    scrollbar-color: #24303f #1a222c;
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar * {
+    @apply w-3;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-track * {
+    @apply bg-[#1a222c];
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb * {
+    @apply bg-[#24303f] rounded-lg border-2 border-[#1a222c];
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover* {
+    @apply bg-[#297fdb];
+  }
+  .scrollbar-dark::-webkit-scrollbar-track:hover * {
+    @apply bg-[#297fdb];
+    background-color: aqua;
+  }
+
+  /* Light theme scrollbar */
+  .scrollbar-light * {
+    scrollbar-width: thin;
+    scrollbar-color: #ffffff #f6f6f6;
+  }
+
+  .scrollbar-light::-webkit-scrollbar {
+    @apply w-3;
+  }
+
+  .scrollbar-light::-webkit-scrollbar-track {
+    @apply bg-[#f6f6f6];
+  }
+
+  .scrollbar-light::-webkit-scrollbar-thumb {
+    @apply bg-[#ffffff] rounded-lg border-2 border-[#f6f6f6];
+  }
+
+  .scrollbar-light::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#e0e0e0];
+  }
+}

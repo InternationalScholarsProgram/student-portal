@@ -1,0 +1,27 @@
+import { useState } from "react";
+import OnboardingSteps from "./components/OnboardingSteps";
+import CreatingMBA from "./components/CreatingMBA";
+import CreatingETS from "./components/CreatingETS";
+import TopTab from "../../components/TopTab";
+
+const resources = ["Onboarding", "MBA account", "ETS account"];
+
+function Resources() {
+  const [show, setShow] = useState(resources[0]);
+  return (
+    <main className="">
+      <TopTab tabs={resources} activeTab={show} setActiveTab={setShow} />
+      <section className="card py-3 col">
+        {show === resources[0] ? (
+          <OnboardingSteps />
+        ) : show === resources[1] ? (
+          <CreatingMBA />
+        ) : (
+          <CreatingETS />
+        )}
+      </section>
+    </main>
+  );
+}
+
+export default Resources;

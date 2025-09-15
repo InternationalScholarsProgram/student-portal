@@ -16,6 +16,8 @@ import ViewSchool from "../pathways/academic/school-admission/pages/requirements
 import Login from "../pathways/user/Login";
 import AcademicDashboard from "../pathways/academic/dashboard/AcademicDashboard";
 import VocationalDashboard from "../pathways/vocational/VocationalDashboard";
+import PermanentResidencyDashboard from "../pathways/permanentResidency/dashboard/PermanentResidencyDashboard";
+import CulturalExchangeDashboard from "../pathways/cultural-exchange/dashboard/CulturalExchangeDashboard";
 
 // Layouts
 const PortalLayout = lazy(() => import("../styles/layouts/PortalLayout"));
@@ -142,9 +144,17 @@ function Router() {
                   element={<ViewSchool />}
                 />
               </Route>
+              
+              <Route path="/pathways/permanent-residency/permanentDashboard" element={<PermanentResidencyDashboard />} />
+
+                
               <Route
                 path="/pathways/academic/academicDashboard"
                 element={<AcademicDashboard />}
+              />
+              <Route
+                path="/pathways/cultural-exchange/culturalDashboard"
+                element={<CulturalExchangeDashboard />}
               />
               <Route path="visa-processing" element={<Visa />} />
 

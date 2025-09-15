@@ -24,7 +24,7 @@ function SchoolApplication() {
           requirements first
         </p>
         <Link
-          to="/school-admission/requirements"
+          to="/pathways/academic/school-admission/requirements"
           className="primary-btn self-end"
         >
           Go to Requirements Page

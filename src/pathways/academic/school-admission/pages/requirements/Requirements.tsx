@@ -1,6 +1,5 @@
 import Guides from "../../components/Guides";
-import Loader, {
-  InlineLoader,
+import {
   SkeletonLoader,
 } from "../../../../../components/loaders/Loader";
 import BookMeeting from "../../components/BookMeeting";

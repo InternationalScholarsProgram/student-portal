@@ -113,7 +113,7 @@ export default function ViewSchool(): JSX.Element {
                 school. <br />
                 <Link
                   className="text-primary-main"
-                  to={`/school-admission/application`}
+                  to={`/pathways/academic/school-admission/application`}
                 >
                   View Application Status
                 </Link>

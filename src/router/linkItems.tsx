@@ -137,6 +137,11 @@ const pathways = [
     to: "pathways/cultural-exchange",
     icon: <FlightTakeoffOutlinedIcon />,
     subItems: [
+      {
+        name: "dashboard",
+        to: "culturalDashboard",
+        icon: <DashboardOutlinedIcon />,
+      },
       { name: "Orientation", to: "orientation" },
       { name: "Placement", to: "placement" },
       { name: "Document Upload", to: "document-upload" },
@@ -152,6 +157,11 @@ const pathways = [
     to: "pathways/permanent-residency",
     icon: <BookOutlinedIcon />,
     subItems: [
+      {
+        name: "dashboard",
+        to: "permanentDashboard",
+        icon: <DashboardOutlinedIcon />,
+      },
       {
         name: "EB-2 NIW",
         to: "eb2-niw",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import useAdmissions from "../../../services/useAdmissions";
 import { useMutation } from "@tanstack/react-query";
 import { admissionAPIs } from "../../../services/admissionAPIs";
-import InputField, {
+import  {
   InputsWithLabel,
 } from "../../../../../../components/inputs/InputField";
 import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";

@@ -33,17 +33,14 @@ class AdmissionAPIs {
       throw new Error(error.response.data);
     }
   };
-  checkMeetingStatus = async () => {
-    try {
-      const response = await api.post(admissionsUrl, {
-        action: "check_meeting_status",
-      });
-      return response.data;
-    } catch (error: any) {
-      console.log(error.response.data);
-      throw new Error(error.response.data);
-    }
-  };
+  checkMeetingStatus = async (email: string) => {
+  const res = await api.post(
+    `${admissionsUrl}?student_id=${encodeURIComponent(email)}`,
+    { action: "check_meeting_status" }
+  );
+  return res.data;
+};
+
   applicationDocs = async (schoolId?: string, courseId?: string) => {
     const response = await api.get(
       `${url}/fetch_school_app_docs_requirements.php?school_id=${schoolId}&program_id=${courseId}`

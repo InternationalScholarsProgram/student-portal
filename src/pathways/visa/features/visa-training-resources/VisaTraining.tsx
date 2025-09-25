@@ -8,6 +8,7 @@ import TrainingVideosModal from "./TrainingVideosModal";
 import { useMutation } from "@tanstack/react-query";
 import visaEndpoints from "../../services/visaEndpoints";
 import ContentComponent from "../../../../components/ContentComponent";
+import Expedite from "../../features/expedite/Expedite";
 
 type keys = "transcripts" | "videos" | "supportDocuments";
 
@@ -80,6 +81,7 @@ function VisaTraining() {
             toggleModal={() => toggleModal("videos")}
             updateCounter={updateCounter}
           />
+          <Expedite />
         </div>
       )}
     </div>

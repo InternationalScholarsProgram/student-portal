@@ -28,7 +28,7 @@ const ProgramConditions = () => {
             all necessary details to facilitate the process.
           </p>
           <Link
-            to="/create-ticket"
+            to="/tickets/create-ticket"
             state={{
               reason: "Switch Program contribution",
             }}

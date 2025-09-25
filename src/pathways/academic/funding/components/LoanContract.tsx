@@ -1,9 +1,4 @@
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-} from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import PrimaryBtn from "../../../../components/buttons/PrimaryBtn";
 import useFetchUser from "../../../../services/hooks/useFetchUser";
@@ -21,7 +16,7 @@ import Address from "../../../../components/letters/Address";
 import dayjs from "dayjs";
 import SimpleTable from "../../../../components/tables/SimpleTable";
 import BobSignatory from "../../../../components/letters/BobSignatory";
-import { GridColDef } from "@mui/x-data-grid";
+import type { GridColDef } from "@mui/x-data-grid";
 import { getLoanType } from "../utils";
 import fundingEndpoints from "../services/fundingEndpoints";
 import { InlineLoader } from "../../../../components/loaders/Loader";
@@ -34,6 +29,13 @@ type Props = {
   loan: any;
   application: any;
   loanType: number;
+};
+
+type GeneratedPdf = {
+  blob: any;
+  doc: File;
+  instance: any;
+  name: string;
 };
 
 const LoanContract: React.FC<Props> = ({
@@ -55,11 +57,11 @@ const LoanContract: React.FC<Props> = ({
     select: (response) => {
       const data = response?.data?.data;
       return data
-        ?.map((row: any) => ({
+        ?.map((row: any, idx: number) => ({
           ...row,
-          no: row.id - 1,
+          no: typeof row.no !== "undefined" ? row.no : idx,
         }))
-        .slice(1);
+        ?.slice(1);
     },
   });
 
@@ -70,28 +72,35 @@ const LoanContract: React.FC<Props> = ({
 
   const [isSigned, setIsSigned] = useState(false);
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
+  const toggleModal = () => setOpen((v) => !v);
   const targetRef = React.useRef<HTMLDivElement>(null);
 
-  const pdf = async () => {
-    if (!targetRef?.current) return;
-    const doc = await generatePdf("OfferLetter", targetRef.current, true);
-    return doc.doc;
+  const buildPdfFile = async (): Promise<File> => {
+    if (!targetRef.current) {
+      throw new Error("Missing contract node to render.");
+    }
+    const result = await generatePdf("OfferLetter", targetRef.current, true);
+    if (!result || result instanceof Error || !(result as any).doc) {
+      throw new Error("Failed to generate PDF.");
+    }
+    return (result as GeneratedPdf).doc;
   };
 
   const signContract = useMutation({
     mutationFn: async () => {
       if (!ipData) throw new Error("Failed to fetch IP data.");
+
       setIsSigned(true);
-      const doc = await pdf();
-      if (!doc) throw new Error("Failed to generate PDF.");
+
+      const contractFile = await buildPdfFile();
+
       const payload = {
         ip: ipData.ip,
         city: ipData?.city,
         country_name: ipData?.country_name,
         loan_id: loan?.loan_id,
         stu_name: loan?.fullnames,
-        contract: doc,
+        contract: contractFile,
         loan_type: loanType,
       };
       return fundingEndpoints.signContract(payload);
@@ -101,8 +110,9 @@ const LoanContract: React.FC<Props> = ({
       onSuccess();
       toggleModal();
     },
-    onError: (error) => {
-      toast.error(errorMsg(error));
+    onError: (err) => {
+      toast.error(errorMsg(err));
+      setIsSigned(false);
     },
   });
 
@@ -110,20 +120,24 @@ const LoanContract: React.FC<Props> = ({
 
   if (isLoading) return <InlineLoader />;
   if (error) return <AxiosError error={error} />;
+
   return (
     <>
       <PrimaryBtn onClick={toggleModal} className="self-end">
         View Contract
       </PrimaryBtn>
+
       <Modal title="Loan Contract" open={open} setOpen={toggleModal}>
         <div className="w-[95vw] md:w-[80vw] xl:w-[70vw] h-[80vh] p-2 overflow-y-auto">
           <div ref={targetRef} className="col w-full">
             <LetterHead />
             <Address email=" " />
+
             <article className="py-3 col gap-2">
               <b className="underline uppercase">
                 RE: {loanName} Loan Contract
               </b>
+
               <section className="col gap-3">
                 <b>
                   This {loanName} loan agreement dated {formatDate(new Date())}.
@@ -131,7 +145,7 @@ const LoanContract: React.FC<Props> = ({
                 <span>BETWEEN</span>
                 <p>
                   <b>The International Scholars Program</b> of 100 S Ashley
-                  Drive, Suite 600, Tampa, FL, 33602("the lender") and
+                  Drive, Suite 600, Tampa, FL, 33602 ("the lender") and
                   <b> {loan?.fullnames}</b> of {application?.usa_address} ("the
                   borrower").
                 </p>
@@ -141,16 +155,17 @@ const LoanContract: React.FC<Props> = ({
                   loan to the lender, the parties agree to keep, perform, and
                   fulfill the promises and conditions set out in this agreement.
                 </p>
+
                 <div className="col gap-3 p-3">
                   <div className="col gap-2">
                     <h5>LOAN AMOUNT & INTEREST</h5>
                     <p>
-                      1. The lender promises to loan{" "}
-                      <b> USD {loan?.principal}</b> to the borrower to cover for
-                      school fees and the borrower promises to repay this
-                      principal amount to the lender, paying on the unpaid
-                      principal amount at the rate of <b>12%</b> per annum,
-                      beginning on {formatDate(loan?.maturity_date)}.
+                      1. The lender promises to loan <b>USD {loan?.principal}</b>{" "}
+                      to the borrower to cover for school fees and the borrower
+                      promises to repay this principal amount to the lender,
+                      paying on the unpaid principal amount at the rate of{" "}
+                      <b>12%</b> per annum, beginning on{" "}
+                      {formatDate(loan?.maturity_date)}.
                     </p>
                   </div>
 
@@ -158,7 +173,7 @@ const LoanContract: React.FC<Props> = ({
                   <p>
                     2. This loan will be repaid in consecutive monthly
                     installments of principal and interest commencing on{" "}
-                    <b> {formatDate(loan?.maturity_date)}.</b> and continuing by
+                    <b> {formatDate(loan?.maturity_date)}</b> and continuing by
                     the 5th day of each following month until{" "}
                     <b>
                       {formatDate(dayjs(loan?.maturity_date).add(5, "month"))}
@@ -171,6 +186,7 @@ const LoanContract: React.FC<Props> = ({
                     balance then owing under this agreement to the lender
                     without further bonus or penalty.
                   </p>
+
                   <h5>DEFAULT</h5>
                   <p>
                     4. Notwithstanding anything to the contrary in this
@@ -184,11 +200,13 @@ const LoanContract: React.FC<Props> = ({
                     within 5 business days, the borrower will be charged a{" "}
                     <b>30.00 USD</b> late fee.
                   </p>
+
                   <h5>GOVERNING LAW</h5>
                   <p>
                     6. This agreement will be construed in accordance with and
                     governed by the laws of the state of Florida.
                   </p>
+
                   <h5>COSTS</h5>
                   <p>
                     7. The borrower shall be liable for all costs, expenses and
@@ -199,6 +217,7 @@ const LoanContract: React.FC<Props> = ({
                     and shall be due and payable by the borrower to the lender
                     immediately upon demand of the lender.
                   </p>
+
                   <h5>BINDING EFFECT</h5>
                   <p>
                     8. This agreement will pass to the benefit of and be binding
@@ -207,12 +226,14 @@ const LoanContract: React.FC<Props> = ({
                     The borrower waives presentment for payment, notice of
                     non-payment, protest and notice of protest.
                   </p>
+
                   <h5>AMENDMENTS</h5>
                   <p>
                     9. This agreement may only be amended or modified by a
                     written instrument executed by both the borrower and the
                     lender.
                   </p>
+
                   <h5>SEVERABILITY</h5>
                   <p>
                     10. The clauses and paragraphs contained in this agreement
@@ -226,6 +247,7 @@ const LoanContract: React.FC<Props> = ({
                     the provisions of this agreement will in no way be affected,
                     impaired or invalidated as a result.
                   </p>
+
                   <h5>GENERAL PROVISIONS</h5>
                   <p>
                     11. Headings are inserted for the convenience of the parties
@@ -234,6 +256,7 @@ const LoanContract: React.FC<Props> = ({
                     and vice versa. Words in the masculine mean and include the
                     feminine and vice versa.
                   </p>
+
                   <h5>ENTIRE AGREEMENT</h5>
                   <p>
                     12. This agreement constitutes the entire agreement between
@@ -278,6 +301,7 @@ const LoanContract: React.FC<Props> = ({
                       </div>
                     </table>
                   </div>
+
                   <div className="col gap-2">
                     <b>NEXT OF KIN DETAILS</b>
                     <table className="data-table">
@@ -301,10 +325,11 @@ const LoanContract: React.FC<Props> = ({
                       </div>
                     </table>
                   </div>
+
                   <div className="col gap-2">
                     <b>EMPLOYMENT DETAILS</b>
                     <table className="data-table">
-                      {application?.employment_status.toString() === "1" ? (
+                      {String(application?.employment_status) === "1" ? (
                         <>
                           <div>
                             <p>Current Employer Name</p>
@@ -328,15 +353,14 @@ const LoanContract: React.FC<Props> = ({
                     </table>
                   </div>
                 </div>
+
                 <p className="title-sm">Loan details</p>
                 <div className="col gap-1">
                   <p>
-                    Approved Loan Amount -{" "}
-                    <b>{formatCurrency(loan?.principal)}</b>
+                    Approved Loan Amount - <b>{formatCurrency(loan?.principal)}</b>
                   </p>
                   <p>
-                    Origination Fee -{" "}
-                    <b>{formatCurrency(loan?.origination_fee)}</b>
+                    Origination Fee - <b>{formatCurrency(loan?.origination_fee)}</b>
                   </p>
                   <p>
                     Loan Amount to be Disbursed (USD) -{" "}
@@ -344,14 +368,14 @@ const LoanContract: React.FC<Props> = ({
                   </p>
                   <p>
                     Loan repayment start date -{" "}
-                    <b>{formatDate(loan.maturity_date)}</b>
+                    <b>{formatDate(loan?.maturity_date)}</b>
                   </p>
                   <p>
                     Total Payable Amount -{" "}
-                    <b>{formatCurrency(loan.total_payable)}</b>
+                    <b>{formatCurrency(loan?.total_payable)}</b>
                   </p>
                   <p>
-                    Months - <b>{loan.term} months</b>
+                    Months - <b>{loan?.term} months</b>
                   </p>
                 </div>
 
@@ -360,11 +384,13 @@ const LoanContract: React.FC<Props> = ({
                   <SimpleTable columns={columns} rows={repaymentSchedule} />
                 </div>
               </section>
+
               <section className="col gap-3">
                 <p>
                   <b>IN WITNESS WHEREOF, </b>the parties have duly affixed their
                   signatures on <em>{formatDate(new Date())}.</em>
                 </p>
+
                 <div className="col ">
                   <p>
                     SIGNED AND DELIVERED this
@@ -373,6 +399,7 @@ const LoanContract: React.FC<Props> = ({
                   </p>
                   <BobSignatory />
                 </div>
+
                 <div className="col">
                   <p>
                     SIGNED AND DELIVERED this
@@ -394,7 +421,7 @@ const LoanContract: React.FC<Props> = ({
                       )}
                       <p className="col">
                         <b>{loan?.fullnames}</b>
-                        <b>{application.usa_address}</b>
+                        <b>{application?.usa_address}</b>
                       </p>
                     </div>
                   </div>
@@ -405,6 +432,7 @@ const LoanContract: React.FC<Props> = ({
             <p>FOR OFFICIAL USE ONLY</p>
             <p className="pb-3">{"  "}</p>
           </div>
+
           <FormFooterBtns
             onClose={toggleModal}
             onSubmit={onSubmit}
@@ -417,18 +445,21 @@ const LoanContract: React.FC<Props> = ({
 };
 
 export default LoanContract;
-const columns: GridColDef[] = [
+
+// 👇 Key change: help TS infer a non-'never' param by typing GridColDef with <any>
+// and the valueGetter param as `any`.
+const columns: GridColDef<any>[] = [
   {
     field: "no",
     headerName: "No",
-    width: 50,
-    valueGetter: (params) => params - 1,
+    width: 60,
   },
   {
     field: "maturity_date",
     headerName: "Maturity Date",
     flex: 1,
-    valueGetter: (params) => formatDate(new Date(params), "MMM D, YYYY"),
+    valueGetter: (params: any) =>
+      formatDate(new Date(params?.row?.maturity_date), "MMM D, YYYY"),
   },
   {
     field: "scheduled_payment",

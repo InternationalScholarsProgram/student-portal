@@ -12,6 +12,36 @@ import {
 } from "./UploadModalComponents";
 import FormFooterBtns from "../../../../../../components/buttons/FormFooterBtns";
 
+const ALLOWED_MIME_PREFIX = "image/";
+const ALLOWED_MIME_EXACT = "application/pdf";
+const ALLOWED_EXTENSIONS = new Set([
+  "pdf",
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "webp",
+  "bmp",
+  "tif",
+  "tiff",
+  "svg",
+  "heic",
+  "heif",
+]);
+
+function isAllowedFile(file: File | null): boolean {
+  if (!file) return false;
+  const type = (file.type || "").toLowerCase();
+  const name = (file.name || "").toLowerCase();
+  const ext = name.includes(".") ? name.split(".").pop() || "" : "";
+
+  const mimeOk = type === ALLOWED_MIME_EXACT || type.startsWith(ALLOWED_MIME_PREFIX);
+  const extOk = ALLOWED_EXTENSIONS.has(ext);
+
+  // Accept if either the MIME (reliable) or extension (fallback) is OK
+  return mimeOk || extOk;
+}
+
 const UploadModal = ({
   open,
   row,
@@ -41,25 +71,45 @@ const UploadModal = ({
       )?.toString() || "";
     setFile(null);
     setComment(docs?.comment ? docs?.comment : getComment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row]);
+
+  // Gate file selection to PDFs and images only
+  const handleSetFile = (f: File | null) => {
+    if (!f) {
+      setFile(null);
+      return;
+    }
+    if (!isAllowedFile(f)) {
+      toast.error("Only PDF and image files are allowed (PDF, PNG, JPG, JPEG, GIF, WEBP, BMP, TIF/TIFF, SVG, HEIC/HEIF).");
+      setFile(null);
+      return;
+    }
+    setFile(f);
+  };
 
   const upload = useMutation({
     mutationFn: (e: FormEvent) => {
       e.preventDefault();
+
+      // Double-check before submit
+      if (!isAllowedFile(file)) {
+        throw new Error(
+          "Invalid file type. Please upload a PDF or an image file."
+        );
+      }
+
       const data = {
         school_app_id: payload.applicationId,
         intake_id: payload.intakeId,
         doc_type_id: row?.id || "12",
         comment,
         action: docs?.document_name ? "update" : "upload",
-        ...(docs?.document_name
-          ? { current_doc_name: docs.document_name }
-          : {}),
+        ...(docs?.document_name ? { current_doc_name: docs.document_name } : {}),
         file,
-        ...(docs?.course?.id
-          ? { proposed_course_id: payload.proposed_course_id }
-          : {}),
+        ...(docs?.course?.id ? { proposed_course_id: payload.proposed_course_id } : {}),
       };
+
       return admissionAPIs.uploadFile(data);
     },
     onSuccess: () => {
@@ -71,6 +121,7 @@ const UploadModal = ({
   });
 
   if (!open) return null;
+
   return (
     <Modal title={title} open={open} setOpen={onClose}>
       <div className="col p-3 w-[80vw] sm:w-[65vw] lg:w-[50vw] xl:w-[38vw]">
@@ -79,15 +130,13 @@ const UploadModal = ({
         <form onSubmit={upload.mutate} className="col gap-2 py-2">
           <FileUploadSection
             row={row}
-            setFile={setFile}
+            setFile={handleSetFile}  // <-- use the guarded setter
             comment={comment}
             setComment={setComment}
           />
           <FormFooterBtns
             onClose={onClose}
-            btnText={
-              upload.isPending ? "Uploading..." : docs ? "Update" : "Upload"
-            }
+            btnText={upload.isPending ? "Uploading..." : docs ? "Update" : "Upload"}
             disabled={upload.isPending || !file}
             hideBtn={hideBtn}
           />

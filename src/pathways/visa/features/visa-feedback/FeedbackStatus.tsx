@@ -13,13 +13,11 @@ function FeedbackStatus() {
     () => <RenderStatus feedback={feedback} />,
     [feedback]
   );
-  return <ProvideVisaFeedback />;
 
   return <div className="my-2">{renderStatus()}</div>;
 }
 
 export default FeedbackStatus;
-
 
 function RenderStatus({ feedback }: any) {
   switch (feedback?.status) {
@@ -41,7 +39,7 @@ function RenderStatus({ feedback }: any) {
         <>
           <ContentComponent header="Your feedback needs your attention ⚠️">
             <p>
-              Unfortunately, your feedback submission has been **rejected**. 😞
+              Unfortunately, your feedback submission has been <strong>rejected</strong>. 😞
               Below, you’ll find the specific reason provided by our team.
               Please review it carefully.
             </p>
@@ -62,6 +60,7 @@ function RenderStatus({ feedback }: any) {
         </>
       );
     default:
+      // No feedback yet → show the form
       return <ProvideVisaFeedback />;
   }
 }

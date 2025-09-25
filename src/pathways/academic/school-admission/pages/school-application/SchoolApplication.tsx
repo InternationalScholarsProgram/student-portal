@@ -11,7 +11,7 @@ function SchoolApplication() {
 
   if (isLoading) return <InlineLoader />;
 
-  if (status?.code !== 5 || !proposedSchools)
+  if (status?.code == 5 || !proposedSchools)
     return (
       <ContentComponent header="Application Status">
         <p>

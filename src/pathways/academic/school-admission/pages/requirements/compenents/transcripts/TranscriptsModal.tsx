@@ -55,7 +55,7 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
 
             <p className="text-justify ">
               The International Scholars Program (ISP) is currently in the
-              process of verifying the academic transcripts submitted by{" "}
+              process of verifying the degree certificate and the academic transcripts submitted by{" "}
               <b>{user?.fullnames}</b>, who has informed us they attended your
               esteemed institution. The student is currently enrolled in ISP and
               seeking graduate study opportunities abroad.
@@ -78,8 +78,8 @@ const TranscriptsModal = ({ open, toggleModal }: ModalProps) => {
             </p>
             {transcripts.school_count > 0 && (
               <p>
-                Additionally, we request that you copy the following institution
-                in the same email:
+                Please also send the degree certificate and the transcripts directly to the following institution(s)
+                :
               </p>
             )}
             <ol className="mx-3 px-3 list-decimal">

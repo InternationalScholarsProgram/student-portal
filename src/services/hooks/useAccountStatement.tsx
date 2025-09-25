@@ -5,6 +5,7 @@ const url = `${baseDirectory}fetch_statement.php`;
 
 function useAccountStatement() {
   const { user, isLoading: userLoading } = useFetchUser();
+
   const {
     data: accountStatements,
     isLoading,
@@ -15,9 +16,16 @@ function useAccountStatement() {
     enabled: !!user?.email,
     select: (response) => {
       const data = response?.data;
+
+      // ⬇️ normalize to numbers so balance is always a number
+      const total_payment = Number(data?.total_payment ?? 0);
+      const total_expenditure = Number(data?.total_expenditure ?? 0);
+
       return {
         ...data,
-        balance: data?.total_payment - data?.total_expenditure,
+        total_payment,
+        total_expenditure,
+        balance: total_payment - total_expenditure,
       } as Statements;
     },
   });
@@ -32,6 +40,7 @@ function useAccountStatement() {
 }
 
 export default useAccountStatement;
+
 type Statements = {
   balance: number;
   message: string;

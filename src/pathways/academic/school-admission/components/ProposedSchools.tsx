@@ -49,7 +49,7 @@ function ProposedSchools() {
               <ToolTip title="View School">
                 <Link
                   className="text-primary-main w-fit"
-                  to={`/school-admission/requirements/view-school`}
+                  to={`/pathways/academic/school-admission/requirements/view-school`}
                   state={{
                     schoolId: params.row?.school_id,
                     courseId: params.row?.course,

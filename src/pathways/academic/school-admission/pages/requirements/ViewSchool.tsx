@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GridColDef } from "@mui/x-data-grid";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Skeleton, Stack } from "@mui/material";
 
 import UploadModal from "./compenents/UploadModal";
 import useAdmissions from "../../services/useAdmissions";
-import api from "../../../../../services/api/base";
 import GridTable from "../../../../../components/tables/GridTable";
 import PrimaryBorderBtn from "../../../../../components/buttons/PrimaryBorderBtn";
 import PrimaryBtn from "../../../../../components/buttons/PrimaryBtn";
 import useApplicationDocs from "../../services/useApplicationDocs";
 import StatusChip from "../../../../../components/StatusChip";
 import { formatDate } from "../../../../../utils/utils";
-import { Skeleton, Stack } from "@mui/material";
 import useGlobalStore from "../../../../../services/global.store";
 import { admissionAPIs } from "../../services/admissionAPIs";
 import { toast } from "react-toastify";
 import { errorMsg } from "../../../../../components/errors/errorMsg";
-import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function ViewSchool(): JSX.Element {
   const { state } = useLocation();
@@ -27,15 +25,54 @@ export default function ViewSchool(): JSX.Element {
   const [disabled, setDisabled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<any | null>(null);
+
+  // 🔔 NEW: local “instant UI” switch after submit
+  const [justSubmitted, setJustSubmitted] = useState(false);
+
+  const queryClient = useQueryClient();
+
   const { currentIntake, proposedSchools, schoolAppId } = useAdmissions();
   const { requirementDocs, invalidateQuery, isLoading } = useApplicationDocs(
     schoolId,
     courseId
   );
   const { setBreadCrumbsLabel } = useGlobalStore();
+  const navigate = useNavigate();
+
+  const schoolData = proposedSchools?.find((s) => s?.school_id === schoolId);
+
+  // ── Status detection (mirror GetApplicationStatus)
+  const rawAppStatus =
+    schoolData?.application_details?.app_status ??
+    (schoolData as any)?.app_status ??
+    null;
+
+  const statusForDecision = rawAppStatus ? String(rawAppStatus) : null;
+  const isRejectedByAppStatus = statusForDecision === "11";
+  const isRejectedByFlag =
+    String(schoolData?.application_status || "").toLowerCase() === "rejected";
+  const isRejectedServer = isRejectedByAppStatus || isRejectedByFlag;
+
+  const isAppliedFlag =
+    String(schoolData?.application_status || "").toLowerCase() === "applied";
+
+  // After submit, treat as not-rejected and already-submitted immediately
+  const isRejected = isRejectedServer && !justSubmitted;
+
+  const hasExistingApplication = Boolean(statusForDecision || isAppliedFlag);
+  const showAlreadySubmitted = !isRejected && (hasExistingApplication || justSubmitted);
+
+  useEffect(() => {
+    setBreadCrumbsLabel("Application Requirements");
+    // Disable if there’s an app and it’s not rejected OR if we just submitted now.
+    setDisabled((hasExistingApplication && !isRejectedServer) || justSubmitted);
+  }, [schoolId, hasExistingApplication, isRejectedServer, justSubmitted, setBreadCrumbsLabel]);
+
+  const closed = Boolean(
+    schoolData?.id && new Date() > new Date(schoolData.intake_end)
+  );
 
   const openModal = (doc: any | null) => {
-    console.log(doc, "doc");
     setSelectedDoc(doc);
     setModalOpen(true);
   };
@@ -43,27 +80,46 @@ export default function ViewSchool(): JSX.Element {
     setModalOpen(false);
     setSelectedDoc(null);
   };
-  const navigate = useNavigate();
-  const schoolData = proposedSchools?.find((s) => s?.school_id === schoolId);
+
   const submitAppMutation = useMutation({
     mutationFn: () =>
       admissionAPIs.submitSchoolApplication({
         proposed_course_id: schoolData?.id,
         intake: currentIntake?.id,
       }),
-    onSuccess: () => toast.success("Application submitted successfully"),
+    onSuccess: () => {
+      // Instant UI flip
+      setJustSubmitted(true);
+      setDisabled(true);
+
+      // Refresh server-backed state in the background
+      invalidateQuery?.(); // docs table
+      queryClient.invalidateQueries({
+        predicate: (q) => {
+          const k = Array.isArray(q.queryKey) ? q.queryKey.join("|").toLowerCase() : "";
+          return (
+            k.includes("admissions") ||
+            k.includes("proposed") ||
+            k.includes("application") ||
+            k.includes("school-app") ||
+            k.includes("school_admission") ||
+            k.includes("requirements")
+          );
+        },
+      });
+
+      toast.success(
+        isRejectedServer
+          ? "Application resubmitted successfully"
+          : "Application submitted successfully"
+      );
+    },
     onError: (err) => toast.error(errorMsg(err)),
   });
 
-  useEffect(() => {
-    setBreadCrumbsLabel("Application Requirements");
-    setDisabled(schoolData?.application_status === "applied");
-  }, [schoolId, schoolData?.application_status]);
-
-  if (!schoolId || !courseId) {
-    // Handle fallback (e.g., redirect or show error)
-  }
+  if (!schoolId || !courseId) return <p>Missing school/course context.</p>;
   if (!schoolData) return <p>School not found</p>;
+
   if (isLoading)
     return (
       <Stack spacing={1} direction="column" className="w-full h-[80dvh]">
@@ -72,19 +128,9 @@ export default function ViewSchool(): JSX.Element {
       </Stack>
     );
 
-  const closed = Boolean(
-    schoolData?.id && new Date() > new Date(schoolData.intake_end)
-  );
-
-  console.log("schoolData:", schoolData);
-  console.log("schoolData.application_status:", schoolData?.application_status);
-  console.log("requirementDocs status:", requirementDocs?.map((d) => d.docs?.status));
-  console.log("intake_end:", schoolData?.intake_end);
-  console.log("new Date(schoolData.intake_end):", new Date(schoolData.intake_end));
-  console.log("closed:", closed);
   return (
     <main>
-      <div className="">
+      <div>
         <button
           onClick={() => navigate(-1)}
           className="row-center gap-2 rounded-full p-2 shadow transition hover:text-primary-light"
@@ -92,6 +138,7 @@ export default function ViewSchool(): JSX.Element {
           <ArrowBackIcon fontSize="small" />
           <span className="text-sm font-medium">Back&nbsp;</span>
         </button>
+
         <div className="border-b my-4">
           <h2>
             {schoolData?.school_name} — ({schoolData?.program_name})
@@ -103,36 +150,22 @@ export default function ViewSchool(): JSX.Element {
         </div>
 
         <div className="py-2">
-          <h3 className="title-sm mb-2 text-primary-main">
-            Make school application
-          </h3>
+          <h3 className="title-sm mb-2 text-primary-main">Make school application</h3>
+
           <div className="col card sm:p-3 p-1">
-            {schoolData?.application_status === "applied" ? (
-              <p className="py-3">
-                You have already submitted an application request for this
-                school. <br />
-                <Link
-                  className="text-primary-main"
-                  to={`/pathways/academic/school-admission/application`}
-                >
-                  View Application Status
-                </Link>
+            {closed ? (
+              <p className="p-3">
+                The intake period for this application{" "}
+                <StatusChip type="rejected" label="closed" /> on{" "}
+                <b>{formatDate(schoolData?.intake_end)}</b>. You can no longer submit an
+                application.
               </p>
-            ) : closed ? (
+            ) : isRejected ? (
               <>
-                <p className="p-3">
-                  The intake period for this application {" "}
-                  <StatusChip type="rejected" label="closed" /> on <b>{formatDate(schoolData?.intake_end)}</b>. You can no longer submit an application.
-                </p>
-              </>
-            ) : requirementDocs?.every((d) => d.docs?.status === 2) ? (
-              <>
-                <p className="">
-                  Your documents have been approved. You are now ready to submit
-                  your school application request. Please note, you can only
-                  submit an application request for each school at a time.
-                  Please use the button below to submit your school application
-                  request.
+                <p>
+                  Your previous application was{" "}
+                  <StatusChip type="rejected" label="rejected" />. You may review your
+                  documents below and resubmit your application.
                 </p>
                 <p>
                   School application cost:{" "}
@@ -145,20 +178,52 @@ export default function ViewSchool(): JSX.Element {
                 <PrimaryBtn
                   className="self-end"
                   onClick={() => submitAppMutation.mutate()}
+                  disabled={submitAppMutation.isPending}
                 >
-                  {submitAppMutation.isPending
-                    ? "Submitting..."
-                    : "Request Application"}
+                  {submitAppMutation.isPending ? "Resubmitting..." : "Resubmit Application"}
+                </PrimaryBtn>
+              </>
+            ) : showAlreadySubmitted ? (
+              <p className="py-3">
+                You have already submitted an application request for this school.
+                <br />
+                <Link
+                  className="text-primary-main"
+                  to={`/pathways/academic/school-admission/application`}
+                >
+                  View Application Status
+                </Link>
+              </p>
+            ) : requirementDocs?.every((d) => d.docs?.status === 2) ? (
+              <>
+                <p>
+                  Your documents have been approved. You are now ready to submit your school
+                  application request. Please note, you can only submit an application request
+                  for each school at a time.
+                </p>
+                <p>
+                  School application cost:{" "}
+                  <strong>
+                    {schoolData?.application_cost === "Waived"
+                      ? "Waived"
+                      : `$${schoolData?.application_cost}`}
+                  </strong>
+                </p>
+                <PrimaryBtn
+                  className="self-end"
+                  onClick={() => submitAppMutation.mutate()}
+                  disabled={submitAppMutation.isPending}
+                >
+                  {submitAppMutation.isPending ? "Submitting..." : "Request Application"}
                 </PrimaryBtn>
               </>
             ) : (
-              <p className="">
+              <p>
                 You are currently{" "}
-                <StatusChip type="rejected" label="not eligible" /> to submit an
-                application.
+                <StatusChip type="rejected" label="not eligible" /> to submit an application.
                 <br />
-                To become eligible, please upload all the required documents
-                listed below and wait for their approval.
+                To become eligible, please upload all the required documents listed below and
+                wait for their approval.
               </p>
             )}
           </div>
@@ -175,6 +240,7 @@ export default function ViewSchool(): JSX.Element {
               </PrimaryBorderBtn>
             )}
           </div>
+
           <GridTable
             name="requirements"
             rows={requirementDocs}
@@ -207,11 +273,7 @@ export default function ViewSchool(): JSX.Element {
 
 const columns: (openModal: any) => GridColDef[] = (openModal) => [
   { field: "uniqueId", headerName: "No", width: 60 },
-  {
-    field: "item_name",
-    headerName: "Item",
-    minWidth: 200,
-  },
+  { field: "item_name", headerName: "Item", minWidth: 200 },
   { field: "description", headerName: "Instructions", flex: 1 },
   {
     field: "docs",

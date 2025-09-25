@@ -19,6 +19,8 @@ function MockTests() {
 
   const sectionCount =
     status?.section_count.find((item) => item.phase === 2)?.sections || 0;
+
+  // We only need the length; the values are unused
   const sectionsArray = Array.from({ length: sectionCount });
 
   const onClick = (item: any) => {
@@ -43,15 +45,16 @@ function MockTests() {
       <div className="h-2" />
 
       <section className="grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-clip p-2 ">
-        {sectionsArray.map((item, index) => (
+        {sectionsArray.map((_, index) => (
           <MockItem
-            key={index}
+            key={mockResources[index]?.id ?? index}
             item={mockResources[index]}
             index={index}
             handleClick={onClick}
           />
         ))}
       </section>
+
       <MarkCompleteMockModal
         open={openModal}
         toggleModal={toggleModal}
@@ -67,15 +70,31 @@ function MockTests() {
 
 export default MockTests;
 
-const MockItem = ({ item, handleClick, index }: any) => {
+type MockItemProps = {
+  item?: {
+    id?: number;
+    title?: string;
+    description?: string;
+  };
+  index: number;
+  handleClick: (item: any) => void;
+};
+
+const MockItem: React.FC<MockItemProps> = ({ item, handleClick, index }) => {
   const isDisabled = item?.id ? false : true;
   const classes = isDisabled
     ? "opacity-50 cursor-not-allowed hover:scale-100"
     : " hover:scale-105 cursor-pointer";
+
   return (
-    <Tooltip title={isDisabled && "Complete previous mock in order to proceed"}>
+    <Tooltip
+      title={
+        isDisabled
+          ? "Complete previous mock in order to proceed"
+          : ""
+      }
+    >
       <div
-        key={item?.id}
         className={`${classes} resource bg-paper `}
         onClick={() => {
           if (isDisabled) return;

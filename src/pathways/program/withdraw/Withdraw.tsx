@@ -37,19 +37,21 @@ function Withdraw() {
     "month"
   );
   const refund = () => {
-    if (accountStatements?.balance >= 0) {
-      if (monthsEnrolled > 6) {
-        return "Amount to be refunded $" + accountStatements?.balance;
-      } else {
-        return "Amount to be refunded $ 0.00 (Enrolled for less than 6 months)";
-      }
+  // Normalize to a definite number for TS
+  const balance: number = accountStatements?.balance ?? 0;
+
+  if (balance >= 0) {
+    if (monthsEnrolled > 6) {
+      // use consistent currency formatting
+      return `Amount to be refunded ${formatCurrency(balance, "USD", 2)}`;
     } else {
-      return (
-        "You owe us " +
-        formatCurrency(Math.abs(accountStatements?.balance), "USD", 2)
-      );
+      return "Amount to be refunded $ 0.00 (Enrolled for less than 6 months)";
     }
-  };
+  } else {
+    return `You owe us ${formatCurrency(Math.abs(balance), "USD", 2)}`;
+  }
+};
+
   useEffect(() => {
     if (monthsEnrolled > 7 && user?.report === "active") {
       // setViewStatements(true);

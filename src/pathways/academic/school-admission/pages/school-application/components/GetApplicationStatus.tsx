@@ -2,6 +2,7 @@ import { useState } from "react";
 import CopyToClipBoard from "../../../../../../components/CopyToClipBoard";
 import SchoolFeedBackModal from "./SchoolFeedBackModal";
 import FeedBackStatus from "./FeedBackStatus";
+
 type Props = {
   status: string;
   school?: any;
@@ -10,11 +11,16 @@ type Props = {
 const GetApplicationStatus = ({ status, school }: Props) => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen(!open);
+
   const userName = school?.application_details?.username;
   const password = school?.application_details?.password;
   const comment = school?.application_details?.comment;
-  const feedbackCode =
-    school?.application_details?.feedback?.feedback?.toString();
+  const feedbackCode = school?.application_details?.feedback?.feedback?.toString();
+
+  // NEW: derive details status and decide whether to hide portal creds
+  const appDetailsStatus = school?.application_details?.status?.toString?.();
+  const hidePortalCredentials =
+    status === "9" && appDetailsStatus === "8";
 
   if (status === "1")
     return (
@@ -28,6 +34,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
         </p>
       </>
     );
+
   if (status === "9")
     return (
       <>
@@ -39,18 +46,23 @@ const GetApplicationStatus = ({ status, school }: Props) => {
           receive from the school without first seeking guidance from our team
           by raising a ticket. <br />
         </p>
+
         {comment && (
           <span className="">
             <b className="">Admin Comments : </b>
             <em>{comment}</em>
           </span>
         )}
+
         <p className="font-semibold opacity-75">School portal Access</p>
-        {school?.isinto ? (
+
+        {/* Hide creds when appDetailsStatus===8, or when isinto=true (existing behavior) */}
+        {school?.isinto || hidePortalCredentials ? (
           <em className="pb-3">
-            Your application is processed through a special platform. You will
-            not have login access until the school makes a decision. Login
-            credentials will be shared by ISP staff upon offer
+            Your application is now complete. Please note that access to the
+            application portal is not available for this particular school.
+            Once we receive an offer, we will promptly provide the necessary
+            login details through this platform.
           </em>
         ) : (
           <>
@@ -61,12 +73,13 @@ const GetApplicationStatus = ({ status, school }: Props) => {
                   className="text-primary-light underline px-2"
                   href={school?.application_details?.school_link || "#"}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Open Link
                 </a>
               </p>
               <p className="row items-center w-full">
-                UserName : {"  "}
+                UserName :{" "}
                 <span className="pl-1 flex-1 max-w-fit text-nowrap truncate text-ellipsis">
                   {userName}
                 </span>{" "}
@@ -98,6 +111,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
             </>
           )}
         </div>
+
         <SchoolFeedBackModal
           open={open}
           toggleModal={toggleModal}
@@ -105,6 +119,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
         />
       </>
     );
+
   if (status === "11")
     return (
       <>
@@ -123,6 +138,7 @@ const GetApplicationStatus = ({ status, school }: Props) => {
         )}
       </>
     );
+
   return (
     <>
       <p>Status : Processing</p>
@@ -132,4 +148,5 @@ const GetApplicationStatus = ({ status, school }: Props) => {
     </>
   );
 };
+
 export default GetApplicationStatus;

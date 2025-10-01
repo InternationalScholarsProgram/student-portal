@@ -97,7 +97,7 @@ const Regular = ({ requiredPay, handleSwitch, balance }: any) => {
           {formatCurrency(requiredPay)} as the amount.
         </p>
         <Link
-          to="/make-payments"
+          to="/finances/make-payments"
           state={{
             requiredPay: requiredPay,
             program: "Prime",

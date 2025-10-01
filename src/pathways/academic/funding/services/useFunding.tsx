@@ -27,7 +27,7 @@ const useFunding = ({ loan = {} }: Props) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: queryKeys?.app,
+    queryKey: queryKeys.app,
     queryFn: fundingEndpoints.getApplicationDetails,
     select: (response) => response?.data?.data,
   });
@@ -61,16 +61,49 @@ const useFunding = ({ loan = {} }: Props) => {
     },
     enabled: !!loan?.loan_id,
   });
+
+  const {
+    data: loanBalance,
+    isLoading: isLoadingBalance,
+    error: errorBalance,
+  } = useQuery({
+    queryKey: [user?.email, "loan-balance", loan?.loan_id],
+    queryFn: () => fundingEndpoints.getLoanBalance(loan?.loan_id),
+    select: (response) =>
+      response?.data?.message ?? response?.data?.data, 
+    enabled: !!loan?.loan_id,
+  });
+
+const startManualPayment = async (amount: number) => {
+  if (!user?.email || !loan?.loan_id) {
+    throw new Error("Missing required email or loan_id.");
+  }
+  const res = await fundingEndpoints.initManualPayment({
+    payment_amount: amount,
+    email: user.email,
+    loan_id: loan.loan_id,
+  });
+
+  
+  const payload = res?.data?.data ?? res?.data?.message ?? {};
+  return payload; 
+};
+
+
   return {
     applicationDetails,
     schools: schoolsEligibleForFunding,
     selectedSchool: schoolsEligibleForFunding?.[0],
     schoolAppId,
     queryClient,
-    isLoading: isLoading || isLoadingSchedule,
-    error: error || errorSchedule,
+
+    isLoading: isLoading || isLoadingSchedule || isLoadingBalance,
+    error: error || errorSchedule || errorBalance,
+
     invalidate,
     schedulePayments,
+    loanBalance,          
+    startManualPayment,   
   };
 };
 

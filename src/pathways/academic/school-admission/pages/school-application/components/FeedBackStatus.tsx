@@ -47,7 +47,7 @@ function FeedBackStatus({ school }: any) {
               required details.
             </p>
             <Link
-              to="/tuition"
+              to="/pathways/academic/funding/tuition"
               className="text-primary-light underline self-end py-2"
             >
               Go to Funding

@@ -14,7 +14,7 @@ const Repayments = () => {
   const handleActions = (action: string) => {
     switch (action) {
       case "make_payment":
-        return navigate("/make-payments", { state: "Test two" });
+        return navigate("/finances/make-payments", { state: "Test two" });
       case "view_loan_contract":
         return window.open(BASE_URL + personalLoan?.loan_contract, "_blank");
       case "apply_loan":

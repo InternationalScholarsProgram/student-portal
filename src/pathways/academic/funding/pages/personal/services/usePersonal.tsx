@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
 import useFetchUser from "../../../../../../services/hooks/useFetchUser";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import personalEndpoints from "./personalEndpoints";
-import { loanType } from "../../../utils";
 import fundingEndpoints from "../../../services/fundingEndpoints";
 import { RepaymentSchedule } from "../../../types/fundingTypes";
 
@@ -20,6 +19,19 @@ const usePersonal = () => {
     queryFn: personalEndpoints?.status,
     enabled: !!user?.email,
     select: (response) => response?.data?.data,
+  });
+
+  // --- NEW: application submit mutation
+  const {
+    mutate: submitApplication,
+    isPending: isSubmittingApplication,
+    error: submitApplicationError,
+  } = useMutation({
+    mutationFn: (payload: FormData) => personalEndpoints.application(payload),
+    onSuccess: () => {
+      // refresh status after a successful submit
+      queryClient.invalidateQueries({ queryKey: queryKeys.status });
+    },
   });
 
   const invalidate = (key: "status") =>
@@ -52,6 +64,11 @@ const usePersonal = () => {
     status,
     isLoading: isLoading || isLoadingSchedule,
     error: error || errorSchedule,
+
+    submitApplication,
+    isSubmittingApplication,
+    submitApplicationError,
+
     invalidate,
     user_details,
     personalLoan,

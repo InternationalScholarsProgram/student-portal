@@ -10,7 +10,7 @@ const multipart = {
 };
 
 const url =
-  process.env.NODE_ENV === "production" ? BASE_URL : "http://localhost:5173";
+  process.env.NODE_ENV === "production" ? BASE_URL : "https://finsapdev.qhtestingserver.com";
 
 const api = axios.create({
   baseURL: url,

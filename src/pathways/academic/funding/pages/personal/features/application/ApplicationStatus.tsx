@@ -9,8 +9,8 @@ const ApplicationStatus: React.FC = () => {
 
   const form = useMemo(
     () => (
-      <ContentComponent header="Loan Application Form" className="my-3">
-        <ApplicationForm max={5000} onSuccess={() => invalidate("status")} />
+      <ContentComponent header="Personal Loan Application Form" className="my-3">
+        <ApplicationForm max={5000} loanType={2} onSuccess={() => invalidate("status")} />
       </ContentComponent>
     ),
     []

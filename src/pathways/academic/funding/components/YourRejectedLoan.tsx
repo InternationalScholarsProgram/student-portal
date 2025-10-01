@@ -18,7 +18,7 @@ const YourRejectedLoan = ({ toPay = 0 }) => {
       </p>
 
       {toPay < 0 && (
-        <Link to="/make-payments" className="self-end primary-btn">
+        <Link to="/finances/make-payments" className="self-end primary-btn">
           Complete Payment
         </Link>
       )}

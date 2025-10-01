@@ -110,12 +110,12 @@ const formFields = [
     placeholder: "River view ave",
     required: true,
   },
-  // {
-  //   type: "text",
-  //   name: "routing",
-  //   id: "routing",
-  //   label: "Routing number",
-  //   placeholder: "45878954485",
-  //   required: true,
-  // },
+  {
+    type: "text",
+    name: "routing",
+    id: "routing",
+    label: "Routing number",
+    placeholder: "45878954485",
+    required: true,
+  },
 ];

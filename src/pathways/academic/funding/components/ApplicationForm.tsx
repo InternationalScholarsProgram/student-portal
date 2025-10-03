@@ -18,7 +18,7 @@ import useFetchUser from "../../../../services/hooks/useFetchUser";
 import personalEndpoints from "../pages/personal/services/personalEndpoints";
 import alternativeEndpoints from "../pages/alternative/services/alternativeEndpoints";
 
-// NEW: type-specific hooks for prefill (replaces useFunding)
+// type-specific hooks for prefill
 import usePersonal from "../pages/personal/services/usePersonal";
 import useAlternative from "../pages/alternative/services/useAlternative";
 
@@ -38,20 +38,24 @@ type Props = {
 const ApplicationForm: React.FC<Props> = ({ max, loanType, onSuccess }) => {
   const { user } = useFetchUser();
 
-  // Relocation source (id & optional prefill)
-  const { application: relocationApp, isLoading: isRelocationLoading } = useRelocation();
+  // Only enable the hook for the active loan type
+  const { application: relocationApp, isLoading: isRelocationLoading } = useRelocation({
+    enabled: loanType === 1,
+  });
 
-  // Personal prefill source (user_details), independent of study
   const {
     user_details: personalDetails,
     isLoading: isPersonalLoading,
-  } = usePersonal?.() ?? ({ user_details: undefined, isLoading: false } as any);
+  } = usePersonal({
+    enabled: loanType === 2,
+  });
 
-  // Alternative/Study prefill source (user_details), independent of personal
   const {
     user_details: alternativeDetails,
     isLoading: isAlternativeLoading,
-  } = useAlternative?.() ?? ({ user_details: undefined, isLoading: false } as any);
+  } = useAlternative({
+    enabled: loanType === 3,
+  });
 
   // Pick the right prefill based on loanType (no shared application_details)
   const prefillRaw =
@@ -116,7 +120,6 @@ const ApplicationForm: React.FC<Props> = ({ max, loanType, onSuccess }) => {
     },
     onSuccess: (response) => {
       toast.success(response?.data?.message);
-      // Do NOT invalidate any shared prefill query here.
       // Parent pages should call invalidate("status") after onSuccess.
       onSuccess?.();
     },

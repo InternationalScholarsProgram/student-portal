@@ -17,7 +17,7 @@ function Relocation() {
     case 1:
       return <LoanProcessing />;
     case 2:
-      return <Repayment />;
+      return <Repayment />;  
   }
 }
 

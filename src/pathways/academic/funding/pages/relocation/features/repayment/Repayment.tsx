@@ -8,12 +8,12 @@ import { BASE_URL } from "../../../../../../../services/api/base";
 import RepaymentSchedule from "../../../../components/RepaymentSchedule";
 import LoanActions from "../../../../components/LoanActions";
 import MakePayment from "../../../../components/MakePayment";
-import useFunding from "../../../../services/useFunding";
+
+// If your backend has a different endpoint, update this:
+const START_MANUAL_PAYMENT_URL = `${BASE_URL}payments/manual/start`;
 
 const Repayment = () => {
   const { schedulePayments, pastPayments, loan, extraLoan } = useRelocation();
-  const { loanBalance, startManualPayment } = useFunding({ loan });
-
   const [action, setAction] = useState("");
   const navigate = useNavigate();
 
@@ -28,6 +28,27 @@ const Repayment = () => {
     }
   };
 
+  const startManualPayment = async (amount: number, loanId: string | number) => {
+    // Adjust payload/headers to match your API if needed
+    const res = await fetch(START_MANUAL_PAYMENT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        amount,
+        loan_id: loanId,
+        loan_type: 1, // relocation
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(text || `Failed to start payment (${res.status})`);
+    }
+
+    return res.json();
+  };
+
   const handleConfirmPayment = async ({
     amount,
     loanId,
@@ -36,8 +57,8 @@ const Repayment = () => {
     loanId: string | number;
   }) => {
     try {
-      const payload = await startManualPayment(amount);
-      const checkoutUrl = (payload as any)?.checkout_url || (payload as any)?.checkoutUrl;
+      const payload = await startManualPayment(amount, loanId);
+      const checkoutUrl = payload?.checkout_url || payload?.checkoutUrl;
       if (!checkoutUrl) {
         toast.error("Unable to start payment: missing checkout URL.");
         return;
@@ -52,8 +73,7 @@ const Repayment = () => {
     <div className="col gap-3">
       <ExtraLoan open={action === "extra_loan"} toggleModal={() => setAction("")} />
 
-      
-      <RepaymentSchedule  pastPayments={pastPayments} schedulePayments={schedulePayments}  />
+      <RepaymentSchedule pastPayments={pastPayments} schedulePayments={schedulePayments} />
 
       <LoanActions
         onSubmit={onSubmit}
@@ -70,7 +90,8 @@ const Repayment = () => {
         open={action === "make_payment"}
         onClose={() => setAction("")}
         onConfirm={handleConfirmPayment}
-        balance={loanBalance ?? undefined}
+        // Balance is intentionally not fetched here anymore
+        balance={undefined}
         balanceLoading={false}
         balanceError={undefined}
       />

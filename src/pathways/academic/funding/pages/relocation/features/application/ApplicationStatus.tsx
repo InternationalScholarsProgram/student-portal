@@ -32,7 +32,7 @@ const ApplicationStatus: React.FC = () => {
           <ContactSupport />
         </ContentComponent>
       );
-    case 7:
+    case 3:
       return (
         <>
           <div className="col gap-2">
@@ -58,8 +58,8 @@ const ApplicationStatus: React.FC = () => {
           {form}
         </>
       );
-    case 3:
-      return <p>Loan approved</p>;
+    case 4:
+      return <p>loan approved</p>;
     default:
       return (
         <>

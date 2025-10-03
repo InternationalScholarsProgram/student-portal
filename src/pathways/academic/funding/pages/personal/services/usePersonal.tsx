@@ -5,7 +5,14 @@ import personalEndpoints from "./personalEndpoints";
 import fundingEndpoints from "../../../services/fundingEndpoints";
 import { RepaymentSchedule } from "../../../types/fundingTypes";
 
-const usePersonal = () => {
+type Options = { enabled?: boolean };
+
+const _queryKeys = (email: any) => ({
+  status: [email, "personal-loans"] as const,
+});
+
+const usePersonal = (options: Options = {}) => {
+  const { enabled = true } = options;
   const { user } = useFetchUser();
   const queryClient = useQueryClient();
   const queryKeys = useMemo(() => _queryKeys(user?.email), [user?.email]);
@@ -17,11 +24,11 @@ const usePersonal = () => {
   } = useQuery({
     queryKey: queryKeys?.status,
     queryFn: personalEndpoints?.status,
-    enabled: !!user?.email,
+    enabled: !!user?.email && enabled,
     select: (response) => response?.data?.data,
   });
 
-  // --- NEW: application submit mutation
+  // Submit application
   const {
     mutate: submitApplication,
     isPending: isSubmittingApplication,
@@ -29,7 +36,6 @@ const usePersonal = () => {
   } = useMutation({
     mutationFn: (payload: FormData) => personalEndpoints.application(payload),
     onSuccess: () => {
-      // refresh status after a successful submit
       queryClient.invalidateQueries({ queryKey: queryKeys.status });
     },
   });
@@ -50,14 +56,16 @@ const usePersonal = () => {
     queryFn: () => fundingEndpoints.repaymentSchedule(personalLoan),
     select: (response) => {
       const data = response?.data?.data;
-      return data
-        ?.map((row: any) => ({
-          ...row,
-          no: row.id - 1,
-        }))
-        .slice(1) as RepaymentSchedule[];
+      return (
+        data
+          ?.map((row: any) => ({
+            ...row,
+            no: row.id - 1,
+          }))
+          .slice(1) as RepaymentSchedule[]
+      );
     },
-    enabled: !!personalLoan?.loan_id && status?.status === 2,
+    enabled: enabled && !!personalLoan?.loan_id && status?.status === 2,
   });
 
   return {
@@ -80,7 +88,3 @@ const usePersonal = () => {
 };
 
 export default usePersonal;
-
-const _queryKeys = (email: any) => ({
-  status: [email, "personal-loans"] as const,
-});

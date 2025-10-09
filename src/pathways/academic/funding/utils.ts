@@ -9,7 +9,6 @@ const loanType = [
   { type: 1, label: "Tuition & Living Expenses", name: "relocation" },
   { type: 2, label: "Tuition & Living Expenses", name: "personal" },
   { type: 3, label: "Tuition & Living Expenses", name: "study" },
-  { type: 4, label: "Tuition & Living Expenses", name: "alternative" },
 ];
 
 const getLoanType = (type: number | string) =>

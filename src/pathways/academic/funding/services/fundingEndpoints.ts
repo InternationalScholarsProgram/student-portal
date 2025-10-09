@@ -34,7 +34,7 @@ class FundingEndpoints {
     });
     if (result.error) throw new Error(result.error.message);
 
-    return api.post(`${url}/process_subscription.php`, {
+    return api.post(`${url}process_subscription.php`, {
       customer_id: stripeReqData?.customer_id,
       bank_account_id: result?.financialConnectionsSession.accounts[0].id,
       member_no: payload?.member_no,

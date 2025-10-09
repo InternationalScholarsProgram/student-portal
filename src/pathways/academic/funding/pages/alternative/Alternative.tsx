@@ -6,21 +6,18 @@ import Repayment from "./features/repayment/Repayment";
 import useAlternative from "./services/useAlternative";
 
 function Alternative() {
-  const { alternativeStatus, isLoading, error } = useAlternative();
+  const { status, isLoading, error } = useAlternative();
 
   if (isLoading) return <FullLoader />;
   if (error) return <AxiosError error={error} />;
-  // return <LoanProcessing />;
-
-  switch (alternativeStatus?.status) {
+  switch (Number(status)) {
     case 0:
-      return <ApplicationStatus />;
     case 1:
-      return <LoanProcessing />;
+      return <ApplicationStatus />;
     case 2:
-      return <Repayment />;
-    default:
-      return null;
+      return <LoanProcessing />;
+    case 3:
+      return <Repayment />; 
   }
 }
 

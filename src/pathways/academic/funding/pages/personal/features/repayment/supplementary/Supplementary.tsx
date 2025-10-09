@@ -8,17 +8,29 @@ import ContentComponent from "../../../../../../../../components/ContentComponen
 type Props = ModalProps;
 
 const Supplementary: React.FC<Props> = ({ open, toggleModal }) => {
-  const { supplementary, invalidate, personalLoan } = usePersonal();
+  const {
+    supplementaryStatus,
+    supplementaryLoan,
+    personalLoan,
+    invalidate,
+  } = usePersonal();
+
   const invalidateStatus = () => invalidate("status");
 
-  switch (supplementary?.status) {
+  // Prefer supplementary loan id, fall back to personal if needed
+  const loanId =
+    (supplementaryLoan as any)?.loan_id_sup ??
+    (supplementaryLoan as any)?.loan_id ??
+    personalLoan?.loan_id;
+
+  switch (supplementaryStatus?.status) {
     case 1:
       return (
         <ContentComponent header="Supplementary Loan Application">
           <RecallDecisions
             invalidate={invalidateStatus}
             status={1}
-            loanId={personalLoan?.loan_id}
+            loanId={loanId}
           />
         </ContentComponent>
       );
@@ -32,8 +44,6 @@ const Supplementary: React.FC<Props> = ({ open, toggleModal }) => {
         />
       );
   }
-
-  return <div>Supplementary</div>;
 };
 
 export default Supplementary;

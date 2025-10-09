@@ -6,11 +6,12 @@ import fundingEndpoints from "../../../services/fundingEndpoints";
 import { splitDate } from "../../../../../../utils/utils";
 import { RepaymentSchedule } from "../../../types/fundingTypes";
 
-type AltStatus = {
-  status: number | string;
-  user_details?: any;
-  personal_loan?: any;
-  supplementary_loan?: any;
+type AltApiData = {
+  study_loan_user?: any | null;
+  study_loan?: any | null;
+  additional_user?: any | null;
+  additional_loan?: any | null;
+  status?: number | string | null; 
 };
 
 type Options = { enabled?: boolean };
@@ -31,19 +32,35 @@ const useAlternative = (options: Options = {}) => {
     error,
   } = useQuery({
     queryKey: queryKeys.status,
-    queryFn: alternativeEndpoints.status,
+    queryFn: () => alternativeEndpoints.status(user?.email || ""),
     enabled: !!user?.email && enabled,
-    select: (res) => res?.data?.data as AltStatus,
+    select: (res) => (res?.data?.data || {}) as AltApiData,
   });
 
-  const user_details = alternativeStatus?.user_details;
-  const personal_loan = alternativeStatus?.personal_loan;
-  const supplementary_loan = alternativeStatus?.supplementary_loan;
+  
+  const user_details = alternativeStatus?.study_loan_user ?? null;
+  const personal_loan = alternativeStatus?.study_loan ?? null;
+  const supplementary_loan = alternativeStatus?.additional_loan ?? null;
 
-  const loan = {
-    ...personal_loan,
-    maturity_date: splitDate(personal_loan?.maturity_date || ""),
-  };
+  
+  const isAllNulls =
+    !alternativeStatus?.study_loan_user &&
+    !alternativeStatus?.study_loan &&
+    !alternativeStatus?.additional_user &&
+    !alternativeStatus?.additional_loan;
+
+  
+  const status =
+    alternativeStatus?.status ??
+    alternativeStatus?.study_loan_user?.status ??
+    (isAllNulls ? 0 : undefined);
+
+  const loan = personal_loan
+    ? {
+        ...personal_loan,
+        maturity_date: splitDate(personal_loan?.maturity_date || ""),
+      }
+    : undefined;
 
   const invalidate = (key: "status") =>
     queryClient.invalidateQueries({ queryKey: queryKeys[key] || key });
@@ -51,17 +68,17 @@ const useAlternative = (options: Options = {}) => {
   const { data: schedulePayments } = useQuery({
     queryKey: [user?.email, "repayment-schedule", loan?.loan_id],
     queryFn: () => fundingEndpoints.repaymentSchedule(loan),
-    select: (response) => response?.data?.data?.slice(1) as RepaymentSchedule[],
-    enabled:
-      enabled && Number(alternativeStatus?.status) === 2 && !!loan?.loan_id,
+    select: (response) =>
+      response?.data?.data?.slice(1) as RepaymentSchedule[],
+    enabled: enabled && Number(status) === 2 && !!loan?.loan_id,
   });
 
   return {
     user,
-    alternativeStatus,
-    status: alternativeStatus?.status,
-    user_details,
-    loan,
+    alternativeStatus, 
+    status,           
+    user_details,      
+    loan,              
     supplementary_loan,
 
     isLoading,

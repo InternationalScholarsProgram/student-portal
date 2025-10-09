@@ -5,21 +5,47 @@ import ApplicationForm from "../../../../components/ApplicationForm";
 import useAlternative from "../../services/useAlternative";
 
 const ApplicationStatus: React.FC = () => {
-  const { user_details, invalidate } = useAlternative();
+  // Pull the derived/passthrough status from the hook
+  const { status, user_details, invalidate, isLoading, error } = useAlternative();
+
+  // Optional: small guard for loading/error to avoid brief flickers
+  if (isLoading) {
+    return (
+      <ContentComponent header="Alternative Loan">
+        <p>Loading your application status…</p>
+      </ContentComponent>
+    );
+  }
+  if (error) {
+    return (
+      <ContentComponent header="Alternative Loan">
+        <p className="text-error-main">We couldn’t load your status. Please try again.</p>
+        <ContactSupport />
+      </ContentComponent>
+    );
+  }
 
   const form = useMemo(
     () => (
       <ContentComponent header="Alternative Loan Application Form" className="my-3">
-        <ApplicationForm max={5000} loanType={3} onSuccess={() => invalidate("status")} />
+        <ApplicationForm
+          max={5000}
+          loanType={3}                           // 3 = Alternative (Study)
+          onSuccess={() => invalidate("status")} // refetch after submit
+        />
       </ContentComponent>
     ),
     [invalidate]
   );
 
-  const status = Number(user_details?.status);
+  // Use the authoritative/derived status from the hook
+  const s = Number(status);
 
-  switch (status) {
+  switch (s) {
+    // Treat these as "under review / processing"
     case 1:
+    case 2:
+    case 5:
       return (
         <ContentComponent header="Alternative Loan Application Under Review">
           <p>
@@ -30,6 +56,7 @@ const ApplicationStatus: React.FC = () => {
         </ContentComponent>
       );
 
+    // Rejected -> show reason + form
     case 7:
       return (
         <>
@@ -44,23 +71,24 @@ const ApplicationStatus: React.FC = () => {
               <em>{user_details?.remark || "No specific reason was provided."}</em>
             </p>
             <p>
-              Please review the feedback above and resubmit the form after
-              making the necessary corrections.
+              Please review the feedback above and resubmit the form after making the
+              necessary corrections.
             </p>
           </div>
           {form}
         </>
       );
 
+    // Approved (some backends use 3, others 4)
     case 3:
+    case 4:
       return <p>Loan approved</p>;
 
+    // Default: new applicant or unknown -> show the form
     default:
       return (
         <>
-          <p>
-            Please submit your alternative loan application by filling the form below
-          </p>
+          <p>Please submit your alternative loan application by filling the form below</p>
           {form}
         </>
       );
@@ -70,7 +98,9 @@ const ApplicationStatus: React.FC = () => {
 export default ApplicationStatus;
 
 /*
-2 or 5 - viewing loan (handled elsewhere by the page-level switch using the top-level "status")
-3 - loan approved
-7 - rejected
+Statuses:
+1/2/5 - under review
+3/4   - approved
+7     - rejected (show reason + form)
+default - show the application form (new/unknown)
 */

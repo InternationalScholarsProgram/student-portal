@@ -75,7 +75,7 @@ const useRelocation = (options: Options = {}) => {
           new_balance: toNum(row?.new_balance),
           status: (row?.status as string) || "Pending",
         }))
-        .sort((a, b) => (a.maturity_date < b.maturity_date ? -1 : 1));
+        .sort((a: { maturity_date: number; }, b: { maturity_date: number; }) => (a.maturity_date < b.maturity_date ? -1 : 1));
 
       return { schedule: normalized, pastPayments: past };
     },

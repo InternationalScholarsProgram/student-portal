@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import MapFormFields from "../../../../components/inputs/MapFormFields";
 import Modal from "../../../../components/Modal";
 import fundingEndpoints from "../services/fundingEndpoints";
-import axios from "axios";
 import { errorMsg } from "../../../../components/errors/errorMsg";
 
 type Props = {

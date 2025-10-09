@@ -1,3 +1,4 @@
+// PersonalContract.tsx
 import React, { useState } from "react";
 import Modal from "../../../../../../../components/Modal";
 import LetterHead from "../../../../../../../components/letters/LetterHead";
@@ -5,7 +6,7 @@ import Address from "../../../../../../../components/letters/Address";
 import useFetchUser from "../../../../../../../services/hooks/useFetchUser";
 import BobSignatory from "../../../../../../../components/letters/BobSignatory";
 import PrimaryBtn from "../../../../../../../components/buttons/PrimaryBtn";
-import useRelocation from "../../services/useRelocation";
+import usePersonal from "../../services/usePersonal";
 import {
   fetchIp,
   formatCurrency,
@@ -16,11 +17,13 @@ import dayjs from "dayjs";
 import SignContract from "../../../../../../../components/letters/SignContract";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import relocationApis from "../../services/relocationApis";
 import { InlineLoader } from "../../../../../../../components/loaders/Loader";
 import AxiosError from "../../../../../../../components/errors/AxiosError";
 import { GridColDef } from "@mui/x-data-grid";
 import SimpleTable from "../../../../../../../components/tables/SimpleTable";
+import personalEndpoints from "../../services/personalEndpoints";
+
+
 
 /** Narrow generatePdf result */
 type GenPdfOk = { blob?: Blob; doc?: unknown; instance?: unknown; name?: string };
@@ -36,18 +39,19 @@ function toPlainArrayBuffer(bufLike: ArrayBufferLike): ArrayBuffer {
   return out;
 }
 
-const RelocationContract = () => {
+const PersonalContract = () => {
   const { user } = useFetchUser();
-  const { relocationStatus, loan, invalidate } = useRelocation();
+  const { user_details: application, personalLoan: loan, invalidate } = usePersonal();
 
-  // Repayment schedule via relocation endpoint only
+  // Repayment schedule — follow the same structure as Relocation for now.
+  // When you have a personal endpoint, replace `relocationApis.repaymentSchedule(loan)`.
   const {
     data: schedulePayments,
     isLoading,
     error,
   } = useQuery({
     queryKey: [user?.email, "repayment-schedule", loan?.loan_id],
-    queryFn: () => relocationApis.repaymentSchedule(loan),
+    queryFn: () => personalEndpoints.repaymentSchedule(loan), // TODO: swap to personal repayment API
     select: (response) => {
       const payload = response?.data?.data ?? {};
       const schedule = Array.isArray(payload?.schedule) ? payload.schedule : [];
@@ -85,7 +89,6 @@ const RelocationContract = () => {
   const [isRejecting, setIsRejecting] = useState(false);
 
   const targetRef = React.useRef<HTMLDivElement>(null);
-  const application = relocationStatus?.application;
 
   // Normalize generatePdf outputs into a File safely (handles SharedArrayBuffer)
   const makePdfFile = async (): Promise<File> => {
@@ -121,8 +124,7 @@ const RelocationContract = () => {
       return new File([blob], name, { type });
     }
 
-    // 4) ArrayBuffer or SharedArrayBuffer -> clone to ArrayBuffer -> Blob -> File
-    // Use structural check for ArrayBufferLike: has byteLength & can be wrapped by Uint8Array
+    // 4) ArrayBuffer or SharedArrayBuffer
     if (
       typeof doc === "object" &&
       doc !== null &&
@@ -135,7 +137,7 @@ const RelocationContract = () => {
       return new File([blob], name, { type });
     }
 
-    // 5) ArrayBufferView (e.g., Uint8Array) -> use its buffer slice into plain ArrayBuffer
+    // 5) ArrayBufferView (e.g., Uint8Array)
     if (
       doc &&
       typeof (doc as any).buffer === "object" &&
@@ -174,7 +176,8 @@ const RelocationContract = () => {
         file,
       };
 
-      await relocationApis.signContract(payload);
+      // TODO: swap to personal API
+      await personalEndpoints.signContract(payload);
       toast.success("Contract signed successfully.");
       invalidate("status");
       setOpenContract(false);
@@ -205,7 +208,8 @@ const RelocationContract = () => {
         loan_id: loan?.loan_id,
       };
 
-      await relocationApis.signContract(payload);
+      // TODO: swap to personal API
+      await personalEndpoints.signContract(payload);
       toast.success("Contract rejected successfully.");
       invalidate("status");
       setOpenContract(false);
@@ -233,15 +237,15 @@ const RelocationContract = () => {
             <LetterHead />
             <Address email=" " />
             <article className="py-3 col gap-2">
-              <b className="underline uppercase">RE: Relocation Loan Contract</b>
+              <b className="underline uppercase">RE: Personal Loan Contract</b>
               <section className="col gap-3">
                 <b>
-                  This relocation loan agreement (this "agreement") dated {formatDate(new Date())}.
+                  This personal loan agreement (this "agreement") dated {formatDate(new Date())}.
                 </b>
                 <span>BETWEEN</span>
                 <p>
                   <b>The International Scholars Program</b> of 100 S Ashley Drive, Suite 600, Tampa, FL, 33602 ("the
-                  lender") and <b> {loan?.fullnames}</b> of {application?.usa_address} ("the borrower").
+                  lender") and <b> {loan?.fullnames}</b> of {application?.permanent_us_address} ("the borrower").
                 </p>
                 <p>
                   <b>IN CONSIDERATION OF </b>the lender loaning certain monies (the "loan") to the borrower and the
@@ -253,7 +257,7 @@ const RelocationContract = () => {
                     <h5>LOAN AMOUNT & INTEREST</h5>
                     <p>
                       1. The lender promises to loan <b>{formatCurrency(loan?.principal)}</b> to the borrower to cover
-                      for school fees and the borrower promises to repay this principal amount to the lender, paying on
+                      personal needs and the borrower promises to repay this principal amount to the lender, paying on
                       the unpaid principal amount at the rate of <b>12%</b> per annum, beginning on{" "}
                       {formatDate(loan?.maturity_date)}.
                     </p>
@@ -332,23 +336,19 @@ const RelocationContract = () => {
                       </div>
                       <div>
                         <p>Social Security Number</p>
-                        <p>{application?.social_security_number || "N/A"}</p>
+                        <p>{application?.ssn_number || "N/A"}</p>
                       </div>
                       <div>
                         <p>Passport Number</p>
-                        <p>{application?.passport_number}</p>
+                        <p>{application?.passport_number || "N/A"}</p>
                       </div>
                       <div>
                         <p>Date of birth</p>
-                        <p>{formatDate(application?.date_of_birth || "")}</p>
-                      </div>
-                      <div>
-                        <p>University Attending</p>
-                        <p>{loan?.fullnames}</p>
+                        <p>{formatDate(application?.dob || "")}</p>
                       </div>
                       <div>
                         <p>Current US Address</p>
-                        <p>{application?.usa_address}</p>
+                        <p>{application?.permanent_us_address}</p>
                       </div>
                     </table>
                   </div>
@@ -358,15 +358,25 @@ const RelocationContract = () => {
                     <table className="data-table">
                       <div>
                         <p>Full Name</p>
-                        <p>{application?.next_of_kin_fullname}</p>
+                        <p>
+                          {[
+                            application?.next_of_kin_fname || "",
+                            application?.next_of_kin_mname || "",
+                            application?.next_of_kin_lname || "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")
+                            .replace(/\s+/g, " ")
+                            .trim() || "N/A"}
+                        </p>
                       </div>
                       <div>
                         <p>Phone Number</p>
-                        <p>{application?.next_of_kin_phone_number}</p>
+                        <p>{application?.next_of_kin_phone_number || "N/A"}</p>
                       </div>
                       <div>
                         <p>Address</p>
-                        <p>{application?.next_of_kin_address}</p>
+                        <p>{application?.next_of_kin_permanent_address || "N/A"}</p>
                       </div>
                     </table>
                   </div>
@@ -384,13 +394,13 @@ const RelocationContract = () => {
                     Loan Amount to be Disbursed (USD) - <b>{formatCurrency(loan?.total_loan)}</b>
                   </p>
                   <p>
-                    Loan repayment start date - <b>{formatDate(loan.maturity_date)}</b>
+                    Loan repayment start date - <b>{formatDate(loan?.maturity_date)}</b>
                   </p>
                   <p>
-                    Total Payable Amount - <b>{formatCurrency(loan.total_payable)}</b>
+                    Total Payable Amount - <b>{formatCurrency(loan?.total_payable)}</b>
                   </p>
                   <p>
-                    Months - <b>{loan.term} months</b>
+                    Months - <b>{loan?.term} months</b>
                   </p>
                 </div>
 
@@ -450,7 +460,7 @@ const RelocationContract = () => {
                       )}
                       <p className="col">
                         <b>{loan?.fullnames}</b>
-                        <b>{relocationStatus?.application?.usa_address}</b>
+                        <b>{application?.permanent_us_address}</b>
                       </p>
                     </div>
                   </div>
@@ -533,7 +543,7 @@ const RelocationContract = () => {
   );
 };
 
-export default RelocationContract;
+export default PersonalContract;
 
 const columns: GridColDef[] = [
   {

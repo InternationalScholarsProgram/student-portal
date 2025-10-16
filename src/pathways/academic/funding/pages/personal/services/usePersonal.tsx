@@ -45,9 +45,11 @@ const usePersonal = (options: Options = {}) => {
     return 2;
   }, [personalLoan, pStatus]);
 
-  // ---- supplementary (unchanged) ----
-  const supplementaryUser = rawData?.supplementary_user ?? null;
-  const supplementaryLoan = rawData?.supplementary_loan ?? null;
+  // ---- supplementary (raw objects) ----
+  const supplementaryUser = rawData?.supplementary_user ?? null;     // SOURCE OF TRUTH for "application received"
+  const supplementaryLoan = rawData?.supplementary_loan ?? null;     // may be null
+
+  // existing view based on supplementary_loan (kept for backward-compat)
   const sStatus: number | null = useMemo(() => {
     const raw = (supplementaryLoan as any)?.status;
     if (raw === null || raw === undefined || raw === "null" || raw === "") return null;
@@ -71,7 +73,7 @@ const usePersonal = (options: Options = {}) => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.status }),
   });
 
-  // ---- repayment schedule (UPDATED past_payments normalization) ----
+  // ---- repayment schedule (unchanged) ----
   const {
     data: scheduleWrap,
     isLoading: isLoadingSchedule,
@@ -93,24 +95,21 @@ const usePersonal = (options: Options = {}) => {
           new_balance: toNum(row?.new_balance),
           status: (row?.status as string) || "Pending",
         }))
-        .sort((a: { maturity_date: number; }, b: { maturity_date: number; }) => (a.maturity_date < b.maturity_date ? -1 : 1));
+        .sort((a: { maturity_date: number }, b: { maturity_date: number }) =>
+          a.maturity_date < b.maturity_date ? -1 : 1
+        );
 
-      // robust past_payments normalization
       const normalizeBlock = (v: any): any[] => {
         if (!v) return [];
         if (Array.isArray(v)) return v;
         if (typeof v === "object") {
           if (Array.isArray((v as any).data)) return (v as any).data;
           if (Array.isArray((v as any).items)) return (v as any).items;
-
-          // dictionary-like: only keep object-like entries
           const values = Object.values(v);
           const looksLikeEntry = (x: any) =>
             x && typeof x === "object" && (("id" in x) || ("loan_id" in x) || ("amount" in x) || ("date_paid" in x));
           const entries = values.filter(looksLikeEntry);
           if (entries.length) return entries;
-
-          // single object entry fallback
           return [v];
         }
         return [];
@@ -126,7 +125,6 @@ const usePersonal = (options: Options = {}) => {
       let past: any[] = [];
       for (const c of candidates) past = past.concat(normalizeBlock(c));
 
-      // de-duplicate & sort ascending by date_paid (fallback created_at)
       const seen = new Set<string>();
       past = past
         .filter((item) => !!item && typeof item === "object")
@@ -202,7 +200,7 @@ const usePersonal = (options: Options = {}) => {
     onSuccess: () => invalidate("status"),
   });
 
-  // ---- existing view object (left intact) ----
+  // ---- existing view objects (kept) ----
   const status = useMemo(
     () => ({ ...(rawData ?? {}), status: viewStatus }),
     [rawData, viewStatus]
@@ -214,7 +212,24 @@ const usePersonal = (options: Options = {}) => {
   );
 
   // =========================
-  // NEW: bank/servicing gating (kept)
+  // NEW: explicit supplementary statuses
+  // =========================
+  const supplementaryUserStatus: number | undefined = useMemo(() => {
+    const raw = (supplementaryUser as any)?.status;
+    if (raw === null || raw === undefined || raw === "null" || raw === "") return undefined;
+    const n = Number(raw);
+    return Number.isNaN(n) ? undefined : n;
+  }, [supplementaryUser]);
+
+  const supplementaryLoanStatus: number | undefined = useMemo(() => {
+    const raw = (supplementaryLoan as any)?.status;
+    if (raw === null || raw === undefined || raw === "null" || raw === "") return undefined;
+    const n = Number(raw);
+    return Number.isNaN(n) ? undefined : n;
+  }, [supplementaryLoan]);
+
+  // =========================
+  // bank/servicing gating (kept)
   // =========================
   const bankComplete = useMemo(() => {
     if (!user_details) return false;
@@ -242,7 +257,7 @@ const usePersonal = (options: Options = {}) => {
 
   return {
     status,
-    supplementaryStatus,
+    supplementaryStatus, // (legacy view based on supplementary_loan)
 
     isLoading: isLoading || isLoadingSchedule,
     error: error || errorSchedule,
@@ -259,6 +274,10 @@ const usePersonal = (options: Options = {}) => {
     personalLoan,
     supplementaryUser,
     supplementaryLoan,
+
+    // NEW explicit fields you should use:
+    supplementaryUserStatus,  // ← from supplementary_user.status (your source of truth)
+    supplementaryLoanStatus,  // ← from supplementary_loan.status (may be undefined)
 
     user,
     loanType: 2,

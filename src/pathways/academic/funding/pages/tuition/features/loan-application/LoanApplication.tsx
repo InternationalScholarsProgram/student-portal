@@ -5,6 +5,7 @@ import SubsequentMeeting from "../subsequent-meeting/SubsequentMeeting";
 import FeedbackStatus from "./feedback/FeedbackStatus";
 import LoanDesicionFeedback from "./feedback/LoanDesicionFeedback";
 import Mpower from "./mpower/Mpower";
+import Prodigy from "./prodigy/Prodigy";
 import SallieMae from "./sallie-mae/SallieMae";
 
 function LoanApplication() {
@@ -49,9 +50,14 @@ export default LoanApplication;
 const renderFundingComponent = (funding?: string) => {
   switch (funding) {
     case "MPOWER":
+    case "mpower":
       return <Mpower />;
     case "Sallie":
+    case "SALLIE":
       return <SallieMae />;
+    case "PRODIGY":        
+    case "Prodigy":        
+      return <Prodigy />;
     default:
       return <p>Funding provider not found</p>;
   }

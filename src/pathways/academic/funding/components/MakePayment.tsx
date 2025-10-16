@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { InputsWithLabel } from "../../../../components/inputs/InputField";
-import FormFooterBtns from "../../../../components/buttons/FormFooterBtns";
 import { InlineLoader } from "../../../../components/loaders/Loader";
 import { toast } from "react-toastify";
 
@@ -33,6 +32,35 @@ const MakePayment: React.FC<Props> = ({
 }) => {
   const [amount, setAmount] = useState<number | "">("");
 
+  // Detect success when redirected back from checkout.
+  // Works with:
+  //  - ?code=200&status=Success&message=Payment%20succeeded.
+  //  - ?payment=success
+  //  - ?payment_status=paid  (Stripe-style)
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const paid = url.searchParams.get("payment_status") === "paid";
+    const successFlag = url.searchParams.get("payment") === "success";
+    const code200 = url.searchParams.get("code") === "200";
+    const statusSuccess =
+      (url.searchParams.get("status") || "").toLowerCase() === "success";
+    const message = url.searchParams.get("message") || "";
+
+    if (paid || successFlag || code200 || statusSuccess || /payment succeeded/i.test(message)) {
+      toast.success("Payment successful. Returning to your page.");
+      if (open) onClose();
+
+      // Clean URL so we don't re-toast on refresh
+      ["payment_status", "payment", "code", "status", "message"].forEach((k) =>
+        url.searchParams.delete(k)
+      );
+      const clean = `${url.pathname}${
+        url.searchParams.toString() ? "?" + url.searchParams.toString() : ""
+      }${url.hash}`;
+      window.history.replaceState({}, "", clean);
+    }
+  }, [open, onClose]);
+
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -62,13 +90,16 @@ const MakePayment: React.FC<Props> = ({
       ? `Amount cannot exceed remaining balance (${remaining.toLocaleString()})`
       : "";
 
-  const submit = (e: React.FormEvent) => {
+  const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (invalid) {
       toast.error(helper || "Invalid amount");
       return;
     }
-    if (balance) onConfirm?.({ amount: amount as number, loanId: balance.loan_id });
+    if (balance) {
+      onConfirm?.({ amount: amount as number, loanId: balance.loan_id });
+      // Do not toast success here. Real success happens after checkout and redirect.
+    }
     onClose();
   };
 
@@ -87,7 +118,7 @@ const MakePayment: React.FC<Props> = ({
     >
       <form
         onSubmit={submit}
-        className="modal bg-paper rounded-2xl shadow-2xl outline outline-1 outline-color"
+        className="modal bg-paper rounded-2xl shadow-2xl outline outline-1 outline-color max-w-[520px] w-full p-5"
       >
         <div className="row items-center justify-between pb-2 border-b border-white/10">
           <h2 className="title">Make a Payment</h2>
@@ -109,7 +140,7 @@ const MakePayment: React.FC<Props> = ({
           <p className="text-error-main py-6">Failed to load balance.</p>
         ) : (
           <>
-            <div className="row gap-6 py-2 flex-wrap">
+            <div className="row gap-6 py-3 flex-wrap">
               <div>
                 <p className="text-sm text-muted-foreground">Total Payable</p>
                 <p className="font-semibold">
@@ -143,13 +174,22 @@ const MakePayment: React.FC<Props> = ({
               required
             />
 
-            <div className="pt-2">
-              <FormFooterBtns
-                btnText="Proceed to Checkout"
-                secondaryText="Cancel"
-                onSecondary={onClose}
+            <div className="pt-4 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
                 disabled={invalid}
-              />
+                className={`px-4 py-2 rounded-xl font-semibold shadow text-white
+                  ${invalid ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+              >
+                Proceed to Checkout
+              </button>
             </div>
           </>
         )}

@@ -6,8 +6,9 @@ import { fetchIp, testEndpoint } from "../../../../../../utils/utils";
 
 const url = `${baseDirectory}funding/tuition`;
 const sallieMaeUrl = `${url}salliemae.php`;
-const mpowerUrl = `${url}m-power.php`;
+const mpowerUrl = `${url}/m-power.php`;
 const tuitionUrl = `${url}/tuition_status.php`;
+
 
 class TuitionEndpoints {
   getStatus = () => api.get(tuitionUrl + "?action=track_status");

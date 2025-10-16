@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FullLoader } from "../../../../../components/loaders/Loader";
 import useTuition from "./services/useTuition";
 import CreditReview from "./features/credit-review/CreditReview";
@@ -8,7 +9,32 @@ import ProvideSchoolFeedback from "./features/credit-review/ProvideSchoolFeedbac
 import AxiosError from "../../../../../components/errors/AxiosError";
 
 function Tuition() {
-  const { tuitionStatus, isLoading, isError, error } = useTuition();
+  const {
+    tuitionStatus,
+    isLoading,
+    isError,
+    error,
+    // optional extras for debugging:
+    tuitionData,
+    fundingAdvisory,
+    activeLoanApplication,
+  } = useTuition();
+
+  // 🔎 Debug log: see current status and key context whenever they change
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.groupCollapsed("[Tuition] Debug");
+    // eslint-disable-next-line no-console
+    console.log("tuitionStatus ⇒", tuitionStatus);
+    // eslint-disable-next-line no-console
+    console.log("fundingAdvisory ⇒", fundingAdvisory);
+    // eslint-disable-next-line no-console
+    console.log("activeLoanApplication ⇒", activeLoanApplication);
+    // eslint-disable-next-line no-console
+    console.log("tuitionData ⇒", tuitionData);
+    // eslint-disable-next-line no-console
+    console.groupEnd();
+  }, [tuitionStatus, fundingAdvisory, activeLoanApplication, tuitionData]);
 
   if (isLoading) return <FullLoader />;
   if (isError)
@@ -18,12 +44,6 @@ function Tuition() {
       </p>
     );
 
-  // return <ProvideSchoolFeedback />;
-  // return <CreditReview />;
-  // return <FundingAdvisory />;
-  // return <OtherFundingSources />;
-  // return <LoanApplication />;
-      // return <ProvideSchoolFeedback />;
   switch (tuitionStatus) {
     case 0:
       return <ProvideSchoolFeedback />;
@@ -38,6 +58,9 @@ function Tuition() {
       return <OtherFundingSources />;
     case 7:
       return <LoanApplication />;
+    default:
+      // Fallback so the UI never renders nothing; also helps catch unexpected statuses.
+      return <ProvideSchoolFeedback />;
   }
 }
 

@@ -68,7 +68,7 @@ function CreditReview() {
         return (
           <>
             <p>
-              YYour credit review is currently undergoing a
+              Your credit review is currently undergoing a
               <strong> second evaluation.</strong>. We appreciate your continued
               patience as our team carefully re-assesses your application.
             </p>

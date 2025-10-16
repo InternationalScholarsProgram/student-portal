@@ -57,7 +57,7 @@ const UpdateBankDetailsModal: React.FC<Props> = ({ loan, onSuccess }) => {
             <MapFormFields fields={formFields} />
             <CheckBox
               sx={{ alignItems: "flex-start" }}
-              title="By providing us with the information, you will be agreeing that your banking details will be used for processing the disbursement and repayment of the loan borrowed from The KENYA Airlift Program via Automated Clearing House (ACH). In case of any questions, please do not hesitate to reach out to our team."
+              title="By providing us with the information, you will be agreeing that your banking details will be used for processing the disbursement and repayment of the loan borrowed from The  International Scholars Program via Automated Clearing House (ACH). In case of any questions, please do not hesitate to reach out to our team."
             />
           </div>
           <FormFooterBtns

@@ -42,7 +42,7 @@ function ProvideSchoolFeedback() {
         <Link to={"/tickets/create-ticket"} className="text-btn">
           Contact Support
         </Link>
-        <Link to={"/school-admission/application"} className="primary-btn">
+        <Link to={"/pathways/academic/school-admission/application"} className="primary-btn">
           Provide Feedback
         </Link>
       </div>

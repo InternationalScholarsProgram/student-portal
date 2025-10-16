@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import RepaymentSchedule from "../../../../components/RepaymentSchedule";
 import LoanActions from "../../../../components/LoanActions";
 import MakePayment from "../../../../components/MakePayment";
-import Supplementary from "./supplementary/Supplementary";
+import Supplementary, { useSupplementaryUI } from "./supplementary/Supplementary";
 
 import usePersonal from "../../services/usePersonal";
 import useFunding from "../../../../services/useFunding";
@@ -13,8 +13,9 @@ import { BASE_URL } from "../../../../../../../services/api/base";
 
 const Repayments = () => {
   const [action, setAction] = useState("");
-  const { schedulePayments, pastPayments, personalLoan, supplementaryLoan } = usePersonal();
+  const { schedulePayments, pastPayments, personalLoan } = usePersonal();
   const { loanBalance, startManualPayment } = useFunding({ loan: personalLoan });
+  const { hideApply } = useSupplementaryUI();
 
   const onSubmit = (formAction: string) => {
     switch (formAction) {
@@ -33,6 +34,12 @@ const Repayments = () => {
     }
   };
 
+  const options = [
+    { value: "make_payment", label: "Make a Loan Payment" },
+    ...(hideApply ? [] : [{ value: "apply_loan", label: "Apply for a Supplementary Loan" }]),
+    { value: "view_loan_contract", label: "View Loan Contract" },
+  ];
+
   const handleConfirmPayment = async ({
     amount,
     loanId,
@@ -42,7 +49,8 @@ const Repayments = () => {
   }) => {
     try {
       const payload = await startManualPayment(amount);
-      const checkoutUrl = (payload as any)?.checkout_url || (payload as any)?.checkoutUrl;
+      const checkoutUrl =
+        (payload as any)?.checkout_url || (payload as any)?.checkoutUrl;
       if (!checkoutUrl) {
         toast.error("Unable to start payment: missing checkout URL.");
         return;
@@ -53,19 +61,16 @@ const Repayments = () => {
     }
   };
 
-  const options = [
-    { value: "make_payment", label: "Make a Loan Payment" },
-    { value: "apply_loan", label: "Apply for a Supplementary Loan" },
-    { value: "view_loan_contract", label: "View Loan Contract" },
-  ].filter((opt) =>
-    opt.value !== "apply_loan"
-      ? true
-      : !supplementaryLoan?.status || supplementaryLoan?.status === 3
-  );
+  // ✅ Proper toggler: honors the boolean from <Supplementary />
+  const toggleApplyModal = (open?: boolean) => {
+    setAction(open ? "apply_loan" : "");
+  };
 
   return (
     <div className="col gap-3">
-      <Supplementary open={action === "apply_loan"} toggleModal={() => setAction("")} />
+      {/* Keep Supplementary always mounted so banners/recall UIs render.
+         Modal opens when action === 'apply_loan'. */}
+      <Supplementary open={action === "apply_loan"} toggleModal={toggleApplyModal} />
 
       <RepaymentSchedule pastPayments={pastPayments} schedulePayments={schedulePayments} />
 

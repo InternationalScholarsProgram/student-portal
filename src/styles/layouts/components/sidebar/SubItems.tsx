@@ -55,6 +55,9 @@ export default function SubItems({
     setOpenSections(sectionKey);
   };
 
+  // Use this id for aria-controls + nested <ul>
+  const subListId = `sub-${sectionKey}`;
+
   return (
     <li className="col">
       {/* Header row container (no 'sidebar-link' here to avoid double borders) */}
@@ -77,6 +80,8 @@ export default function SubItems({
             onClick={toggle}
             className="sidebar-link flex items-center gap-2 w-full text-left"
             style={{ paddingLeft: depth * INDENT }}
+            aria-expanded={isOpen}
+            aria-controls={hasChildren ? subListId : undefined}
           >
             {item.icon}
             <p className="text-left flex-1">{item.name}</p>
@@ -95,7 +100,7 @@ export default function SubItems({
             onClick={toggle}
             className="caret-btn"
             aria-expanded={isOpen}
-            aria-controls={`sub-${sectionKey}`}
+            aria-controls={subListId}
             title={isOpen ? "Collapse" : "Expand"}
           >
             {isOpen ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
@@ -106,14 +111,19 @@ export default function SubItems({
       {/* Children */}
       {hasChildren && (
         <Collapse in={isOpen} timeout="auto" unmountOnExit className="opacity-80">
-          <div className="pl-[10%]">
+          {/* ✅ Wrap descendants in a UL so nested <li> are valid */}
+          <ul
+            id={subListId}
+            role="group"
+            className="list-none m-0 p-0 pl-[10%]"
+          >
             {item.subItems!.map((child, idx) => {
               const childKey = child.to || `${sectionKey}-${idx}`;
               const childHasChildren =
                 Array.isArray(child.subItems) && child.subItems.length > 0;
 
               if (childHasChildren) {
-                // Recurse for deeper levels
+                // Recurse (returns <li>) — valid now because it’s inside this <ul>
                 return (
                   <SubItems
                     key={childKey}
@@ -127,21 +137,22 @@ export default function SubItems({
                 );
               }
 
-              // Leaf link (only the NavLink has 'sidebar-link')
+              // Leaf: wrap in <li> so DOM nesting is valid
               const childTo = joinPath(fullTo, child.to);
               return (
-                <SidebarNavLink
-                  key={childKey}
-                  to={`/${childTo}`}
-                  onClick={onNavigate}
-                  className="sidebar-link"
-                  style={{ paddingLeft: (depth + 1) * INDENT }}
-                >
-                  <p className="first-letter:uppercase">{child.name}</p>
-                </SidebarNavLink>
+                <li key={childKey}>
+                  <SidebarNavLink
+                    to={`/${childTo}`}
+                    onClick={onNavigate}
+                    className="sidebar-link"
+                    style={{ paddingLeft: (depth + 1) * INDENT }}
+                  >
+                    <p className="first-letter:uppercase">{child.name}</p>
+                  </SidebarNavLink>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </Collapse>
       )}
     </li>

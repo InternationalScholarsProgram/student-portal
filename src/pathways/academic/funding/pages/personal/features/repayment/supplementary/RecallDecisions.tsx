@@ -106,7 +106,7 @@ const RecallDecisions: React.FC<Props> = ({ status, loanId, invalidate }) => {
             yet entered the repayment phase. To streamline your financing, it has
             been consolidated with your supplementary loan and will be processed as
             a merged loan. Please review and either accept or decline this update.
-          </p>
+          </p><br></br>
 
           <ContentComponent header="Confirm Your Decision">
             <form className="p-3" onSubmit={submitDecision}>
